@@ -15,6 +15,9 @@ We analysed the temporal trend of the snow cover dynamics in Sierra Nevada, a me
 
 
 An automatic workflow was used to process the images of the MOD10A2 product (MODIS) and to compute indicators of the structure of the snow cover: snow-cover duration (scd), snow-cover onset dates (scod) and snow-cover melting dates (scmd) (`TODO`: include snow-cover melting cycles?) 
+Below an analisis of the temporal trends of each indicator was applied to characterize the temporal dynamics of the 
+
+To characterize the temporal dynamics of each snow-cover indicators we applied a Mann-Kendall The
 
 
 
