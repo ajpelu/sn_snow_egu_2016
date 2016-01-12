@@ -1,6 +1,17 @@
-### Temporal trend of the snow-cover dynamics in Sierra Nevada in the last years: An analysis using satellite data and ecohydrological modelling data 
+### Tentative title
 
+Temporal trend of the snow-cover dynamics in Sierra Nevada in the last years: An analysis using satellite data and ecohydrological modelling data 
 
+### Authors (order to determine)
+Francisco J. Bonet-García <fjbonet@ugr.es> [1]
+Antonio J. Pérez-Luque <ajperez@ugr.es> [1]
+Ramón Pérez-Pérez [1]
+Javier Herrero <herrero@ugr.es> [2]
+
+:bangbang: Limitaciones de submission
+ 
+[1] Laboratory of Ecology (iEcolab), Andalusian Institute for Earth System Research, University of Granada, Edificio CEAMA, Av del Mediterráneo s/n, Granada, Spain 
+[2] Fluvial Dynamics and Hydrology Research Group, Andalusian Institute for Earth System Research, University of Granada, Edificio CEAMA, Av del Mediterráneo s/n, Granada, Spain
 
 
 ## Aims 
@@ -29,7 +40,7 @@ Some ideas:
 * Show temporal trends of the snowpack dynamic in the last 14 years in Sierra Nevada
 * Spatial analysis (elevation) of the dynamics 
 * Relation with hydrological model 
-* Ecosystem services? Ski resort? 
+* ~~Ecosystem services? Ski resort?~~ 
 
 
 ## Implications for managemet
