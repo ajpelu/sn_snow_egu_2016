@@ -1,6 +1,10 @@
 ### Tentative title
 
-Temporal trend of the snow-cover dynamics in Sierra Nevada in the last years: An analysis using satellite data and ecohydrological modelling data 
+* t1: Temporal trend of the snow-cover dynamics in Sierra Nevada in the last years: An analysis using satellite data and ecohydrological modelling data 
+
+* t2: Tendencies of snow-related variables from 2000 to 2014 from MODIS and modelling
+
+* t3: Temporal trends of snow-related variables from 2000 to 2014 in Sierra Nevada (Spain): An analisis using modelling and MODIS satellite data. 
 
 ### Authors (order to determine)
 * Francisco J. Bonet-García <fjbonet@ugr.es> [1]
@@ -29,7 +33,13 @@ Snow cover has undergone significant changes in the last 14 years. 80 % of the p
 The evaluation of the spatial pattern of snow cover duration showed that both the trend and the slope of the trend become more pronounced with elevation. In higher elevations the snow cover duration decreased an average of 3 days from 2000-2014. 
 
 
+
 --- 
+
+* :large_orange_diamond: Incluir algo de ECOPOTENTIAL:
+ * "This research has been co-funded by ECOPOTENTIAL (Improving future ecosystem benefits through Earth Observations) Horizon 2020 EU project"
+* 
+
 
 
 
