@@ -68,12 +68,12 @@ for (j in indicadores){
   assign(j, theil)
   
   # Write table 
-  write.table(assign(j, theil), file=paste(di, '/data/', j, '.csv', sep=''), row.names=FALSE, sep=';')
+  write.table(assign(j, theil), file=paste(di, '/data/', j, '.csv', sep=''), row.names=FALSE, sep=',')
   
   # Check Results. Get the pixel with NA in pvalue. Save results
   aux_na <- theil[!complete.cases(theil),]
   aux_na$var <- rep(j,nrow(aux_na))
-  write.table(aux_na[,c(8:9)], file=paste(di, '/data/na_', j, '.csv', sep=''), row.names=FALSE, sep=';')
+  write.table(aux_na[,c(8:9)], file=paste(di, '/data/na_', j, '.csv', sep=''), row.names=FALSE, sep=',')
     
 } 
 ################################################################
