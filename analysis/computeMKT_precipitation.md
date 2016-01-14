@@ -1,33 +1,20 @@
----
-title: "Compute Mann-Kendall Theil Sen of Precipitation"
-author: "AJ Perez-Luque (@ajpelu); FJ Bonet; J Herrero and R. Perez-Perez and "
-date: "2016 Jaunary"
-output:  
-    md_document:
-      variant: markdown_github
----
-
-```{r metadata, echo=FALSE}
-########################################################
-# Title: Compute Mann-Kendall Theil Sen of snow cover
-# Date: Feb 2015
-# version: v1
-# Authors: Perez-Luque AJ (@ajpelu); Perez-Perez R and Bonet FJ 
-################################################################
-
-################################################################
-# Set working directory 
-machine <- 'ajpelu'
-# machine <- 'ajpeluLap'
-di <- paste('/Users/', machine, '/ownCloud/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
-################################################################
-```
-
 En primer lugar leemos los datos
-```{r packages, warning=FALSE}
+
+``` r
 ################################################################
 # Load packages 
 library('wq')
+```
+
+    ## Loading required package: zoo
+    ## 
+    ## Attaching package: 'zoo'
+    ## 
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     as.Date, as.Date.numeric
+
+``` r
 library('reshape2')
 ################################################################
 
@@ -44,10 +31,9 @@ names(prec) <- c('nie_malla_modi_id', 'pre', 'year')
 ################################################################
 ```
 
-A continuación computamos la tendencia y la pendiente. Aplicamos la técnica de Mann-Kendall-Theil-Sen. El bucle realiza las siguientes operaciones: 
+A continuación computamos la tendencia y la pendiente. Aplicamos la técnica de Mann-Kendall-Theil-Sen. El bucle realiza las siguientes operaciones:
 
-```{r}
-
+``` r
 # Prepare data. Transpose 
 aux <- dcast(prec, year ~ nie_malla_modi_id, value.var = 'pre') 
 
@@ -73,12 +59,26 @@ write.table(theil, file=paste(di, '/data/pre_trend.csv', sep=''), row.names=FALS
 ################################################################
 ```
 
-```{r}
+``` r
 # Select only data within SN using scod file 
 scod <- read.csv(file=paste(di, '/data/scod.csv', sep=''), header=T, sep=',')
 pre_sn <- theil[which(theil$nie_malla_modi_id %in% scod$nie_malla_modi_id), ]
 
 
 summary(pre_sn)
-
 ```
+
+    ##    sen.slope       sen.slope.pct         p.value             S           
+    ##  Min.   :-7.0000   Min.   :-1.44000   Min.   :0.3223   Min.   :-21.0000  
+    ##  1st Qu.:-1.9300   1st Qu.:-0.38000   1st Qu.:0.8431   1st Qu.: -3.0000  
+    ##  Median :-0.5115   Median :-0.09000   Median :0.9212   Median : -1.0000  
+    ##  Mean   :-0.1930   Mean   :-0.09057   Mean   :0.9085   Mean   : -0.9754  
+    ##  3rd Qu.: 1.4840   3rd Qu.: 0.21000   3rd Qu.:1.0000   3rd Qu.:  1.0000  
+    ##  Max.   : 8.9320   Max.   : 1.18000   Max.   :1.0000   Max.   : 11.0000  
+    ##       varS            miss        tau            nie_malla_modi_id 
+    ##  Min.   :407.3   Min.   :0   Min.   :-0.200000   Length:7994       
+    ##  1st Qu.:408.3   1st Qu.:0   1st Qu.:-0.029000   Class :character  
+    ##  Median :408.3   Median :0   Median :-0.010000   Mode  :character  
+    ##  Mean   :408.3   Mean   :0   Mean   :-0.009338                     
+    ##  3rd Qu.:408.3   3rd Qu.:0   3rd Qu.: 0.010000                     
+    ##  Max.   :408.3   Max.   :0   Max.   : 0.105000
