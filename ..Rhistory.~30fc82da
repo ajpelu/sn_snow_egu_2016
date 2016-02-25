@@ -1,0 +1,73 @@
+machine <- 'ajpelu'
+# machine <- 'ajpeluLap'
+di <- paste('/Users/', machine, '/ownCloud/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
+library('wq')
+library('reshape2')
+raw_pre <- read.csv(file=paste(di, '/data/PXpxXyear.csv', sep=''), header=T, sep=',')
+# Remove NaN
+prec <- raw_pre[which(!is.na(raw_pre$pre)),]
+# Rename
+names(prec) <- c('nie_malla_modi_id', 'pre', 'year')
+aux <- dcast(prec, nie_malla_modi_id ~ year,  value.var = pre)
+names(prec) <- c('nie_malla_modi_id', 'pre', 'year')
+aux <- dcast(prec, nie_malla_modi_id ~ year,  value.var = pre)
+View(prec)
+aux <- dcast(prec, nie_malla_modi_id ~ year,  value.var = 'pre')
+View(aux)
+machine <- 'ajpelu'
+# machine <- 'ajpeluLap'
+di <- paste('/Users/', machine, '/ownCloud/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
+library('wq')
+library('reshape2')
+raw_pre <- read.csv(file=paste(di, '/data/PXpxXyear.csv', sep=''), header=T, sep=',')
+# Remove NaN
+prec <- raw_pre[which(!is.na(raw_pre$pre)),]
+# Rename
+names(prec) <- c('nie_malla_modi_id', 'pre', 'year')
+################################################################
+aux <- dcast(prec, year ~ nie_malla_modi_id, value.var = pre)
+aux <- dcast(prec, year ~ nie_malla_modi_id, value.var = 'pre')
+View(aux)
+aux <- dcast(prec, nie_malla_modi_id ~ year, value.var = 'pre')
+aux <- dcast(prec, nie_malla_modi_id ~ year, value.var = 'pre')
+View(aux)
+auxts <- zoo(aux[-1],aux[,1])
+theil <- mannKen(as.ts(auxts))
+View(theil)
+aux <- dcast(prec, year ~ nie_malla_modi_id, value.var = 'pre')
+auxts <- zoo(aux[-1],aux[,1])
+theil <- mannKen(as.ts(auxts))
+View(theil)
+theil$sen.slope <- round(theil$sen.slope, 3)
+theil$sen.slope.pct <- round(theil$sen.slope.pct,2)
+theil$p.value <- round(theil$p.value, 5)
+theil$varS <- round(theil$varS, 2)
+theil$tau <- round(theil$tau, 3)
+theil <- as.data.frame(theil)
+theil$nie_malla_modi_id <- rownames(theil)
+# Round the output
+theil$sen.slope <- round(theil$sen.slope, 3)
+theil$sen.slope.pct <- round(theil$sen.slope.pct,2)
+theil$p.value <- round(theil$p.value, 5)
+theil$varS <- round(theil$varS, 2)
+theil$tau <- round(theil$tau, 3)
+View(theil)
+nrows(theil$p.value < 0.05
+)
+nrows(theil$p.value < 0.05
+nrow(theil$p.value < 0.05
+nrow(theil$p.value < 0.05)
+nrow(theil[theil$p.value < 0.05, ])
+nrow(theil[theil$p.value < 0.1, ])
+head(theil)
+summary(theil$p.value)
+summary(theil$tau)
+aux_na <- theil[!complete.cases(theil),]
+write.table(theil, file=paste(di, '/data/pre_trend.csv', sep=''), row.names=FALSE, sep=',')
+scod <- read.csv(file=paste(di, '/data/scod.csv', sep=''), header=T, sep=',')
+View(scod)
+pre_sn <- theil[which(theil$nie_malla_modi_id %in% scod$nie_malla_modi_id), ]
+View(pre_sn)
+summary(pre_sn)
+View(prec)
+View(pre_sn)
