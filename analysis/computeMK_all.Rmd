@@ -1,0 +1,117 @@
+---
+title: "Compute Mann-Kendall Theil Sen of snow cover"
+author: "AJ Perez-Luque (@ajpelu); FJ Bonet; J Herrero and R. Perez-Perez"
+date: "2016 Jaunary"
+output:  
+    md_document:
+      variant: markdown_github
+---
+
+```{r metadata, echo=FALSE}
+################################################################
+# Set working directory 
+
+machine <- 'ajpelu'
+# machine <- 'ajpeluLap'
+di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
+################################################################
+```
+
+En primer lugar leemos los datos
+```{r packages, warning=FALSE}
+################################################################
+# Load packages 
+library('wq')
+library('reshape2')
+################################################################
+
+################################################################
+# Read data
+myfiles <- list.files(path = paste(di, '/data/raw/',sep=''), pattern = '\\)
+
+
+files <- list.files(path = paste(di, "/data/wos_raw/", sep= ""), pattern= "\\.txt$")
+
+# Loop to read files 
+for (j in files){ 
+  aux <- read.csv(file=paste(di, "/data/wos_raw/", j, sep= ""),
+              header = TRUE,
+              sep = '\t')
+  name_aux <- str_replace(j, "\\..*", "") 
+
+  assign(name_aux, aux)
+  }
+
+rawdf <- rbind(bioCI, bioP, med, wos1, wos2, zoo)
+
+
+
+# 
+for (i in myfiles){ 
+  
+  
+  
+  
+  
+  
+  
+  }
+
+snow <- read.csv(file=paste(di, '/data/raw/snow_sn.csv', sep=''), header=T, sep=';')
+################################################################
+```
+
+A continuación creamos un bucle para obtener de cada indicador la tendencia y la pendiente. Aplicamos la técnica de Mann-Kendall-Theil-Sen. El bucle realiza las siguientes operaciones: 
+
+* Crea una variable con los indicadores para el bucle. 
+* Realiza un subset de datos con los valores del indicador para cada pixel. Obtenemos una serie de datos por cada pixel. 
+* Calculamos la tendencia y la pendiente
+* Guardamos los resultamos como csv (uno por cada indicador, ver `./data/`)
+
+```{r}
+################################################################
+# Loop to compute the MKT by indicator
+
+# Define name of indicators (see variables names)
+indicadores <- c('scd', 'scod', 'scmd', 'scmc' )
+
+# subset by indicator
+for (j in indicadores){ 
+  # Create a subset by indicator
+  subdf <- snow[, names(snow) %in% c('nie_malla_modi_id', 'ano', j )]
+  
+  # Manipule data. Transpose 
+  # la funcion aggregate es porque tenemos duplicados 
+  aux <- dcast(subdf, ano ~ nie_malla_modi_id, value.var = j, fun.aggregate = mean) 
+
+  # Create a zoo object 
+  auxts <- zoo(aux[-1],aux[,1])
+  
+  # Compute Mann Kendall and Theil 
+  theil <- mannKen(as.ts(auxts))
+  
+  # Prepare data output
+  theil <- as.data.frame(theil)
+  theil$nie_malla_modi_id <- rownames(theil)
+  
+  # Round the output
+  theil$sen.slope <- round(theil$sen.slope, 3)
+  theil$sen.slope.pct <- round(theil$sen.slope.pct,2)
+  theil$p.value <- round(theil$p.value, 5)
+  theil$varS <- round(theil$varS, 2)
+  theil$tau <- round(theil$tau, 3)
+  
+  # Assign output to an dataframe
+  assign(j, theil)
+  
+  # Write table 
+  write.table(assign(j, theil), file=paste(di, '/data/', j, '.csv', sep=''), row.names=FALSE, sep=',')
+  
+  # Check Results. Get the pixel with NA in pvalue. Save results
+  aux_na <- theil[!complete.cases(theil),]
+  aux_na$var <- rep(j,nrow(aux_na))
+  write.table(aux_na[,c(8:9)], file=paste(di, '/data/na_', j, '.csv', sep=''), row.names=FALSE, sep=',')
+    
+} 
+################################################################
+```
