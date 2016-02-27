@@ -11,8 +11,8 @@ output:
 ################################################################
 # Set working directory 
 
-machine <- 'ajpelu'
-# machine <- 'ajpeluLap'
+# machine <- 'ajpelu'
+machine <- 'ajpeluLap'
 di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
 ################################################################
 ```
@@ -22,6 +22,7 @@ En primer lugar leemos los datos
 ################################################################
 # Load packages 
 library("wq")
+library("zoo")
 library("reshape2")
 library("stringr")
 library("dplyr")
@@ -67,7 +68,6 @@ A continuación creamos un bucle para obtener de cada indicador la tendencia y l
 * Guardamos los resultamos como csv (uno por cada indicador, ver `./data/`)
 
 ```{r}
-
 # Loop to compute the MKT by indicator
 
 # Define name of indicators (see variables names)
@@ -92,7 +92,7 @@ for (j in indicadores){
   theil <- as.data.frame(theil)
   
   theil_df <- theil %>% 
-    mutate(nie_malla_modi_id = rownames(theil)) %>%
+    mutate(nie_malla_modi_id = as.numeric(rownames(theil))) %>%
     mutate(sen_slope = round(sen.slope, 3),
            sen_slope_per = round(sen.slope.pct, 2),
            p_value = round(p.value, 5),
@@ -113,12 +113,40 @@ for (j in indicadores){
 } 
 ```
 
-### Generación de rasters con los resultados de las tendencias para cada variable 
+
+## Falta documentar esto cantiflas!! 
 
 ```{r}
+### Rename variables adding dataframe name
+for (i in indicadores){ 
+  # Get object
+  aux <- get(i) 
+
+  # Create vector of new names 
+  new_names <- c(paste(names(aux), i ,sep='_'))
+  
+  aux_rename <- aux %>% rename_(.dots = setNames(names(.), new_names)) %>%
+    dplyr::select(nie_malla_modi_id = starts_with("nie_malla_modi_id"), everything())
+  
+  assign(i, aux_rename)
+  }
+
+
+# Create a dataframe with all variables 
+fulldf <- scod %>% 
+  inner_join(scd,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(scmd,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(scmc,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(pre,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(pre_snow,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(pre_snow_per,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(temp,  by=c("nie_malla_modi_id")) 
+  
+                      
+### Add elevation data
 library("rgdal")
 library("sp")
-library("raster")
+
 
 # The pixles polygon shape is in 4326 
 # Read pixels vectorial layer 
@@ -126,10 +154,22 @@ pixels <- rgdal::readOGR(dsn = paste(di, "/data/geoinfo/", sep=""),
                          layer = "nie_malla_modis_selected", 
                          verbose = FALSE)
 
-# Select only attributes of interest 
 pixels <- pixels[, c("id","elevacion")]
 names(pixels) <- c("nie_malla_modi_id","elevacion")
 
+## Join data of Elevation with mk data
+elev <- as.data.frame(pixels@data)
+
+# Loop to add elevation data and to create subsets with elevation > 1900 
+for (k in indicadores){
+  auxmk <- get(k) # Get object
+  aux_elev <- inner_join(elev, auxmk, by="nie_malla_modi_id") # Join elevation data
+  
+  aux_elev1900 <- aux_elev %>% filter(elevacion > 1900)
+  
+  assign(k, aux_elev)
+  assign(paste(k,'1900',sep=''), aux_elev1900)
+  }
 
 
 
@@ -138,6 +178,110 @@ names(pixels) <- c("nie_malla_modi_id","elevacion")
 
 
 
+
+
+
+
+
+
+
+testtttttt  <- aux_y %>% rename_(.dots = setNames(names(.), var_names))
+
+
+head(iris %>% rename_(.dots=setNames(names(.), tolower(gsub("\\.", "_", names(.))))))
+
+
+# Loop to plot 
+u = scod1900
+
+# aux_y <- get(k) 
+aux_y <- u
+y_variable <- aux_y %>% 
+  var_names
+  
+  
+  dplyr::select(nie_malla_modi_id, tau) %>% 
+  dplyr::mutate_each(paste0('tau','scod1900') = tau)
+  
+   dplyr::rename_(df, .dots=setNames(list(col), new))
+  
+  
+
+  mutate(paste('scod', 'tau', sep='') = tau) %>% 
+  
+head(aux_y) 
+ttt <- melt(aux_y[,c("nie_malla_modi_id", "tau")])
+
+y_variable <- a  
+  
+ttt <- ren
+
+> myFunc <- function(df, col){
++   new <- paste0(col, '_1')
++   out <- dplyr::rename_(df, .dots=setNames(list(col), new))
++   return(out)
++ }
+
+
+# Vector of variables names 
+var_names <- c(paste(names(aux_y),'scod',sep='_'))
+
+ttt <- rename_(aux_y, .dots=setNames(aux_y), var_names)
+
+rename_vars(names(iris), petal_length = Petal.Length)
+
+
+ii <- dplyr::rename_(aux_y, .dots=setNames(list(aux_y), var_names))
+
+rename_vars(names(aux_y), tau)
+
+plot(scd1900$tau, pre_snow1900$tau)
+
+
+t1 <- tt[tt$elevacion > 1900, ]
+
+head(pixels@data)
+
+
+
+
+
+
+# Merge dataframe of interest with spatial information 
+mm <- sp::merge(pixels, temp, by="nie_malla_modi_id")
+
+# Select only the pixels of Sierra Nevada
+mm1 <- mm[mm$nie_malla_modi_id %in% temp$nie_malla_modi_id, ]
+         
+tt <-rasterize(mm1)
+
+
+# Rasterizar con coordenadas utm
+raster_tendencia<-rasterFromXYZ(malla_puntos_final_aux)
+plot(raster_tendencia)
+
+# Asignamos proyección al raster anterior
+crs(raster_tendencia)<-"+proj=utm +zone=30"
+
+# reproyectar a geográficas
+raster_tendencia<-projectRaster(raster_tendencia, crs = "+proj=longlat")
+
+# creamos máscara para recortar y remuestrear. Le ponemos la resolución y la extensión de raster_tendencia
+mascara<-raster(crs = "+proj=longlat")
+extent(mascara)<-extent(raster_tendencia)
+res(mascara)<-c(0.00418,0.00418)
+
+raster_tendencia<-resample(raster_tendencia, mascara)
+plot(raster_tendencia)
+
+
+
+
+plot(mm1)
+
+
+
+head(pixels)
 summary(pixels)
 
 extent(pixels)
