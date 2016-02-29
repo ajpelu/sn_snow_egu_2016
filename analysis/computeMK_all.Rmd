@@ -159,39 +159,7 @@ elev <- elev %>%
                                     "2001-2250","2251-2500","2501-2750", "2751-3000",
                                     "3001-3250", "3251-3500"))) 
 
-
-                           
-                           
-                           
-                           c(250,500,750,1000,
-                                               1250,1500,1750,2000,
-                                               2250,2500,2750,3000,
-                                               3250,2500)))
-
-mutate(a = cut(a, breaks = quantile(a, probs = seq(0, 1, 0.2))))
-
-
-all_ind$elevC250 <- as.factor(ifelse(all_ind$elev > 3251, '3251-3500',
-                                     ifelse(all_ind$elev > 3001, '3001-3250',
-                                     ifelse(all_ind$elev > 2751, '2751-3000',
-                                     ifelse(all_ind$elev > 2501, '2501-2750',
-                                     ifelse(all_ind$elev > 2251, '2251-2500',  
-                                     ifelse(all_ind$elev > 2001, '2001-2250',          
-                                     ifelse(all_ind$elev > 1751, '1751-2000',  
-                                     ifelse(all_ind$elev > 1501, '1501-1750',
-                                     ifelse(all_ind$elev > 1251, '1251-1500', 
-                                     ifelse(all_ind$elev > 1001, '1001-1250', 
-                                     ifelse(all_ind$elev > 751, '751-1000',
-                                     ifelse(all_ind$elev > 501, '501-750', '251-500')))))))))))))
-
-
-# Reorder las elevaciones
-all_ind$elevC250 <- reorder.factor(all_ind$elevC250, new.order=c("251-500","501-750","751-1000",
-                                                                 "1001-1250","1251-1500","1501-1750", "1751-2000",
-                                                                 "2001-2250","2251-2500","2501-2750", "2751-3000",
-                                                                 "3001-3250", "3251-3500")
-
-
+# Create un dataframe con todos los datos
 fulldf <- elev %>% 
   inner_join(scod,  by=c("nie_malla_modi_id")) %>% 
   inner_join(scd,  by=c("nie_malla_modi_id")) %>% 
@@ -213,38 +181,35 @@ taus <- fulldf %>%
 
 tau1900 <- fulldf %>% 
   filter(elevacion > 1900) %>% 
-  dplyr::select(nie_malla_modi_id, starts_with("tau"))
+  dplyr::select(nie_malla_modi_id, elevacion, elevGroup, starts_with("tau"))
+
+ss1900 <- fulldf %>% 
+  filter(elevacion > 1900) %>% 
+  dplyr::select(nie_malla_modi_id, elevacion, elevGroup, starts_with("sen_slope"))
+
+tau <- fulldf %>% 
+  dplyr::select(nie_malla_modi_id, elevacion, elevGroup, starts_with("tau"))
 
 ```
 
 
 ```{r}
-# Create a variable of elevation by intervals of 250  
-all_ind$elevC250 <- as.factor(ifelse(all_ind$elev > 3251, '3251-3500',
-                                     ifelse(all_ind$elev > 3001, '3001-3250',
-                                     ifelse(all_ind$elev > 2751, '2751-3000',
-                                     ifelse(all_ind$elev > 2501, '2501-2750',
-                                     ifelse(all_ind$elev > 2251, '2251-2500',  
-                                     ifelse(all_ind$elev > 2001, '2001-2250',          
-                                     ifelse(all_ind$elev > 1751, '1751-2000',  
-                                     ifelse(all_ind$elev > 1501, '1501-1750',
-                                     ifelse(all_ind$elev > 1251, '1251-1500', 
-                                     ifelse(all_ind$elev > 1001, '1001-1250', 
-                                     ifelse(all_ind$elev > 751, '751-1000',
-                                     ifelse(all_ind$elev > 501, '501-750', '251-500')))))))))))))
-
-
-# Reorder las elevaciones
-all_ind$elevC250 <- reorder.factor(all_ind$elevC250, new.order=c("251-500","501-750","751-1000",
-                                                                 "1001-1250","1251-1500","1501-1750", "1751-2000",
-                                                                 "2001-2250","2251-2500","2501-2750", "2751-3000",
-                                                                 "3001-3250", "3251-3500")
+library(ggplot2)
 
 
 
 
-# SCOD 
-plot(tau1900$tau_scd)
+plot(tau1900)
+
+
+
+ggplot(tau, aes(tau_temp, tau_scmd)) + geom_point() + 
+  facet_wrap(~elevGroup)
+
+ggplot(tau1900, aes(elevacion,tau_scd)) + geom_point()
+  geom_point(aes(colour=elevGroup))
+  
+ggplot(ss1900, aes(elevacion,sen_slope_pre_snow_per)) + geom_point()
 
 
 ```{r}
