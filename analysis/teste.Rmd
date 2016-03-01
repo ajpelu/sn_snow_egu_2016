@@ -1,0 +1,354 @@
+---
+title: "Compute Mann-Kendall Theil Sen of snow cover"
+author: "AJ Perez-Luque (@ajpelu); FJ Bonet; J Herrero and R. Perez-Perez"
+date: "2016 March"
+output:  
+    md_document:
+      variant: markdown_github
+---
+
+```{r metadata, echo=FALSE}
+################################################################
+# Set working directory 
+
+machine <- 'ajpelu'
+# machine <- 'ajpeluLap'
+di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
+################################################################
+```
+
+En primer lugar leemos los datos
+```{r packages, warning=FALSE}
+################################################################
+# Load packages 
+library("dplyr")
+library("modeest")
+################################################################
+
+################################################################
+# Read data
+
+# Define name of indicators (see variables names)
+indicadores <- c("scd", "scod", "scmd", "scmc", "pre", "pre_snow", "pre_snow_per", "temp")
+
+# Loop to read files 
+for (j in indicadores){ 
+  aux <- read.csv(file=paste(di, "/data/derived/", j, ".csv", sep= ""),
+              header = TRUE,
+              sep = ',')
+  assign(j, aux)
+}
+
+
+# Read Topographic data 
+rawtopo <- read.csv(file=paste(di, "/data/topo_ni_malla_modi_id.csv", sep=""),
+                 header=TRUE,
+                 sep = ",") 
+
+
+topoaux <- rawtopo %>% 
+  select(nie_malla_modi_id, altura, twi, pendiente) 
+
+topo <- topoaux %>% 
+  group_by(nie_malla_modi_id) %>% 
+  summarise_each(funs(mode=mlv(., method='mfv')[['M']],
+                      mean), altura:pendiente)
+
+
+
+test <- topoaux[topoaux$nie_malla_modi_id == 1752781,]
+
+mean(test$altura)
+mlv(test$altura, method = 'mfv')
+
+
+
+
+
+%>%
+  group_by(nie_malla_modi_id) %>% 
+  mutate_each_(funs(media= mean(.)), altura:pendiente)
+
+
+%>%
+  group_by(nie_malla_modi_id) %>%
+  mutate_each(funs(media = mean(.)), c(altura, twi, pendiente))
+
+
+
+
+              
+xx <- c(1,2,2,2,3,4,2,3,1)
+mfv(xx)
+mlv()
+
+
+
+# Join Wimmed data
+join_aux1 <- inner_join(PnXpxXyear, PorcPnXpxXyear, by=c('id','year'))
+join_aux2 <- inner_join(PXpxXyear, TXpxXyear, by=c('id','year'))
+join_aux3 <- inner_join(join_aux1, join_aux2, by=c('id','year'))
+
+# Set rigth names
+names(join_aux3)[1] <- "nie_malla_modi_id"
+names(snow_sn)[3] <- "year"
+
+# Join with snow data
+mydf <- inner_join(snow_sn, join_aux3, by=c("nie_malla_modi_id", "year"))
+
+# remove temp files
+rm(join_aux1, join_aux2, join_aux3)
+```
+
+A continuación creamos un bucle para obtener de cada indicador la tendencia y la pendiente. Aplicamos la técnica de Mann-Kendall-Theil-Sen. El bucle realiza las siguientes operaciones: 
+
+* Crea una variable con los indicadores para el bucle. 
+* Realiza un subset de datos con los valores del indicador para cada pixel. Obtenemos una serie de datos por cada pixel. 
+* Calculamos la tendencia y la pendiente
+* Guardamos los resultamos como csv (uno por cada indicador, ver `./data/derived/`)
+
+```{r}
+# Loop to compute the MKT by indicator
+
+# Define name of indicators (see variables names)
+indicadores <- c("scd", "scod", "scmd", "scmc", "pre", "pre_snow", "pre_snow_per", "temp")
+
+# subset by indicator
+for (j in indicadores){ 
+  # Create a subset by indicator
+  subdf <- mydf[, names(mydf) %in% c("nie_malla_modi_id", "year", j )]
+  
+  # Manipule data. Transpose 
+  # la funcion aggregate es porque tenemos duplicados 
+  aux <- dcast(subdf, year ~ nie_malla_modi_id, value.var = j, fun.aggregate = mean) 
+
+  # Create a zoo object 
+  auxts <- zoo(aux[-1],aux[,1])
+  
+  # Compute Mann Kendall and Theil 
+  theil <- mannKen(as.ts(auxts))
+  
+  # Prepare data output
+  theil <- as.data.frame(theil)
+  
+  theil_df <- theil %>% 
+    mutate(nie_malla_modi_id = as.numeric(rownames(theil))) %>%
+    mutate(sen_slope = round(sen.slope, 3),
+           sen_slope_per = round(sen.slope.pct, 2),
+           p_value = round(p.value, 5),
+           tau = round(tau, 3)) %>%
+    dplyr::select(nie_malla_modi_id, sen_slope, sen_slope_per, p_value, tau)
+  
+  # As data.frame
+  theil_df <- as.data.frame(theil_df)
+  
+  # Rename variables adding dataframe name
+  
+  # Create vector of new names 
+  new_names <- c(paste(names(theil_df), j ,sep='_'))
+  
+  theil_rename <- theil_df %>% rename_(.dots = setNames(names(.), new_names)) %>%
+    dplyr::select(nie_malla_modi_id = starts_with("nie_malla_modi_id"), everything())
+  
+  # Write table 
+  write.table(assign(j, theil_rename), file=paste(di, "/data/derived/", j, ".csv", sep=""), row.names=FALSE, sep=',')
+  
+  # Check Results. Get the pixel with NA in pvalue. Save results
+  aux_na <- theil_df[!complete.cases(theil_df),]
+  aux_na$var <- rep(j,nrow(aux_na))
+  write.table(aux_na[,c("nie_malla_modi_id","var")], file=paste(di, "/data/derived/na_", j, ".csv", sep=""), row.names=FALSE, sep=',')
+} 
+```
+
+
+
+
+
+```{r}
+#### Read topo data 
+
+# Create a dataframe with all variables and add Elevation data
+### Add elevation data
+library("rgdal")
+library("sp")
+
+
+# The pixles polygon shape is in 4326 
+# Read pixels vectorial layer 
+pixels <- rgdal::readOGR(dsn = paste(di, "/data/geoinfo/", sep=""), 
+                         layer = "nie_malla_modis_selected", 
+                         verbose = FALSE)
+
+pixels <- pixels[, c("id","elevacion")]
+names(pixels) <- c("nie_malla_modi_id","elevacion")
+
+## Join data of Elevation with mk data
+elev <- as.data.frame(pixels@data)
+
+## Create interval variables (250 m)
+elev <- elev %>% 
+  mutate(elevGroup = cut(elevacion, 
+                         breaks = seq(from=0, to=3500, by=250),
+                         labels = c("0-250", "251-500","501-750","751-1000",
+                                    "1001-1250","1251-1500","1501-1750","1751-2000",
+                                    "2001-2250","2251-2500","2501-2750", "2751-3000",
+                                    "3001-3250", "3251-3500"))) 
+
+# Create un dataframe con todos los datos
+fulldf <- elev %>% 
+  inner_join(scod,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(scd,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(scmd,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(scmc,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(pre,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(pre_snow,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(pre_snow_per,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(temp,  by=c("nie_malla_modi_id")) 
+  
+
+### Create subset of data > 1900 elev and only taus
+
+taus <- fulldf %>%
+  dplyr::select(nie_malla_modi_id, 
+                elevacion,
+                starts_with("tau"))
+
+
+tau1900 <- fulldf %>% 
+  filter(elevacion > 1900) %>% 
+  dplyr::select(nie_malla_modi_id, elevacion, elevGroup, starts_with("tau"))
+
+ss1900 <- fulldf %>% 
+  filter(elevacion > 1900) %>% 
+  dplyr::select(nie_malla_modi_id, elevacion, elevGroup, starts_with("sen_slope"))
+
+tau <- fulldf %>% 
+  dplyr::select(nie_malla_modi_id, elevacion, elevGroup, starts_with("tau"))
+
+```
+
+
+```{r}
+library(ggplot2)
+
+
+
+
+plot(tau1900)
+
+
+
+ggplot(tau, aes(tau_temp, tau_scmd)) + geom_point() + 
+  facet_wrap(~elevGroup)
+
+ggplot(tau1900, aes(elevacion,tau_scd)) + geom_point()
+  geom_point(aes(colour=elevGroup))
+  
+ggplot(ss1900, aes(elevacion,sen_slope_pre_snow_per)) + geom_point()
+
+
+```{r}
+# Merge dataframe of interest with spatial information 
+mm <- sp::merge(pixels, taus, by="nie_malla_modi_id")
+
+# Select only the pixels of Sierra Nevada
+mm1 <- mm[mm$nie_malla_modi_id %in% taus$nie_malla_modi_id, ]
+
+
+r <- raster()
+tt <- rasterize(mm1, field= 'tau_scmd')
+projection(tt)
+extent(tt)s <- extent(mm1)
+
+
+tt <-rasterize(mm1)
+
+
+# Rasterizar con coordenadas utm
+raster_tendencia<-rasterFromXYZ(malla_puntos_final_aux)
+plot(raster_tendencia)
+
+
+
+
+
+
+
+
+
+
+
+
+# Loop to add elevation data and to create subsets with elevation > 1900 
+for (k in indicadores){
+  auxmk <- get(k) # Get object
+  aux_elev <- inner_join(elev, auxmk, by="nie_malla_modi_id") # Join elevation data
+  
+  aux_elev1900 <- aux_elev %>% filter(elevacion > 1900)
+  
+  assign(k, aux_elev)
+  assign(paste(k,'1900',sep=''), aux_elev1900)
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+# Asignamos proyección al raster anterior
+crs(raster_tendencia)<-"+proj=utm +zone=30"
+
+# reproyectar a geográficas
+raster_tendencia<-projectRaster(raster_tendencia, crs = "+proj=longlat")
+
+# creamos máscara para recortar y remuestrear. Le ponemos la resolución y la extensión de raster_tendencia
+mascara<-raster(crs = "+proj=longlat")
+extent(mascara)<-extent(raster_tendencia)
+res(mascara)<-c(0.00418,0.00418)
+
+raster_tendencia<-resample(raster_tendencia, mascara)
+plot(raster_tendencia)
+
+
+
+
+plot(mm1)
+
+
+
+head(pixels)
+summary(pixels)
+
+extent(pixels)
+projection(pixels)
+
+
+head(pixels)
+
+
+
+
+
