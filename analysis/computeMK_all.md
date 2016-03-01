@@ -1,31 +1,39 @@
----
-title: "Compute Mann-Kendall Theil Sen of snow cover"
-author: "AJ Perez-Luque (@ajpelu); FJ Bonet; J Herrero and R. Perez-Perez"
-date: "2016 Jaunary"
-output:  
-    md_document:
-      variant: markdown_github
----
-
-```{r metadata, echo=FALSE}
-################################################################
-# Set working directory 
-
-machine <- 'ajpelu'
-# machine <- 'ajpeluLap'
-di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
-################################################################
-```
-
 En primer lugar leemos los datos
-```{r packages, warning=FALSE}
+
+``` r
 ################################################################
 # Load packages 
 library("wq")
+```
+
+    ## Loading required package: zoo
+
+    ## 
+    ## Attaching package: 'zoo'
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     as.Date, as.Date.numeric
+
+``` r
 library("zoo")
 library("reshape2")
 library("stringr")
 library("dplyr")
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
 ################################################################
 
 ################################################################
@@ -60,14 +68,14 @@ mydf <- inner_join(snow_sn, join_aux3, by=c("nie_malla_modi_id", "year"))
 rm(join_aux1, join_aux2, join_aux3)
 ```
 
-A continuación creamos un bucle para obtener de cada indicador la tendencia y la pendiente. Aplicamos la técnica de Mann-Kendall-Theil-Sen. El bucle realiza las siguientes operaciones: 
+A continuación creamos un bucle para obtener de cada indicador la tendencia y la pendiente. Aplicamos la técnica de Mann-Kendall-Theil-Sen. El bucle realiza las siguientes operaciones:
 
-* Crea una variable con los indicadores para el bucle. 
-* Realiza un subset de datos con los valores del indicador para cada pixel. Obtenemos una serie de datos por cada pixel. 
-* Calculamos la tendencia y la pendiente
-* Guardamos los resultamos como csv (uno por cada indicador, ver `./data/derived/`)
+-   Crea una variable con los indicadores para el bucle.
+-   Realiza un subset de datos con los valores del indicador para cada pixel. Obtenemos una serie de datos por cada pixel.
+-   Calculamos la tendencia y la pendiente
+-   Guardamos los resultamos como csv (uno por cada indicador, ver `./data/derived/`)
 
-```{r}
+``` r
 # Loop to compute the MKT by indicator
 
 # Define name of indicators (see variables names)

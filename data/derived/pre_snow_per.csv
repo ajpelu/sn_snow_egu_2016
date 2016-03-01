@@ -1,4 +1,4 @@
-"nie_malla_modi_id","sen_slope","sen_slope_per","p_value","tau"
+"nie_malla_modi_id","sen_slope_pre_snow_per","sen_slope_per_pre_snow_per","p_value_pre_snow_per","tau_pre_snow_per"
 1589498,0.146,3.52,0.51122,0.143
 1591900,0.061,1.34,0.74256,0.077
 1591901,0.065,2.05,0.74256,0.077
