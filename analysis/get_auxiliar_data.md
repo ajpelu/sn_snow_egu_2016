@@ -30,7 +30,7 @@ WHERE
   aux.nie_malla_modi_id = iv_malla_modis_nie_malla_modis.nie_malla_modi_id AND
   iv_malla_modis_mde_celdas_20m.id_mde_20m = mde_20_v_top.id_mde AND
   iv_malla_modis_mde_celdas_20m.id_modis = iv_malla_modis_nie_malla_modis.iv_malla_modi_id ORDER BY aux.nie_malla_modi_id;
-
+```
 
 * Save data as `./data/topo_ni_malla_modi_id.csv` 
 
