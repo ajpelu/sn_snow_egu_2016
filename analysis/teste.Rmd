@@ -46,13 +46,44 @@ rawtopo <- read.csv(file=paste(di, "/data/topo_ni_malla_modi_id.csv", sep=""),
                  sep = ",") 
 
 
-topoaux <- rawtopo %>% 
-  select(nie_malla_modi_id, altura, twi, pendiente) 
+
+xxx <- read.csv(file=paste(di, "/data/xxxx.csv", sep=""),
+                 header=TRUE,
+                 sep = ",") 
+
+topo <- xxx %>% 
+  group_by(nie_malla_modi_id) %>% 
+  select(nie_malla_modi_id, altur_mean, altur_mod) 
+
+tt <- topo %>% group_by(nie_malla_modi_id) %>% 
+    summarise_each(funs(mean)) 
+
+length(unique(tt$nie_malla_modi_id))
+
+
+xtest <- xxx[ xxx$nie_malla_modi_id %in% scd$nie_malla_modi_id, ]
+
+topo <- xtest %>% 
+  group_by(nie_malla_modi_id) %>% 
+  summarise_each(mean)
+
+
+
+
+length(unique(xxx$nie_malla_modi_id))
+
+
+
+
+topoaux <- xxx %>% 
+  group_by(nie_malla_modi_id) %>%
+  select(nie_malla_modi_id, altura, twi, pendiente)
+   
 
 topo <- topoaux %>% 
   group_by(nie_malla_modi_id) %>% 
-  summarise_each(funs(mode=mlv(., method='mfv')[['M']],
-                      mean), altura:pendiente)
+  summarise_each(funs(mode=mlv(., method='mfv')[['M']]),
+                      altura:pendiente)
 
 
 
