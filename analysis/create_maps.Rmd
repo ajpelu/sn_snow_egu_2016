@@ -25,7 +25,7 @@ library("sp")
 library("raster")
 
 library("dplyr")
-
+# Tool https://geoscripting-wur.github.io/ 
 ################################################################
 ```
 
@@ -48,13 +48,24 @@ for (j in indicadores){
 ### Spatial Data
 # Read spatial data
 # centroides
-centroides <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
+centroidesOri <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
                              layer = "centroides_selected", verbose = FALSE)
+
+centroides <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
+                             layer = "aux_alberto", verbose = FALSE)
+
+
+
+
+
+# centroides <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
+  #                            layer = "malla_MODIS", verbose = FALSE)
+
+
+centroides <- spTransform(centroides, CRS("+init=epsg:23030"))
 
 # Get projection 
 projection(centroides) 
-# check is the same as 4326 
-CRS("+init=epsg:4326")
 
 # Select only attributes of interest and rename them
 centroides <- centroides[c("id")]
@@ -62,6 +73,7 @@ names(centroides) <-"nie_malla_modi_id"
 
 # Which pixels are in the MKTrends objet
 pix_comunes <- match(scd$nie_malla_modi_id, centroides$nie_malla_modi_id)
+
 
 # Create spatial objetc with centroid of Sierra Nevada
 centroides_sn <- centroides[pix_comunes,]
@@ -71,12 +83,59 @@ aux_spatial <- sp::merge(x=centroides_sn, y=scd, by="nie_malla_modi_id")
 
 # raster auxiliar 
 aux_rast <- raster()
+res(aux_rast) <- c(250,250)
 
 # extension 
 extent(aux_rast) <- extent(aux_spatial)
 # rasterize 
-tau_test <- rasterize(aux_spatial, aux_rast, 'tau_scd')
+
+tau_test <- rasterize(aux_spatial, aux_rast, 'tau_scd', fun=mean)
+
 plot(tau_test)
+resolu
+
+
+
+
+s<- rasterFromXYZ(centroides_sn)
+
+
+mascara<-raster(crs = "+proj=longlat")
+extent(mascara)<-extent(tau_test)
+res(mascara)<-c(0.00418,0.00418)
+
+raster_tendencia<-resample(tau_test, mascara)
+
+plot(raster_tendencia)
+
+
+
+writeRaster(tau_test, filename=paste(di, "/data/derived/rast.tiff", sep=''))
+
+
+
+e <- raster()
+
+
+
+
+
+tabla_union <- match(tendencia_nieve$pixel_id, malla_puntos$OBJECTID)
+malla_puntos_tendencia<-malla_puntos[tabla_union,]
+malla_puntos_final<-spCbind(malla_puntos_tendencia, tendencia_nieve)
+
+# Renombrar y reordenar campos capa con datos de tendencia. sEleccionamos el campo
+malla_puntos_final_aux<-as.data.frame(malla_puntos_final[,"sen_slope"])
+malla_puntos_final_aux<-malla_puntos_final_aux[,c(2,3,1)]
+
+
+
+
+
+
+
+
+
 
 
 
@@ -89,7 +148,7 @@ coordinates(df) <- ~lng+lat
 proj4string(df) <- CRS("+init=epsg:4326")
 
 # Create empty raster
-dd <- raster()
+dd <- raster(resolu)
 extent(dd) <- extent(df)
 # Rasterize mq_evi_mean
 evi_mean <- rasterize(df, dd, res=c(250,250), 'mq_evi_mean')
