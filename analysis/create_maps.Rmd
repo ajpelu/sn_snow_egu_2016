@@ -12,7 +12,7 @@ output:
 # Set working directory 
 
 machine <- 'ajpelu'
-# machine <- 'ajpeluLap'
+machine <- 'ajpeluLap'
 di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
 ################################################################
 ```
@@ -48,20 +48,10 @@ for (j in indicadores){
 ### Spatial Data
 # Read spatial data
 # centroides
-centroidesOri <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
+centroides <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
                              layer = "centroides_selected", verbose = FALSE)
 
-centroides <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
-                             layer = "aux_alberto", verbose = FALSE)
-
-
-
-
-
-# centroides <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
-  #                            layer = "malla_MODIS", verbose = FALSE)
-
-
+# Reproject to utm and m
 centroides <- spTransform(centroides, CRS("+init=epsg:23030"))
 
 # Get projection 
@@ -74,30 +64,81 @@ names(centroides) <-"nie_malla_modi_id"
 # Which pixels are in the MKTrends objet
 pix_comunes <- match(scd$nie_malla_modi_id, centroides$nie_malla_modi_id)
 
-
 # Create spatial objetc with centroid of Sierra Nevada
 centroides_sn <- centroides[pix_comunes,]
+
+
+for (i in indicadores) { 
+  trend <- get(i)
+  
+  # merge MKT and spatial pixel 
+  aux_spatial <- sp::merge(x=centroides_sn, y=trend, by="nie_malla_modi_id")
+  
+  # raster auxiliar 
+  aux_rast <- raster(aux_spatial, resolution=500)
+  
+  # variable z
+  ztau <- paste("tau_",i, sep="")
+  zsen <- paste("sen_slope_", i, sep="")
+  
+  # raster_tau
+  tau_raster <- rasterize(aux_spatial, aux_rast, ztau, fun=mean)
+  sen_raster <- rasterize(aux_spatial, aux_rast, zsen, fun=mean)
+  
+  # assign 
+  name_tau <- paste("r_tau_",i, sep="")
+  name_sen <- paste("r_sen_",i, sep="")
+  
+  assign(name_tau, tau_raster)
+  assign(name_sen, sen_raster)
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # merge MKT and spatial pixel 
 aux_spatial <- sp::merge(x=centroides_sn, y=scd, by="nie_malla_modi_id")
 
 # raster auxiliar 
-aux_rast <- raster()
-res(aux_rast) <- c(250,250)
+aux_rast <- raster(aux_spatial, resolution=500)
 
-# extension 
-extent(aux_rast) <- extent(aux_spatial)
-# rasterize 
 
 tau_test <- rasterize(aux_spatial, aux_rast, 'tau_scd', fun=mean)
 
+
 plot(tau_test)
-resolu
 
-
-
-
-s<- rasterFromXYZ(centroides_sn)
 
 
 mascara<-raster(crs = "+proj=longlat")
