@@ -1,36 +1,36 @@
----
-title: "Maps of trends"
-author: "AJ Perez-Luque (@ajpelu); FJ Bonet; J Herrero and R. Perez-Perez"
-date: "2016 March"
-output:  
-    md_document:
-      variant: markdown_github
----
-
-```{r metadata, echo=FALSE}
-################################################################
-# Set working directory 
-
-machine <- 'ajpelu'
-machine <- 'ajpeluLap'
-di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
-################################################################
-```
-
-```{r packages, warning=FALSE}
+``` r
 ################################################################
 # Load packages 
 library("rgdal")
+```
+
+    ## Loading required package: sp
+    ## rgdal: version: 1.0-4, (SVN revision 548)
+    ##  Geospatial Data Abstraction Library extensions to R successfully loaded
+    ##  Loaded GDAL runtime: GDAL 1.11.2, released 2015/02/10
+    ##  Path to GDAL shared files: /Library/Frameworks/R.framework/Versions/3.2/Resources/library/rgdal/gdal
+    ##  Loaded PROJ.4 runtime: Rel. 4.9.1, 04 March 2015, [PJ_VERSION: 491]
+    ##  Path to PROJ.4 shared files: /Library/Frameworks/R.framework/Versions/3.2/Resources/library/rgdal/proj
+    ##  Linking to sp version: 1.1-1
+
+``` r
 library("sp")
 library("raster")
 library("rasterVis") 
+```
 
+    ## Loading required package: lattice
+    ## Loading required package: latticeExtra
+    ## Loading required package: RColorBrewer
+
+``` r
 # Tool https://geoscripting-wur.github.io/ 
 ################################################################
 ```
 
 En primer lugar leemos los datos
-```{r}
+
+``` r
 ################################################################
 # Read data
 
@@ -56,7 +56,11 @@ centroides <- spTransform(centroides, CRS("+init=epsg:23030"))
 
 # Get projection 
 projection(centroides) 
+```
 
+    ## [1] "+init=epsg:23030 +proj=utm +zone=30 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs"
+
+``` r
 # Select only attributes of interest and rename them
 centroides <- centroides[c("id")]
 names(centroides) <-"nie_malla_modi_id"
@@ -111,7 +115,7 @@ stack_sen <- stack(r_sen_pre, r_sen_pre_snow, r_sen_pre_snow_per, r_sen_temp,
                    r_sen_scd, r_sen_scod, r_sen_scmd, r_sen_scmc)
 ```
 
-```{r}
+``` r
 # Map raster
 # See https://github.com/oscarperpinan/spacetime-vis/blob/master/raster.R 
 
@@ -140,145 +144,141 @@ levelplot(r_sen_pre,
           par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Sen slope Pre")
+```
 
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-1.png)
+
+``` r
 levelplot(r_sen_temp, 
           par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Sen slope Temp")
+```
 
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-2.png)
+
+``` r
 levelplot(r_sen_pre_snow, 
           par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Sen slope Pre snow")
+```
 
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-3.png)
+
+``` r
 levelplot(r_sen_pre_snow_per, 
           par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Sen slope Pre snow")
+```
 
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-4.png)
+
+``` r
 levelplot(r_sen_scd, 
           par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Sen slope Scd")
+```
 
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-5.png)
+
+``` r
 levelplot(r_sen_scod, 
           par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Sen slope Scod")
+```
 
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-6.png)
+
+``` r
 levelplot(r_sen_scmd, 
           par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Sen slope Scmd")
+```
 
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-7.png)
+
+``` r
 levelplot(r_sen_scmc, 
           par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Sen slope Scmc")
+```
 
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-8.png)
 
+``` r
 levelplot(r_tau_pre, 
           margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Tau  Pre")
+```
 
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-9.png)
+
+``` r
 levelplot(r_tau_temp, 
           margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Tau  Temp")
+```
 
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-10.png)
+
+``` r
 levelplot(r_tau_pre_snow, 
           margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Tau  Pre snow")
+```
 
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-11.png)
+
+``` r
 levelplot(r_tau_pre_snow_per, 
           margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Tau  Pre snow")
+```
 
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-12.png)
+
+``` r
 levelplot(r_tau_scd, 
           margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Tau  Scd")
+```
 
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-13.png)
+
+``` r
 levelplot(r_tau_scod, 
           margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Tau  Scod")
+```
 
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-14.png)
+
+``` r
 levelplot(r_tau_scmd, 
           margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Tau  Scmd")
+```
 
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-15.png)
+
+``` r
 levelplot(r_tau_scmc, 
           margin=FALSE, colorkey=TRUE, 
           contour=TRUE, 
           main="Tau  Scmc")
-
-
 ```
 
-
-```{r, eval=FALSE, echo=FALSE}
-
-levelplot(r_tau_pre, margin = list(FUN = 'median'), contour=TRUE, par.settings=RdBuTheme)
-
-# Option 2 
-
-# Define the colour of the hillshade and set the transparency (alpha)
-hsTheme <- modifyList(GrTheme(), list(regions=list(alpha=0.35)))
-levelplot(r_sen_pre, panel=panel.levelplot.raster,
-          par.settings=PuOrTheme, margin=FALSE, colorkey=TRUE) +
-  levelplot(hs_sn, par.settings=hsTheme, maxpixels=1e6) + 
-  levelplot(r_sen_pre, panel=panel.levelplot.raster,
-          par.settings=PuOrTheme, margin=FALSE, colorkey=TRUE)
-  
-# + layer(sp.lines(sn, lwd=0.5))
-
-
-
-
-PuOrTheme(
-  RdBuTheme(region=brewer.pal(9, 'RdBu'), ...)
-BuRdTheme
-
-
-
-
-
-
-xxx <- projectRaster(r_tau_pre, crs = "+proj=longlat")
-
-
-
-
-
-levelplot(stack_tau)
-levelplot(r_tau_pre, margin = list(FUN = 'median'), contour=TRUE, par.settings=RdBuTheme)
-
-
-# Download DEM data and create hillshade 
-
-old <- setwd(tempdir())
-download.file('http://biogeo.ucdavis.edu/data/diva/msk_alt/ESP_msk_alt.zip', 'ESP_msk_alt.zip')
-unzip('ESP_msk_alt.zip', exdir='.')
-dem <- raster('ESP_msk_alt')
-setwd(old)
-
-# Read DEM from Andalusia
-dem <- raster(paste('/Users/', machine, '/Dropbox/carto_public/mde/TP_ELEV.asc', sep=''))
-projection(dem) <- "+proj=utm +ellps=WGS84"
-
-slope <- terrain(dem, 'slope')
-aspect <- terrain(dem, 'aspect')
-hs <- hillShade(slope=slope, aspect=aspect, angle=20, direction=30)
-
-
-# HillShade Andalusia 
-hs <- raster(paste('/Users/', machine, '/Dropbox/carto_public/sombra/sombra_Andalusia.tif', sep=''))
-projection(hs) <- "+proj=utm +ellps=WGS84"
-
-```
-
+![](create_maps_files/figure-markdown_github/unnamed-chunk-2-16.png)
