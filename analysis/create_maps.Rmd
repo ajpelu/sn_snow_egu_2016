@@ -1,0 +1,139 @@
+---
+title: "Maps of trends"
+author: "AJ Perez-Luque (@ajpelu); FJ Bonet; J Herrero and R. Perez-Perez"
+date: "2016 March"
+output:  
+    md_document:
+      variant: markdown_github
+---
+
+```{r metadata, echo=FALSE}
+################################################################
+# Set working directory 
+
+machine <- 'ajpelu'
+# machine <- 'ajpeluLap'
+di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
+################################################################
+```
+
+```{r packages, warning=FALSE}
+################################################################
+# Load packages 
+library("rgdal")
+library("sp")
+library("raster")
+
+library("dplyr")
+
+################################################################
+```
+
+En primer lugar leemos los datos
+```{r}
+################################################################
+# Read data
+
+# Define name of indicators (see variables names)
+indicadores <- c("scd", "scod", "scmd", "scmc", "pre", "pre_snow", "pre_snow_per", "temp")
+
+# Loop to read files 
+for (j in indicadores){ 
+  aux <- read.csv(file=paste(di, "/data/derived/", j, ".csv", sep= ""),
+              header = TRUE,
+              sep = ',')
+  assign(j, aux)
+}
+
+### Spatial Data
+# Read spatial data
+# centroides
+centroides <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
+                             layer = "centroides_selected", verbose = FALSE)
+
+# Get projection 
+projection(centroides) 
+# check is the same as 4326 
+CRS("+init=epsg:4326")
+
+# Select only attributes of interest and rename them
+centroides <- centroides[c("id")]
+names(centroides) <-"nie_malla_modi_id"
+
+# Which pixels are in the MKTrends objet
+pix_comunes <- match(scd$nie_malla_modi_id, centroides$nie_malla_modi_id)
+
+# Create spatial objetc with centroid of Sierra Nevada
+centroides_sn <- centroides[pix_comunes,]
+
+# merge MKT and spatial pixel 
+aux_spatial <- sp::merge(x=centroides_sn, y=scd, by="nie_malla_modi_id")
+
+# raster auxiliar 
+aux_rast <- raster()
+
+# extension 
+extent(aux_rast) <- extent(aux_spatial)
+# rasterize 
+tau_test <- rasterize(aux_spatial, aux_rast, 'tau_scd')
+plot(tau_test)
+
+
+
+c(0.00418,0.00418)
+
+
+## definimos las coordenadas de los puntos
+coordinates(df) <- ~lng+lat
+## definimos el sistema de coordenadas WGS84
+proj4string(df) <- CRS("+init=epsg:4326")
+
+# Create empty raster
+dd <- raster()
+extent(dd) <- extent(df)
+# Rasterize mq_evi_mean
+evi_mean <- rasterize(df, dd, res=c(250,250), 'mq_evi_mean')
+evi_cv <- rasterize(df, dd, 'mq_evi_cv')
+evi_dmax <- rasterize(df, dd, 'mq_max')
+
+xxx <- stack(evi_mean, evi_cv, evi_dmax)
+plot(xxx)
+
+
+
+
+
+
+tabla_union <- match(tendencia_nieve$pixel_id, malla_puntos$OBJECTID)
+malla_puntos_tendencia<-malla_puntos[tabla_union,]
+malla_puntos_final<-spCbind(malla_puntos_tendencia, tendencia_nieve)
+
+
+
+sp::merge(x=centroides, y=scd, by="nie_malla_modi_id")
+### 
+
+aux <- sp::merge(x=centroides, y=)
+
+
+
+
+
+
+
+
+
+
+
+## Read Sierra Nevada limits
+enp <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo/EENNPP/InfGeografica/InfVectorial/Shapes/ED50_30", sep=""),
+                      layer = "EENNPP", verbose = FALSE)
+# Subset limits of SN                      
+sn <- subset(enp, NOMBRE == 'SIERRA NEVADA' & FIGURA == 'Espacio Natural')
+
+centroides_selected.shp
+
+
+
+
+
