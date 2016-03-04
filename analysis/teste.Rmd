@@ -22,7 +22,7 @@ En primer lugar leemos los datos
 ################################################################
 # Load packages 
 library("dplyr")
-library("modeest")
+# library("modeest")
 ################################################################
 
 ################################################################
@@ -41,15 +41,29 @@ for (j in indicadores){
 
 
 # Read Topographic data 
-rawtopo <- read.csv(file=paste(di, "/data/topo_ni_malla_modi_id.csv", sep=""),
+rawtopo <- read.csv(file=paste(di, "/data/topo_nie_malla_modi_id.csv", sep=""),
                  header=TRUE,
                  sep = ",") 
+```
+
+## Select topographic attributes
+```{r}
+# Select only pixels of interest 
+topo_pix <- rawtopo %>% 
+  filter(nie_malla_modis_id %in% scd$nie_malla_modi_id)
+
+# Compute mean, mode, median, 
+topo <- rawtopo %>% 
+  group_by(nie_malla_modis_id) %>% 
+  summarise(media=mean(altura))
 
 
 
-xxx <- read.csv(file=paste(di, "/data/xxxx.csv", sep=""),
-                 header=TRUE,
-                 sep = ",") 
+
+length(unique(rawtopo$nie_malla_modis_id))
+
+
+
 
 topo <- xxx %>% 
   group_by(nie_malla_modi_id) %>% 
