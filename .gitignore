@@ -1,3 +1,6 @@
 .Rproj.user
 .Rhistory
 .RData
+
+# Large files
+/data/topo_nie_malla_modi_id.csv 
