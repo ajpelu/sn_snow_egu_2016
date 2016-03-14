@@ -21,6 +21,14 @@ WHERE
 
 ### Topographic data for pixels 
 
+:red_circle: `TODO` Update source 
+
+See windows script 
+* Save data as `./data/topo_ni_malla_modi_id.csv` 
+
+
+:red_circle: Organize the following
+
 We have two tables:
 
 * `mde` (mde_celdas_20m): a spatial table with the grid of DEM (20 m). EPSG: 23030
