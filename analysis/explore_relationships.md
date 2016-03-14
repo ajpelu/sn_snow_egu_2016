@@ -151,4 +151,4 @@ ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) +
   theme(strip.background = element_rect(fill = "white"))
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-2-3.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-3-1.png)

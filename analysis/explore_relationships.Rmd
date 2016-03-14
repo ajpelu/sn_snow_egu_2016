@@ -130,8 +130,9 @@ ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) +
   labs(title= 'scod vs. scmd (>1900 masl)',
     x= 'trend (tau) of Snow cover onset date',
     y='trend (tau) of Snow cover melting date') 
+```
 
-
+```{r, fig.height=10, fig.width=8}
 # Exploratory by elevatin groups 
 ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) + 
   geom_point(alpha=0.5) + 
