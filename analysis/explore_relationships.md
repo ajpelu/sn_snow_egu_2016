@@ -143,8 +143,6 @@ ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) +
   geom_hline(yintercept=0) + 
   facet_wrap(~dem50mean_group) + 
   theme_bw() + 
-  xlab('trend (tau) of Snow cover onset date')+ 
-  ylab('trend (tau) of Snow cover melting date') + 
   labs(title= 'scod vs. scmd (>1900 masl)',
        x= 'trend (tau) of Snow cover onset date',
        y='trend (tau) of Snow cover melting date') +
@@ -152,3 +150,39 @@ ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) +
 ```
 
 ![](explore_relationships_files/figure-markdown_github/unnamed-chunk-3-1.png)
+\#\# Explore Slopes
+
+``` r
+# Exploratory for pixels >1900
+ggplot(fulldf1900, aes(x=sen_slope_scod, y=sen_slope_scmd)) +
+  geom_point(alpha=0.5) + 
+  xlim(-7.5,7.5) + ylim(-7.5,7) + 
+  geom_vline(xintercept=0) + geom_hline(yintercept=0) + 
+  theme_bw() + 
+  labs(title= 'scod vs. scmd (>1900 masl)',
+       x= 'Slope (days) of Snow cover onset date',
+       y='Slope (days) of Snow cover melting date') 
+```
+
+    ## Warning: Removed 1 rows containing missing values (geom_point).
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-4-1.png)
+
+``` r
+# by elevation group 
+ggplot(fulldf1900, aes(x=sen_slope_scod, y=sen_slope_scmd)) + 
+  geom_point(alpha=0.5) + 
+  xlim(-7.5,7.5) + ylim(-7.5,7) +
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) +
+  labs(title= 'scod vs. scmd (>1900 masl)',
+       x= 'Slope (days) of Snow cover onset date',
+       y='Slope (days) of Snow cover melting date') +
+  theme_bw() + 
+  theme(strip.background = element_rect(fill = "white")) +
+  facet_wrap(~dem50mean_group)
+```
+
+    ## Warning: Removed 1 rows containing missing values (geom_point).
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-4-2.png)
