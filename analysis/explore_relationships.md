@@ -43,48 +43,14 @@ By exploring the relationship between the trend of two indicators of snow cover 
 
 We applied this exploratory analysis for all pixels and for all pixels above 1900 *m asl*.
 
-``` r
-# Exploratory for all pixels 
-ggplot(fulldf, aes(x=tau_scod, y=tau_scmd)) + 
-  geom_point(alpha=0.5) + 
-  xlim(-1,1) + ylim(-1,1) + 
-  geom_vline(xintercept=0) +
-  geom_hline(yintercept=0) + 
-  annotate('text', label='early',  x=-.9, y=-.9) + 
-  annotate('text', label='late', x=.9, y=.9)+
-  annotate('text', label='contraction', x=.9, y=-.9)+
-  annotate('text', label='expansion', x=-.9, y=.9) + 
-  theme_bw() + 
-  labs(title= 'scod vs. scmd',
-    x= 'trend (tau) of Snow cover onset date',
-    y='trend (tau) of Snow cover melting date') 
-```
-
 <img src="explore_relationships_files/figure-markdown_github/unnamed-chunk-1-1.png" alt="Figure 2"  />
 <p class="caption">
 Figure 2
 </p>
 
-``` r
-# Exploratory for pixels >1900
-ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) + 
-  geom_point(alpha=0.5) + 
-  xlim(-1,1) + ylim(-1,1) + 
-  geom_vline(xintercept=0) +
-  geom_hline(yintercept=0) + 
-  annotate('text', label='early',  x=-.9, y=-.9) + 
-  annotate('text', label='late', x=.9, y=.9)+
-  annotate('text', label='retraction', x=.9, y=-.9)+
-  annotate('text', label='expansion', x=-.9, y=.9) + 
-  theme_bw() + 
-  labs(title= 'scod vs. scmd (>1900 masl)',
-    x= 'trend (tau) of Snow cover onset date',
-    y='trend (tau) of Snow cover melting date') 
-```
-
-<img src="explore_relationships_files/figure-markdown_github/unnamed-chunk-1-2.png" alt="Figure 2"  />
+<img src="explore_relationships_files/figure-markdown_github/unnamed-chunk-2-1.png" alt="Figure 3"  />
 <p class="caption">
-Figure 2
+Figure 3
 </p>
 
-A total of 70.3114645 pixels (of all above 1900) showed a positive trend in snow cover onset date (late onset) and a negative trend in snow cover melting date (earlier melting date).
+A total of 70.31 % of pixels (of all above 1900) showed a positive trend in snow cover onset date (late onset) and a negative trend in snow cover melting date (earlier melting date). It means that of 70.31 % of the pixels above 1900 m, have suffered a trend to rectraction of the snow cover period in the last years (Figure 3).
