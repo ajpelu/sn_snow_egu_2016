@@ -33,9 +33,13 @@ Explore Snow-cover related indicators
 
 We explore the pattern of the trend (*tau*) of the snow-cover indicators (see figure 1).
 
-By exploring the relationship between the trend of two indicators of snow cover (scod: snow cover onset date; and scmd: snow cover melting date) we can describe the temporal evolution of snow cover in Sierra Nevada from 2000-2014. This relationship is evaluated at pixel scale (figure 1c) and we have four potential scenarios: \* Expansion \* Contraction \* Shift (delay and advance)
+By exploring the relationship between the trend of two indicators of snow cover (scod: snow cover onset date; and scmd: snow cover melting date) we can describe the temporal evolution of snow cover in Sierra Nevada from 2000-2014. This relationship is evaluated at pixel scale (figure 1c) and we have four potential scenarios:
 
-![Figure 1.](/images/snow_cover_profile.png)
+-   Expansion
+-   Contraction
+-   Shift (delay and advance)
+
+**Figure 1** ![Figure 1.](/images/snow_cover_profile.png)
 
 We applied this exploratory analysis for all pixels and for all pixels above 1900 m asl.
 
