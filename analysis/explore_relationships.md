@@ -41,7 +41,7 @@ By exploring the relationship between the trend of two indicators of snow cover 
 
 **Figure 1** ![Figure 1.](/images/snow_cover_profile.png)
 
-We applied this exploratory analysis for all pixels and for all pixels above 1900 m asl.
+We applied this exploratory analysis for all pixels and for all pixels above 1900 *m asl*.
 
 ``` r
 # Exploratory for all pixels 
@@ -60,7 +60,10 @@ ggplot(fulldf, aes(x=tau_scod, y=tau_scmd)) +
     y='trend (tau) of Snow cover melting date') 
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-1-1.png)
+<img src="explore_relationships_files/figure-markdown_github/unnamed-chunk-1-1.png" alt="Figure 2"  />
+<p class="caption">
+Figure 2
+</p>
 
 ``` r
 # Exploratory for pixels >1900
@@ -79,4 +82,9 @@ ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) +
     y='trend (tau) of Snow cover melting date') 
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-1-2.png)
+<img src="explore_relationships_files/figure-markdown_github/unnamed-chunk-1-2.png" alt="Figure 2"  />
+<p class="caption">
+Figure 2
+</p>
+
+A total of 70.3114645 pixels (of all above 1900) showed a positive trend in snow cover onset date (late onset) and a negative trend in snow cover melting date (earlier melting date).
