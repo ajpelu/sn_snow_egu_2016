@@ -101,7 +101,7 @@ fulldf1900 <- fulldf %>%
 
 We explore the pattern of the trend (*tau*) of the snow-cover indicators (see figure 1)
 
-[](images/snow_cover_profile.png) 
+![](images/snow_cover_profile.png) 
 
 We applied this exploratory analysis for all pixels and for all pixels above 1900 m asl. 
 
