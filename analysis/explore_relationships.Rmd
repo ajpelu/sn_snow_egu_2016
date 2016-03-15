@@ -10,13 +10,13 @@ output:
 ```{r metadata, echo=FALSE}
 # Set working directory 
 
-# machine <- 'ajpelu'
-machine <- 'ajpeluLap'
+machine <- 'ajpelu'
+#machine <- 'ajpeluLap'
 di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
 ```
 
 
-```{r packages, warning=FALSE}
+```{r packages, warning=FALSE, echo=FALSE}
 # Load packages 
 library("dplyr")
 library("ggplot2")
@@ -46,7 +46,7 @@ rawtopo <- read.csv(file=paste(di, "/data/topo_nie_malla_modis.csv", sep=""),
 
 ## Select topographic attributes and create a raw dataframe with all variables
 
-```{r}
+```{r prepareData, echo=FALSE}
 # function to convert radian to degree 
 rad2deg <- function(rad) {(rad * 180) / (pi)} 
 
@@ -62,7 +62,7 @@ topo <- rawtopo %>%
   select(nie_malla_modi_id, dem50mean, dem50median, slope50mean_deg, 
          slope50median_deg, aspect50mean_deg, aspect50median_deg) 
 
-## Create interval variables (250 m) for dem 
+## Create interval variables (250 m) for dem; and classify aspect into 8 categories 
 topo <- topo %>% 
   mutate(dem50mean_group = cut(dem50mean, 
                          breaks = seq(from=0, to=3500, by=250),
@@ -75,7 +75,11 @@ topo <- topo %>%
                          labels = c("0-250", "251-500","501-750","751-1000",
                                     "1001-1250","1251-1500","1501-1750","1751-2000",
                                     "2001-2250","2251-2500","2501-2750", "2751-3000",
-                                    "3001-3250", "3251-3500"))) 
+                                    "3001-3250", "3251-3500")),
+         aspect50mean_deg_group = cut(aspect50mean_deg, 
+                                      breaks= c(22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5, 359.5),
+                                      labels = c("N", "NE", "E", "SE", "S", "SW", "W", "NW")))
+
 
 # Create un dataframe con todos los datos
 fulldf <- topo %>% 
@@ -87,109 +91,19 @@ fulldf <- topo %>%
   inner_join(pre_snow,  by=c("nie_malla_modi_id")) %>% 
   inner_join(pre_snow_per,  by=c("nie_malla_modi_id")) %>% 
   inner_join(temp,  by=c("nie_malla_modi_id")) 
+
+# Create subset of pixels above 1900 
+fulldf1900 <- fulldf %>% 
+  filter(dem50mean > 1900)  
 ```
 
-## Trends analysis of the snow-cover related indicators
+## Explore Snow-cover related indicators
 
-* First we explore the relationship between topographic variables and snow-cover related variables. 
+We explore the pattern of the trend (*tau*) of the snow-cover indicators (see figure 1)
 
-```{r}
-# Compute mean, sd, se of tau variables by elevation interval and plot them 
-taus <- fulldf1900 %>% 
-  select(contains("tau"), dem50mean_group) 
-taus <- melt(taus, id=c("dem50mean_group"))
+[](images/snow_cover_profile.png) 
 
-taus <- taus %>% 
-  group_by(dem50mean_group, variable) %>% 
-  summarise(mean = mean(value),
-            sd = sd(value),
-            se=sd(value)/sqrt(length(value)))
-
-ggplot(taus, aes(x=dem50mean_group, y=mean, group=variable)) +
-  geom_line() + geom_errorbar(aes(ymax = mean + se, ymin= mean - se), width=.15) +
-  geom_point(size=3, shape=21, fill="white") +
-  facet_wrap(~variable) +
-  theme_bw() + xlab('elevation') + ylab('tau (average value)') +
-  theme(axis.text.x=element_text(angle = -90, hjust = 0))
-
-
-# Explore trends of temperatures and snow-cover indicators potentially related with temperature
-df <- taus %>% filter(variable %in% c("tau_scod","tau_scmd", "tau_scd", "tau_temp"))
-
-ggplot(df, aes(x=dem50mean_group, y=mean, group=variable)) +
-  geom_line(aes(col=variable)) + 
-  geom_errorbar(aes(col=variable, ymax = mean + se, ymin= mean - se), width=.15) +
-  geom_point(aes(col=variable), size=3, shape=21, fill="white") + 
-  theme_bw() + xlab('elevation') + ylab('tau (average value)') +
-  theme(axis.text.x=element_text(angle = -90, hjust = 0))
- 
-
-# Explore trends of temperatures and snow-cover indicators potentially related with temperature
-df <- taus %>% filter(variable %in% c("tau_scod","tau_scmd", "tau_scd", "tau_pre_snow"))
-
-ggplot(df, aes(x=dem50mean_group, y=mean, group=variable)) +
-  geom_line(aes(col=variable)) + 
-  geom_errorbar(aes(col=variable, ymax = mean + se, ymin= mean - se), width=.15) +
-  geom_point(aes(col=variable), size=3, shape=21, fill="white") + 
-  theme_bw() + xlab('elevation') + ylab('tau (average value)') +
-  theme(axis.text.x=element_text(angle = -90, hjust = 0))
-
-
-####
-
-# Compute mean, sd, se of tau variables by elevation interval and plot them 
-sen <- fulldf1900 %>% 
-  select(contains("sen_slope"), aspect50mean_deg) %>%
-  select(-contains("slope_per")) %>% 
-  mutate(aspect50mean_deg_group = cut(aspect50mean_deg, 
-    breaks= c(22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5, 359.5),
-    labels = c("N", "NE", "E", "SE", "S", "SW", "W", "NW")))
-
-taus <- fulldf1900 %>% 
-  select(contains("tau"), aspect50mean_deg) %>%
-  mutate(aspect50mean_deg_group = cut(aspect50mean_deg, 
-    breaks= c(22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5, 359.5),
-    labels = c("N", "NE", "E", "SE", "S", "SW", "W", "NW")))
-
-plot(taus$tau_scmd~taus$aspect50mean_deg_group, col='grey')
-abline(lm(taus$tau_scod~taus$aspect50mean_deg))
-
-plot(taus$tau_scd~taus$aspect50mean_deg, col='grey')
-abline(lm(taus$tau_scd~taus$aspect50mean_deg))
-
-
-
-
-
-
-
-
-
-sen <- melt(sen, id=c("dem50mean_group"))
-
-sen <- sen %>% 
-  group_by(dem50mean_group, variable) %>% 
-  summarise(mean = mean(value),
-            sd = sd(value),
-            se=sd(value)/sqrt(length(value)))
-
-ggplot(sen, aes(x=dem50mean_group, y=mean, group=variable)) +
-  geom_line() + geom_errorbar(aes(ymax = mean + se, ymin= mean - se), width=.15) +
-  geom_point(size=3, shape=21, fill="white") +
-  facet_wrap(~variable) +
-  theme_bw() + xlab('elevation') + ylab('tau (average value)') +
-  theme(axis.text.x=element_text(angle = -90, hjust = 0))
-
-
-
-
-
-
-)## Analysis of the correlation between taus. 
-
-### Relation between *scod* and *scmd* 
-
-* See blackboard figure 
+We applied this exploratory analysis for all pixels and for all pixels above 1900 m asl. 
 
 ```{r}
 # Exploratory for all pixels 
@@ -207,11 +121,6 @@ ggplot(fulldf, aes(x=tau_scod, y=tau_scmd)) +
     x= 'trend (tau) of Snow cover onset date',
     y='trend (tau) of Snow cover melting date') 
   
-
-## Remove below 1900 
-fulldf1900 <- fulldf %>% 
-  filter(dem50mean > 1900)  
-
 # Exploratory for pixels >1900
 ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) + 
   geom_point(alpha=0.5) + 
@@ -227,207 +136,6 @@ ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) +
     x= 'trend (tau) of Snow cover onset date',
     y='trend (tau) of Snow cover melting date') 
 ```
-
-```{r, fig.height=10, fig.width=8}
-# Exploratory by elevatin groups 
-ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) + 
-  geom_point(alpha=0.5) + 
-  xlim(-1,1) + ylim(-1,1) + 
-  geom_vline(xintercept=0) +
-  geom_hline(yintercept=0) + 
-  facet_wrap(~dem50mean_group) + 
-  theme_bw() + 
-  labs(title= 'scod vs. scmd (>1900 masl)',
-       x= 'trend (tau) of Snow cover onset date',
-       y='trend (tau) of Snow cover melting date') +
-  theme(strip.background = element_rect(fill = "white"))
-
-```
-
-## Explore Slopes 
-
-```{r, fig.height=10, fig.width=8}
-# Exploratory for pixels >1900
-ggplot(fulldf1900, aes(x=sen_slope_scod, y=sen_slope_scmd)) +
-  geom_point(alpha=0.5) + 
-  xlim(-7.5,7.5) + ylim(-7.5,7) + 
-  geom_vline(xintercept=0) + geom_hline(yintercept=0) + 
-  theme_bw() + 
-  labs(title= 'scod vs. scmd (>1900 masl)',
-       x= 'Slope (days) of Snow cover onset date',
-       y='Slope (days) of Snow cover melting date') 
-
-# by elevation group 
-ggplot(fulldf1900, aes(x=sen_slope_scod, y=sen_slope_scmd)) + 
-  geom_point(alpha=0.5) + 
-  xlim(-7.5,7.5) + ylim(-7.5,7) +
-  geom_vline(xintercept=0) +
-  geom_hline(yintercept=0) +
-  labs(title= 'scod vs. scmd (>1900 masl)',
-       x= 'Slope (days) of Snow cover onset date',
-       y='Slope (days) of Snow cover melting date') +
-  theme_bw() + 
-  theme(strip.background = element_rect(fill = "white")) +
-  facet_wrap(~dem50mean_group)
-
-```
-
-
-
-
-
-
-
-```{r, eval=FALSE, echo=FALSE}
-# Create a subset for only taus 
-
-taus <- fulldf %>%
-  dplyr::select(nie_malla_modi_id, 
-                dem50mean,
-                starts_with("tau"))
-
-
-tau1900 <- fulldf %>% 
-  filter(elevacion > 1900) %>% 
-  dplyr::select(nie_malla_modi_id, elevacion, elevGroup, starts_with("tau"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-### Create subset of data > 1900 elev and only taus
-
-taus <- fulldf %>%
-  dplyr::select(nie_malla_modi_id, 
-                elevacion,
-                starts_with("tau"))
-
-
-tau1900 <- fulldf %>% 
-  filter(elevacion > 1900) %>% 
-  dplyr::select(nie_malla_modi_id, elevacion, elevGroup, starts_with("tau"))
-
-ss1900 <- fulldf %>% 
-  filter(elevacion > 1900) %>% 
-  dplyr::select(nie_malla_modi_id, elevacion, elevGroup, starts_with("sen_slope"))
-
-tau <- fulldf %>% 
-  dplyr::select(nie_malla_modi_id, elevacion, elevGroup, starts_with("tau"))
-
-
-
-plot(tau1900)
-
-
-
-ggplot(tau, aes(tau_temp, tau_scmd)) + geom_point() + 
-  facet_wrap(~elevGroup)
-
-ggplot(tau1900, aes(elevacion,tau_scd)) + geom_point()
-  geom_point(aes(colour=elevGroup))
-  
-ggplot(ss1900, aes(elevacion,sen_slope_pre_snow_per)) + geom_point()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # Loop to add elevation data and to create subsets with elevation > 1900 
-# for (k in indicadores){
-#   auxmk <- get(k) # Get object
-#   aux_elev <- inner_join(elev, auxmk, by="nie_malla_modi_id") # Join elevation data
-#   
-#   aux_elev1900 <- aux_elev %>% filter(elevacion > 1900)
-#   
-#   assign(k, aux_elev)
-#   assign(paste(k,'1900',sep=''), aux_elev1900)
-#   }
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-#   
-#   
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# 
-# # Asignamos proyección al raster anterior
-# crs(raster_tendencia)<-"+proj=utm +zone=30"
-# 
-# # reproyectar a geográficas
-# raster_tendencia<-projectRaster(raster_tendencia, crs = "+proj=longlat")
-# 
-# # creamos máscara para recortar y remuestrear. Le ponemos la resolución y la extensión de raster_tendencia
-# mascara<-raster(crs = "+proj=longlat")
-# extent(mascara)<-extent(raster_tendencia)
-# res(mascara)<-c(0.00418,0.00418)
-# 
-# raster_tendencia<-resample(raster_tendencia, mascara)
-# plot(raster_tendencia)
-# 
-# 
-# 
-# 
-# plot(mm1)
-# 
-# 
-# 
-# head(pixels)
-# summary(pixels)
-# 
-# extent(pixels)
-# projection(pixels)
-# 
-# 
-# head(pixels)
-```
-
 
 
 
