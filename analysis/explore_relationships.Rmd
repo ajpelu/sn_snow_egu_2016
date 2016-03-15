@@ -187,11 +187,19 @@ aux1 <- fulldf1900 %>% group_by(dem50mean_group) %>%
   filter(tau_scmd < 0) %>% 
   summarise(n=n()) %>%
   inner_join(aux, by="dem50mean_group") %>%
-  mutate(freq = n / total)
+  mutate(freq = round((n / total)*100),2)
 pander(aux1)
 ```
 
 First we explore the relationship between topographic variables and snow-cover related variables. 
+
+## Notas
+(see Chen et al. 2015)
+* Dd <- duration of snow cover 
+* Do <- day of onset 
+* De <- day of end 
+
+Analysis of the spatio-temporal pattern of this variables 
 
 ### Elevation pattern
 
