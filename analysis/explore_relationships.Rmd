@@ -6,6 +6,13 @@ output:
     md_document:
       variant: markdown_github
 ---
+## Prepare Data
+
+* Read data of Mann-Kendal Sen-Slope for each pixels and each indicator: snow-cover related (scd, scod, scmd, scmc) and hydrological model (pre, pre_snow, pre_snow_per, temp). See :red_circle: (`$TODO`: include link to analysis)
+* Read data of topographic variable :red_circle: (`$TODO`: Document script) 
+* Create two dataframes: 
+ * Full Dataframe with all variables and all pixels 
+ * Dataframe with all variables and filter by pixels above 1900 *m.a.s.l.*
 
 ```{r metadata, echo=FALSE}
 # Set working directory 
@@ -16,7 +23,7 @@ di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016',
 ```
 
 
-```{r packages, warning=FALSE, echo=FALSE}
+```{r packages, warning=FALSE, echo=FALSE, message=FALSE}
 # Load packages 
 library("dplyr")
 library("ggplot2")
@@ -44,7 +51,6 @@ rawtopo <- read.csv(file=paste(di, "/data/topo_nie_malla_modis.csv", sep=""),
                  sep = ",") 
 ```
 
-## Select topographic attributes and create a raw dataframe with all variables
 
 ```{r prepareData, echo=FALSE}
 # function to convert radian to degree 

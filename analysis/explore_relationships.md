@@ -1,13 +1,11 @@
-    ## 
-    ## Attaching package: 'dplyr'
+Prepare Data
+------------
 
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
+-   Read data of Mann-Kendal Sen-Slope for each pixels and each indicator: snow-cover related (scd, scod, scmd, scmc) and hydrological model (pre, pre\_snow, pre\_snow\_per, temp). See :red\_circle: (`$TODO`: include link to analysis)
+-   Read data of topographic variable :red\_circle: (`$TODO`: Document script)
+-   Create two dataframes:
+-   Full Dataframe with all variables and all pixels
+-   Dataframe with all variables and filter by pixels above 1900 *m.a.s.l.*
 
 ``` r
 # Read data
@@ -29,9 +27,6 @@ rawtopo <- read.csv(file=paste(di, "/data/topo_nie_malla_modis.csv", sep=""),
                  header=TRUE,
                  sep = ",") 
 ```
-
-Select topographic attributes and create a raw dataframe with all variables
----------------------------------------------------------------------------
 
 Explore Snow-cover related indicators
 -------------------------------------
