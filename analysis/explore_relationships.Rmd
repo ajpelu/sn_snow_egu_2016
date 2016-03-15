@@ -29,6 +29,7 @@ di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016',
 library("dplyr")
 library("ggplot2")
 library("reshape2")
+library("pander")
 ```
 
 ```{r data}
@@ -159,4 +160,33 @@ aux <- round(((fulldf1900 %>% filter(tau_scod > 0) %>% filter(tau_scmd < 0) %>% 
 
 A total of `r aux` % of pixels (of all above 1900) showed a positive trend in snow cover onset date (late onset) and a negative trend in snow cover melting date (earlier melting date). It means that of `r aux` % of the pixels above 1900 m, have suffered a trend to rectraction of the snow cover period in the last years (Figure 3). 
 
+We also can explore this relationship by elevation (Figure 4), and we obtanied that the *retraction pattern* is more evident at low elevations 
+
+```{r, fig.cap='Figure 4', fig.height=10, fig.width=8, results='asis'}
+# Exploratory by elevatin groups 
+ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) + 
+  geom_point(alpha=0.5) + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  facet_wrap(~dem50mean_group) + 
+  theme_bw() + 
+  labs(title= 'scod vs. scmd (>1900 masl)',
+       x= 'trend (tau) of Snow cover onset date',
+       y='trend (tau) of Snow cover melting date') +
+  theme(strip.background = element_rect(fill = "white"))
+
+# Compute percentage of pixels (tau scod > 0, tau_scmd < 0)   
+aux <- fulldf1900 %>% group_by(dem50mean_group) %>% 
+  summarise(total=n())
+
+aux1 <- fulldf1900 %>% group_by(dem50mean_group) %>% 
+  filter(tau_scod > 0) %>% 
+  filter(tau_scmd < 0) %>% 
+  summarise(n=n()) %>%
+  inner_join(aux, by="dem50mean_group") %>%
+  mutate(freq = n / total)
+
+pander(aux1)
+```
 
