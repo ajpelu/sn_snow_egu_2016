@@ -10,8 +10,8 @@ output:
 ```{r metadata, echo=FALSE}
 # Set working directory 
 
-machine <- 'ajpelu'
-# machine <- 'ajpeluLap'
+# machine <- 'ajpelu'
+machine <- 'ajpeluLap'
 di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
 
 ```
@@ -22,6 +22,7 @@ library("raster")
 library("rgdal")
 library("sp")
 library("dplyr")
+library("rasterVis") 
 ```
 
 ## Prepare Data
@@ -68,149 +69,97 @@ topo <- rawtopo %>%
 # -- 
 
 
-# Create a dataframe with all variables for SCD 
-scd <- snow %>% 
-  dplyr::select(nie_malla_modi_id, ano, scd) %>% 
-  inner_join(topo, by="nie_malla_modi_id") %>%
-  inner_join(xycentroides, by="nie_malla_modi_id") 
+# Create objects with basis statistics for all indicators 
+indicadores <- c("scd", "scod", "scmd", "scmc") 
 
-
-scd1900 <- scd %>% filter(dem50mean > 1900) 
-
-
-m1 <- glm(scd ~ ano + dem50mean + slope50mean_deg + aspect50mean_deg + lon + lat,
-          data=scd1900, family="poisson")
-
-e1 <- resid(m2, type = 'pearson')
-n <- nrow(scd1900) 
-p <- length(coef(m2))
-sum(e1^2) /(n-p)
-
-
-
-scd_df <- snow %>%
-  dplyr::select(nie_malla_modi_id, ano, scd) %>%
-  mutate(year = ano) %>% 
-  group_by(nie_malla_modi_id) %>% 
-  summarise(mean = mean(scd),
-            sd = sd(scd),
-            cv = raster::cv(scd),
-            se = sd / sqrt (length(scd)))
-            
-library('MASS')
-
-m2 <- glm.nb(scd ~ ano + dem50mean + slope50mean_deg + aspect50mean_deg + lon + lat,
-          data=scd1900)
-
-drop1(m2, test="Chi")
-
-
-
-
-
-plot(x = scd1900$slope50mean_deg, y = scd1900$scd, type='n')
-
-mnd <- expand.grid(dem50mean=0, 
-                   ano=2000,
-                   slope50mean_deg=seq(0,50,by=1),
-                   aspect50mean_deg=0, 
-                   lon=-3.60,
-                   lat=36.9)
-                   
-
-
-
-p1 <- predict(m2, newdata = mnd, type ='link', se=TRUE)
-lines(x = mnd$slope50mean_deg, y=p1$fit)
-
-
-newdata2 <- data.frame(
-  math = rep(seq(from = min(dat$math), to = max(dat$math), length.out = 100), 3),
-  prog = factor(rep(1:3, each = 100), levels = 1:3, labels =
-  levels(dat$prog)))
-
-newdata2 <- cbind(newdata2, predict(m1, newdata2, type = "link", se.fit=TRUE))
-newdata2 <- within(newdata2, {
-  DaysAbsent <- exp(fit)
-  LL <- exp(fit - 1.96 * se.fit)
-  UL <- exp(fit + 1.96 * se.fit)
-})
-
-ggplot(newdata2, aes(math, DaysAbsent)) +
-  geom_ribbon(aes(ymin = LL, ymax = UL, fill = prog), alpha = .25) +
-  geom_line(aes(colour = prog), size = 2) +
-  labs(x = "Math Score", y = "Predicted Days Absent")
-                       
-                       
-                       
-
-
-
-
-
-names(snow_sn)[3] <- "year"
-
-```
-
-A continuación creamos un bucle para obtener de cada indicador la tendencia y la pendiente. Aplicamos la técnica de Mann-Kendall-Theil-Sen. El bucle realiza las siguientes operaciones: 
-
-* Crea una variable con los indicadores para el bucle. 
-* Realiza un subset de datos con los valores del indicador para cada pixel. Obtenemos una serie de datos por cada pixel. 
-* Calculamos la tendencia y la pendiente
-* Guardamos los resultamos como csv (uno por cada indicador, ver `./data/derived/`)
-
-```{r}
-# Loop to compute the MKT by indicator
-
-# Define name of indicators (see variables names)
-indicadores <- c("scd", "scod", "scmd", "scmc", "pre", "pre_snow", "pre_snow_per", "temp")
-
-# subset by indicator
-for (j in indicadores){ 
-  # Create a subset by indicator
-  subdf <- mydf[, names(mydf) %in% c("nie_malla_modi_id", "year", j )]
-  
-  # Manipule data. Transpose 
-  # la funcion aggregate es porque tenemos duplicados 
-  aux <- dcast(subdf, year ~ nie_malla_modi_id, value.var = j, fun.aggregate = mean) 
-
-  # Create a zoo object 
-  auxts <- zoo(aux[-1],aux[,1])
-  
-  # Compute Mann Kendall and Theil 
-  theil <- mannKen(as.ts(auxts))
-  
-  # Prepare data output
-  theil <- as.data.frame(theil)
-  
-  theil_df <- theil %>% 
-    mutate(nie_malla_modi_id = as.numeric(rownames(theil))) %>%
-    mutate(sen_slope = round(sen.slope, 3),
-           sen_slope_per = round(sen.slope.pct, 2),
-           p_value = round(p.value, 5),
-           tau = round(tau, 3)) %>%
-    dplyr::select(nie_malla_modi_id, sen_slope, sen_slope_per, p_value, tau)
-  
-  # As data.frame
-  theil_df <- as.data.frame(theil_df)
-  
-  # Rename variables adding dataframe name
-  
-  # Create vector of new names 
-  new_names <- c(paste(names(theil_df), j ,sep='_'))
-  
-  theil_rename <- theil_df %>% rename_(.dots = setNames(names(.), new_names)) %>%
-    dplyr::select(nie_malla_modi_id = starts_with("nie_malla_modi_id"), everything())
-  
-  # Write table 
-  write.table(assign(j, theil_rename), file=paste(di, "/data/derived/", j, ".csv", sep=""), row.names=FALSE, sep=',')
-  
-  # Check Results. Get the pixel with NA in pvalue. Save results
-  aux_na <- theil_df[!complete.cases(theil_df),]
-  aux_na$var <- rep(j,nrow(aux_na))
-  write.table(aux_na[,c("nie_malla_modi_id","var")], file=paste(di, "/data/derived/na_", j, ".csv", sep=""), row.names=FALSE, sep=',')
+# Loop to create objects with basis stats
+for (i in indicadores) { 
+  vnames <- c("nie_malla_modi_id", i) 
+  aux <- snow %>%
+    dplyr::select(one_of(vnames)) %>%
+    mutate_(vinterest = i) %>%
+    group_by_("nie_malla_modi_id") %>%
+    summarise(mean=mean(vinterest),
+              sd = sd(vinterest),
+              cv = raster::cv(vinterest),
+              se = sd / sqrt (length(vinterest))) %>%
+    inner_join(topo, by="nie_malla_modi_id") %>%
+    inner_join(xycentroides, by="nie_malla_modi_id") 
+    
+    assign(i, aux)
 } 
+
 ```
+
+
+### Spatial pattern of the snowcover duration 
+
+* Create raster maps of the summary stats for each indicator  
+
+```{r} 
+# Spatial data
+# Reproject to utm and m
+centroides <- spTransform(centroides, CRS("+init=epsg:23030"))
+
+# Get projection 
+projection(centroides) 
+
+# Select only attributes of interest and rename them
+centroides <- centroides[c("id")]
+names(centroides) <-"nie_malla_modi_id"
+
+# Which pixels are in the snow object
+pix_comunes <- match(snow$nie_malla_modi_id, centroides$nie_malla_modi_id)
+
+# Create spatial objetc with centroid of Sierra Nevada
+centroides_sn <- centroides[pix_comunes,]
+
+
+# Loop to create raster map 
+for (i in indicadores) { 
+  df <- get(i)
+  
+  # merge MKT and spatial pixel 
+  aux_spatial <- sp::merge(x=centroides_sn, y=df, by="nie_malla_modi_id")
+  
+  # raster auxiliar 
+  aux_rast <- raster(aux_spatial, resolution=500)
+
+  # raster of Mean values 
+  mean_raster <- rasterize(aux_spatial, aux_rast, "mean", fun=mean)
+  names(mean_raster) <- i # Set name of the raster layer 
+  
+  # raster of CV values
+  cv_raster <- rasterize(aux_spatial, aux_rast, "cv", fun=mean)
+  names(cv_raster) <- i 
+  
+  # assign 
+  name_mean <- paste("r_mean_",i, sep="")
+  name_cv <- paste("r_cv_",i, sep="")
+  
+  assign(name_mean, mean_raster)
+  writeRaster(mean_raster, file=paste(di, "/data/derived/r_mean_", i, ".asc", sep=""), overwrite=TRUE)
+  
+  
+  assign(name_cv, cv_raster)
+  writeRaster(cv_raster, file=paste(di, "/data/derived/r_cv_", i, ".asc", sep=""), overwrite=TRUE)
+  }
+
+
+
+# POR AQUI VAS CARPINTO 
+
+stack_cv <- stack(r_cv_scd, r_cv_scod, r_cv_scmd, r_cv_scmc)
+
+levelplot(r_mean_scd, 
+          par.settings=RdBuTheme, margin=list(axis=TRUE), colorkey=TRUE, 
+          contour=TRUE, 
+          main="Snow Cover Duration")
+
+levelplot(r_mean_scmd, 
+          par.settings=rasterTheme, margin=list(axis=TRUE), colorkey=TRUE, 
+          contour=TRUE, 
+          main="Snow Cover Melting Date")
 
 
 
