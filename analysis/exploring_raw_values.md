@@ -1,22 +1,4 @@
----
-title: "Explore raw values of snow-cover indicators"
-author: "AJ Perez-Luque (@ajpelu); FJ Bonet; J Herrero and R. Perez-Perez"
-date: "2016 March"
-output:  
-    md_document:
-      variant: markdown_github
----
-
-```{r metadata, echo=FALSE}
-# Set working directory 
-
-machine <- 'ajpelu'
-# machine <- 'ajpeluLap'
-di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
-
-```
-
-```{r packages, warning=FALSE, message=FALSE}
+``` r
 # Load packages 
 library("raster")
 library("rgdal")
@@ -25,12 +7,13 @@ library("dplyr")
 library("rasterVis") 
 ```
 
-## Prepare Data
+Prepare Data
+------------
 
-* Read snow cover indicator data and subset snow cover duration 
-* Read topographic data and position (spatial) data
+-   Read snow cover indicator data and subset snow cover duration
+-   Read topographic data and position (spatial) data
 
-```{r}
+``` r
 # Read data (snow cover)
 snow <- read.csv(file=paste(di, "/data/raw/snow_sn.csv", sep= ""), header = TRUE) 
 # --   
@@ -88,28 +71,30 @@ for (i in indicadores) {
     
     assign(i, aux)
 } 
-
 ```
 
+### Spatial pattern of the snowcover indicators
 
-### Spatial pattern of the snowcover indicators 
+-   Create raster maps of the summary stats for each indicator (`$indicator$`: `scd`, `scod`, `scmd`, `scmc`). Two raster maps will be created:
+-   `r_mean_$indicator$`: mean values of the indicator for the pixel in the temporal serie.
+-   `r_cv_$indicator$`: coefficient of variation of the indicator for the pixel in the temporal serie.
 
-* Create raster maps of the summary stats for each indicator (`$indicator$`: `scd`, `scod`, `scmd`, `scmc`). Two raster maps will be created:
- * `r_mean_$indicator$`: mean values of the indicator for the pixel in the temporal serie.
- * `r_cv_$indicator$`: coefficient of variation of the indicator for the pixel in the temporal serie.
+-   Two additional raster maps will be created, with a mask of the elevation (those pixels above 1900 *m asl*). The names of the raster are: `r_mean_$indicator$_1900` and `r_cv_$indicator$_1900`. Pixels below 1900 masl show a value of `-1`. This value can be customized (change `updatevalue=-1` argument of the `mask` function).
 
-* Two additional raster maps will be created, with a mask of the elevation (those pixels above 1900 *m asl*). The names of the raster are: `r_mean_$indicator$_1900` and `r_cv_$indicator$_1900`. Pixels below 1900 masl show a value of `-1`. This value can be customized (change `updatevalue=-1` argument of the `mask` function). 
+-   All these rasters are stored at `./data/derived/`.
 
-* All these rasters are stored at `./data/derived/`. 
-
-```{r} 
+``` r
 # Spatial data
 # Reproject to utm and m
 centroides <- spTransform(centroides, CRS("+init=epsg:23030"))
 
 # Get projection 
 projection(centroides) 
+```
 
+    ## [1] "+init=epsg:23030 +proj=utm +zone=30 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs"
+
+``` r
 # Select only attributes of interest and rename them
 centroides <- centroides[c("id")]
 names(centroides) <-"nie_malla_modi_id"
@@ -170,12 +155,7 @@ for (i in indicadores) {
   }
 ```
 
-
-```{r, echo=TRUE, eval=FALSE}
-
-
-
-
+``` r
 # POR AQUI VAS CARPINTO 
 
 
@@ -193,4 +173,3 @@ levelplot(r_mean_scmd,
           contour=TRUE, 
           main="Snow Cover Melting Date")
 ```
-
