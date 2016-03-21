@@ -10,8 +10,8 @@ output:
 ```{r metadata, echo=FALSE}
 # Set working directory 
 
-# machine <- 'ajpelu'
-machine <- 'ajpeluLap'
+machine <- 'ajpelu'
+# machine <- 'ajpeluLap'
 di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
 
 ```
@@ -115,12 +115,16 @@ pix_comunes <- match(snow$nie_malla_modi_id, centroides$nie_malla_modi_id)
 centroides_sn <- centroides[pix_comunes,]
 
 
+
+
+
 # Loop to create raster map 
 for (i in indicadores) { 
   df <- get(i)
   
   # merge MKT and spatial pixel 
   aux_spatial <- sp::merge(x=centroides_sn, y=df, by="nie_malla_modi_id")
+  aux_spatial_elev <- aux_spatial[c("nie_malla_modi_id", "dem50mean")]
   
   # raster auxiliar 
   aux_rast <- raster(aux_spatial, resolution=500)
@@ -133,17 +137,46 @@ for (i in indicadores) {
   cv_raster <- rasterize(aux_spatial, aux_rast, "cv", fun=mean)
   names(cv_raster) <- i 
   
+  # raster of Elevation
+  elev_raster <- rasterize(aux_spatial_elev, aux_rast, "dem50mean", fun=mean)
+  elev_raster1900 <- elev_raster
+  elev_raster1900[elev_raster1900 < 1900] <- NA
+  
+  # Mask by 1900
+  mean_raster1900 <- mask(mean_raster, elev_raster1900, updatevalue=-1)
+  cv_raster1900 <- mask(cv_raster, elev_raster1900, updatevalue=-1)
+  
+  
   # assign 
   name_mean <- paste("r_mean_",i, sep="")
   name_cv <- paste("r_cv_",i, sep="")
+  name_mean1900 <- paste("r_mean_",i,"_1900", sep="")
+  name_cv1900 <- paste("r_cv_",i,"_1900", sep="")
   
   assign(name_mean, mean_raster)
   writeRaster(mean_raster, file=paste(di, "/data/derived/r_mean_", i, ".asc", sep=""), overwrite=TRUE)
   
-  
   assign(name_cv, cv_raster)
   writeRaster(cv_raster, file=paste(di, "/data/derived/r_cv_", i, ".asc", sep=""), overwrite=TRUE)
+  
+  assign(name_mean1900, mean_raster1900)
+  writeRaster(mean_raster1900, file=paste(di, "/data/derived/r_mean_", i, "_1900", ".asc", sep=""), overwrite=TRUE)
+  
+  assign(name_cv1900, cv_raster1900)
+  writeRaster(cv_raster1900, file=paste(di, "/data/derived/r_cv_", i, "_1900", ".asc", sep=""), overwrite=TRUE)
   }
+
+
+
+
+
+
+# POR AQUI VAS CARPINTO 
+
+
+
+
+
 
 
 
@@ -151,7 +184,7 @@ for (i in indicadores) {
 
 stack_cv <- stack(r_cv_scd, r_cv_scod, r_cv_scmd, r_cv_scmc)
 
-levelplot(r_mean_scd, 
+levelplot(r_mean_scod_1900, 
           par.settings=RdBuTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           contour=TRUE, 
           main="Snow Cover Duration")
