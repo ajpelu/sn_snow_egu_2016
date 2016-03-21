@@ -188,3 +188,47 @@ Visualization of the Snow Cover indicators
 <span style="color:black; ">Figure 3: Mean values of Snow cover Onset Date</span>
 </figcaption>
 </figure>
+<figure>
+<a name="scod_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-7-1.png">
+<figcaption>
+<span style="color:black; ">Figure 4: Coefficient of Variation of values of Snow cover Onset date</span>
+</figcaption>
+</figure>
+### Snow Cover Melting Date
+
+<figure>
+<a name="scmd_mean"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-8-1.png">
+<figcaption>
+</figcaption>
+</figure>
+<figure>
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-8-2.png">
+<figcaption>
+<span style="color:black; ">Figure 5: Mean values of Snow cover Melting Date</span>
+</figcaption>
+</figure>
+<figure>
+<a name="scmd_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-9-1.png">
+<figcaption>
+<span style="color:black; ">Figure 6: Coefficient of Variation of values of Snow cover Melting date</span>
+</figcaption>
+</figure>
+### Snow Cover Melting Cycles
+
+<figure>
+<a name="scmc_mean"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-10-1.png">
+<figcaption>
+</figcaption>
+</figure>
+<figure>
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-10-2.png">
+<figcaption>
+<span style="color:black; ">Figure 7: Mean values of Snow cover Melting Date</span>
+</figcaption>
+</figure>
+<figure>
+<a name="scmc_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-11-1.png">
+<figcaption>
+<span style="color:black; ">Figure 8: Coefficient of Variation of values of Snow cover Melting cycles</span>
+</figcaption>
+</figure>

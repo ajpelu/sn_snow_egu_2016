@@ -385,3 +385,86 @@ levelplot(r_cv_scod_1900,
           main="Snow Cover Onset Date (CV)")
 ```
 
+### Snow Cover Melting Date
+
+```{r, echo=FALSE, fig.cap=fig$cap("scmd_mean", "Mean values of Snow cover Melting Date"), fig.height=8 , fig.width=11}
+
+# Select a palette
+# http://colorbrewer2.org/
+mypal <- rev(brewer.pal(9, "Greens"))
+# Add a colour for 0 value
+mypal <- c("#D2D2D2", mypal)
+# Specify the color palette
+myTheme=rasterTheme(region=mypal)
+
+
+levelplot(r_mean_scmd_1900, 
+          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
+          # Contour options
+          contour=TRUE, labels=TRUE, pretty=TRUE, 
+          # Breaks
+          #cut=20,
+          at=c(0,seq(140,280,by=20)),
+          main="Snow Cover Melting Date (mean values, hydrological day)") 
+
+levelplot(r_mean_scmd_1900, 
+          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
+          main="Snow Cover Melting Date (mean values, hydrological day)", 
+          at=c(0,seq(140,280,by=5)))
+```
+
+```{r, echo=FALSE, fig.cap=fig$cap("scmd_cv", "Coefficient of Variation of values of Snow cover Melting date"), fig.height=8 , fig.width=11}
+# CV plot
+mypal_cv <- brewer.pal(9, "Oranges")
+mypal_cv <- c("#D2D2D2", mypal_cv)
+
+myTheme_cv=rasterTheme(region=mypal_cv)
+
+levelplot(r_cv_scmd_1900, 
+          par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
+          #contour=TRUE, labels=TRUE, pretty=TRUE, 
+          # Breaks
+          #at=seq(0,50,by=7.5),
+          main="Snow Cover Melting Date (CV)")
+```
+
+### Snow Cover Melting Cycles
+
+```{r, echo=FALSE, fig.cap=fig$cap("scmc_mean", "Mean values of Snow cover Melting Date"), fig.height=8 , fig.width=11}
+
+# Select a palette
+# http://colorbrewer2.org/
+mypal <- brewer.pal(5, "Purples")
+# Add a colour for 0 value
+mypal <- c("#D2D2D2", mypal)
+# Specify the color palette
+myTheme=rasterTheme(region=mypal)
+
+
+levelplot(r_mean_scmc_1900, 
+          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
+          # Contour options
+          contour=TRUE, labels=TRUE, pretty=TRUE, 
+          # Breaks
+          at=seq(0,5,by=1),
+          main="Snow Cover Melting cycles (mean values, number)") 
+
+levelplot(r_mean_scmc_1900, 
+          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
+          main="Snow Cover Melting cycles (mean values, number)")
+```
+
+```{r, echo=FALSE, fig.cap=fig$cap("scmc_cv", "Coefficient of Variation of values of Snow cover Melting cycles"), fig.height=8 , fig.width=11}
+# CV plot
+mypal_cv <- brewer.pal(9, "Oranges")
+mypal_cv <- c("#D2D2D2", mypal_cv)
+
+myTheme_cv=rasterTheme(region=mypal_cv)
+
+levelplot(r_cv_scmc_1900, 
+          par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
+          contour=TRUE, labels=TRUE, pretty=TRUE, 
+          # Breaks
+          at=seq(0,100,by=10),
+          main="Snow Cover Melting Date (CV)")
+```
