@@ -370,4 +370,18 @@ levelplot(r_mean_scod_1900,
           main="Snow Cover Onset Date (mean values, hydrological day)") 
 ```
 
+```{r, echo=FALSE, fig.cap=fig$cap("scod_cv", "Coefficient of Variation of values of Snow cover Onset date"), fig.height=8 , fig.width=11}
+# CV plot
+mypal_cv <- brewer.pal(9, "Oranges")
+mypal_cv <- c("#D2D2D2", mypal_cv)
+
+myTheme_cv=rasterTheme(region=mypal_cv)
+
+levelplot(r_cv_scod_1900, 
+          par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
+          contour=TRUE, labels=TRUE, pretty=TRUE, 
+          # Breaks
+          at=seq(0,100,by=10),
+          main="Snow Cover Onset Date (CV)")
+```
 
