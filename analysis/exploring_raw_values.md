@@ -163,5 +163,15 @@ Visualization of the Snow Cover indicators
 
 ### Snow Cover Duration
 
-![](exploring_raw_values_files/figure-markdown_github/unnamed-chunk-4-1.png)
-![](exploring_raw_values_files/figure-markdown_github/unnamed-chunk-5-1.png)
+<figure>
+<a name="scd_mean"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-4-1.png">
+<figcaption>
+<span style="color:black; ">Figure 1: Mean values of Snow cover duration</span>
+</figcaption>
+</figure>
+<figure>
+<a name="scd_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-5-1.png">
+<figcaption>
+<span style="color:black; ">Figure 2: Coefficient of Variation of values of Snow cover duration</span>
+</figcaption>
+</figure>
