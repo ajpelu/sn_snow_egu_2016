@@ -502,7 +502,7 @@ tidy(m_scod)
 
 :red_circle: broom tidy glm factor level
 
-```{r, echo=FALSE, fig.cap=fig$cap("scod_tukey_aspect", "Snow cover onset dates by aspect"), fig.height=6 , fig.width=8, warning=FALSE}
+```{r, echo=FALSE, fig.cap=fig$cap("scod_tukey_aspect", "Snow cover onset dates by aspect"), fig.height=5 , fig.width=7, warning=FALSE, message=FALSE}
 # Plot of Snow Cover Onset dates by aspect 
 
 # Remove na level of aspect 
@@ -539,7 +539,7 @@ ggplot(mapping = aes(lhs, estimate)) +
 ```
 
 
-```{r echo=FALSE, fig.cap=fig$cap("scod_lon_slope", "Snow cover onset dates by Longitude and Slope"), fig.height=6 , fig.width=11}
+```{r echo=FALSE, fig.cap=fig$cap("scod_lon_slope", "Snow cover onset dates by Longitude and Slope"), fig.height=5 , fig.width=8}
 
 a <- ggplot(scod1900, aes(x=lon, y= mean)) + 
   geom_point(col='gray') + 

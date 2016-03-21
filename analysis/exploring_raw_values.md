@@ -265,14 +265,6 @@ Snow Cover Onset Dates
 <span style="color:black; ">Figure 9: Snow cover onset dates by aspect</span>
 </figcaption>
 </figure>
-    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
-
-    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
-
-    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
-
-    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
-
 <figure>
 <a name="scod_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-14-1.png">
 <figcaption>
