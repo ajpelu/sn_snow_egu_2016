@@ -95,12 +95,13 @@ for (i in indicadores) {
 ### Spatial pattern of the snowcover indicators 
 
 * Create raster maps of the summary stats for each indicator (`$indicator$`: `scd`, `scod`, `scmd`, `scmc`). Two raster maps will be created:
+
  * `r_mean_$indicator$`: mean values of the indicator for the pixel in the temporal serie.
  * `r_cv_$indicator$`: coefficient of variation of the indicator for the pixel in the temporal serie.
 
 * Two additional raster maps will be created, with a mask of the elevation (those pixels above 1900 *m asl*). The names of the raster are: `r_mean_$indicator$_1900` and `r_cv_$indicator$_1900`. Pixels below 1900 masl show a value of `-1`. This value can be customized (change `updatevalue=-1` argument of the `mask` function). 
 
-* All these rasters are stored at `./data/derived/`. 
+* All these rasters are stored at `./data/derived/` 
 
 ```{r} 
 # Spatial data
@@ -146,8 +147,8 @@ for (i in indicadores) {
   elev_raster1900[elev_raster1900 < 1900] <- NA
   
   # Mask by 1900
-  mean_raster1900 <- mask(mean_raster, elev_raster1900, updatevalue=-1)
-  cv_raster1900 <- mask(cv_raster, elev_raster1900, updatevalue=-1)
+  mean_raster1900 <- mask(mean_raster, elev_raster1900, updatevalue=0)
+  cv_raster1900 <- mask(cv_raster, elev_raster1900, updatevalue=0)
   
   
   # assign 
@@ -170,27 +171,47 @@ for (i in indicadores) {
   }
 ```
 
+## Visualization of the Snow Cover indicators 
 
-```{r, echo=TRUE, eval=FALSE}
+### Snow Cover Duration
 
+```{r, echo=FALSE, fig.cap='Figure 1', fig.height=8 , fig.width=11}
 
+# Select a palette
+# http://colorbrewer2.org/
+# mypal <- brewer.pal(9, "Blues")
+# Add a colour for 0 value
+# mypal <- c("#D2D2D2", mypal)
 
+mypal <- c("#D2D2D2", "#C6DBEF", "#9ECAE1", "#6BAED6", "#4292C6", "#2171B5", "#08519C", "#08306B")
 
-# POR AQUI VAS CARPINTO 
+# Specify the color palette
+myTheme=rasterTheme(region=mypal)
+# myTheme$panel.background$col <- 'gray'
 
+# Mean plot
+levelplot(r_mean_scd_1900, 
+          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
+          # Contour options
+          contour=TRUE, labels=TRUE, pretty=TRUE, 
+          # Breaks
+          at=c(0,seq(50,250,by=25)),
+          main="Snow Cover Duration (mean values, days)")
 
+```
 
+```{r, echo=FALSE, fig.cap='Figure 1', fig.height=8 , fig.width=11}
+# CV plot
+mypal_cv <- brewer.pal(9, "Oranges")
+mypal_cv <- c("#D2D2D2", mypal_cv)
 
-stack_cv <- stack(r_cv_scd, r_cv_scod, r_cv_scmd, r_cv_scmc)
+myTheme_cv=rasterTheme(region=mypal_cv)
 
-levelplot(r_mean_scod_1900, 
-          par.settings=RdBuTheme, margin=list(axis=TRUE), colorkey=TRUE, 
-          contour=TRUE, 
-          main="Snow Cover Duration")
-
-levelplot(r_mean_scmd, 
-          par.settings=rasterTheme, margin=list(axis=TRUE), colorkey=TRUE, 
-          contour=TRUE, 
-          main="Snow Cover Melting Date")
+levelplot(r_cv_scd_1900, 
+          par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
+          contour=TRUE, labels=TRUE, pretty=TRUE, 
+          # Breaks
+          at=seq(0,100,by=10),
+          main="Snow Cover Duration (CV)")
 ```
 

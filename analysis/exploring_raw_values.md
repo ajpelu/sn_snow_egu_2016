@@ -76,12 +76,13 @@ for (i in indicadores) {
 ### Spatial pattern of the snowcover indicators
 
 -   Create raster maps of the summary stats for each indicator (`$indicator$`: `scd`, `scod`, `scmd`, `scmc`). Two raster maps will be created:
+
 -   `r_mean_$indicator$`: mean values of the indicator for the pixel in the temporal serie.
 -   `r_cv_$indicator$`: coefficient of variation of the indicator for the pixel in the temporal serie.
 
 -   Two additional raster maps will be created, with a mask of the elevation (those pixels above 1900 *m asl*). The names of the raster are: `r_mean_$indicator$_1900` and `r_cv_$indicator$_1900`. Pixels below 1900 masl show a value of `-1`. This value can be customized (change `updatevalue=-1` argument of the `mask` function).
 
--   All these rasters are stored at `./data/derived/`.
+-   All these rasters are stored at `./data/derived/`
 
 ``` r
 # Spatial data
@@ -131,8 +132,8 @@ for (i in indicadores) {
   elev_raster1900[elev_raster1900 < 1900] <- NA
   
   # Mask by 1900
-  mean_raster1900 <- mask(mean_raster, elev_raster1900, updatevalue=-1)
-  cv_raster1900 <- mask(cv_raster, elev_raster1900, updatevalue=-1)
+  mean_raster1900 <- mask(mean_raster, elev_raster1900, updatevalue=0)
+  cv_raster1900 <- mask(cv_raster, elev_raster1900, updatevalue=0)
   
   
   # assign 
@@ -155,21 +156,17 @@ for (i in indicadores) {
   }
 ```
 
-``` r
-# POR AQUI VAS CARPINTO 
+Visualization of the Snow Cover indicators
+------------------------------------------
 
+### Snow Cover Duration
 
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-3-1.png" alt="Figure 1"  />
+<p class="caption">
+Figure 1
+</p>
 
-
-stack_cv <- stack(r_cv_scd, r_cv_scod, r_cv_scmd, r_cv_scmc)
-
-levelplot(r_mean_scod_1900, 
-          par.settings=RdBuTheme, margin=list(axis=TRUE), colorkey=TRUE, 
-          contour=TRUE, 
-          main="Snow Cover Duration")
-
-levelplot(r_mean_scmd, 
-          par.settings=rasterTheme, margin=list(axis=TRUE), colorkey=TRUE, 
-          contour=TRUE, 
-          main="Snow Cover Melting Date")
-```
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-4-1.png" alt="Figure 1"  />
+<p class="caption">
+Figure 1
+</p>
