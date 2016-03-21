@@ -36,8 +36,8 @@ xycentroides <- filter(xycentroides, nie_malla_modi_id %in% snow$nie_malla_modi_
 
 # Read Topographic data 
 rawtopo <- read.csv(file=paste(di, "/data/topo_nie_malla_modis.csv", sep=""),
-                 header=TRUE,
-                 sep = ",") 
+                    header=TRUE,
+                    sep = ",") 
 # function to convert radian to degree 
 rad2deg <- function(rad) {(rad * 180) / (pi)} 
 
@@ -50,7 +50,7 @@ topo <- rawtopo %>%
          aspect50mean_deg = rad2deg(aspect50mean),
          aspect50median_deg = rad2deg(aspect50median)) %>%
   dplyr::select(nie_malla_modi_id, dem50mean, dem50median, slope50mean_deg, 
-         slope50median_deg, aspect50mean_deg, aspect50median_deg) 
+                slope50median_deg, aspect50mean_deg, aspect50median_deg) 
 # -- 
 
 
@@ -70,8 +70,8 @@ for (i in indicadores) {
               se = sd / sqrt (length(vinterest))) %>%
     inner_join(topo, by="nie_malla_modi_id") %>%
     inner_join(xycentroides, by="nie_malla_modi_id") 
-    
-    assign(i, aux)
+  
+  assign(i, aux)
 } 
 ```
 
@@ -119,7 +119,7 @@ for (i in indicadores) {
   
   # raster auxiliar 
   aux_rast <- raster(aux_spatial, resolution=500)
-
+  
   # raster of Mean values 
   mean_raster <- rasterize(aux_spatial, aux_rast, "mean", fun=mean)
   names(mean_raster) <- i # Set name of the raster layer 
@@ -155,7 +155,7 @@ for (i in indicadores) {
   
   assign(name_cv1900, cv_raster1900)
   writeRaster(cv_raster1900, file=paste(di, "/data/derived/r_cv_", i, "_1900", ".asc", sep=""), overwrite=TRUE)
-  }
+}
 ```
 
 Visualization of the Snow Cover indicators

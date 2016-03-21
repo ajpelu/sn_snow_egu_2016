@@ -2,12 +2,12 @@
 title: "Explore raw values of snow-cover indicators"
 author: "AJ Perez-Luque (@ajpelu); FJ Bonet; J Herrero and R. Perez-Perez"
 date: "2016 March"
-output:  
-    md_document:
+output:
+  md_document:
       variant: markdown_github
 ---
-
-```{r metadata, echo=FALSE}
+  
+  ```{r metadata, echo=FALSE}
 # Set working directory 
 
 machine <- 'ajpelu'
@@ -37,40 +37,40 @@ library("rasterVis")
 # A function for generating captions and cross-references
 
 fig <- local({
-    i <- 0
-    list(
-        cap=function(refName, text, center=FALSE, col="black", inline=FALSE) {
-            i <<- i + 1
-            ref[[refName]] <<- i
-            css_ctr <- ""
-            if (center) css_ctr <- "text-align:center; display:inline-block; width:100%;"
-            cap_txt <- paste0("<span style=\"color:", col, "; ", css_ctr, "\">Figure ", i, ": ", text , "</span>")
-            anchor <- paste0("<a name=\"", refName, "\"></a>")
-            if (inline) {
-                paste0(anchor, cap_txt)    
-            } else {
-                list(anchor=anchor, cap_txt=cap_txt)
-            }
-        },
-        
-        ref=function(refName, link=FALSE, checkRef=TRUE) {
-            
-            ## This function puts in a cross reference to a caption. You refer to the
-            ## caption with the refName that was passed to fig$cap() (not the code chunk name).
-            ## The cross reference can be hyperlinked.
-            
-            if (checkRef && !refName %in% names(ref)) stop(paste0("fig$ref() error: ", refName, " not found"))
-            if (link) {
-                paste0("<A HREF=\"#", refName, "\">Figure ", ref[[refName]], "</A>")
-            } else {
-                paste0("Figure ", ref[[refName]])
-            }
-        },
-        
-        ref_all=function(){
-            ## For debugging
-            ref
-        })
+  i <- 0
+  list(
+    cap=function(refName, text, center=FALSE, col="black", inline=FALSE) {
+      i <<- i + 1
+      ref[[refName]] <<- i
+      css_ctr <- ""
+      if (center) css_ctr <- "text-align:center; display:inline-block; width:100%;"
+      cap_txt <- paste0("<span style=\"color:", col, "; ", css_ctr, "\">Figure ", i, ": ", text , "</span>")
+      anchor <- paste0("<a name=\"", refName, "\"></a>")
+      if (inline) {
+        paste0(anchor, cap_txt)    
+      } else {
+        list(anchor=anchor, cap_txt=cap_txt)
+      }
+    },
+    
+    ref=function(refName, link=FALSE, checkRef=TRUE) {
+      
+      ## This function puts in a cross reference to a caption. You refer to the
+      ## caption with the refName that was passed to fig$cap() (not the code chunk name).
+      ## The cross reference can be hyperlinked.
+      
+      if (checkRef && !refName %in% names(ref)) stop(paste0("fig$ref() error: ", refName, " not found"))
+      if (link) {
+        paste0("<A HREF=\"#", refName, "\">Figure ", ref[[refName]], "</A>")
+      } else {
+        paste0("Figure ", ref[[refName]])
+      }
+    },
+    
+    ref_all=function(){
+      ## For debugging
+      ref
+    })
 })
 
 ```
@@ -81,28 +81,28 @@ fig <- local({
 
 library("knitr")
 knit_hooks$set(plot = function(x, options) {
+  sty <- ""
+  if (options$fig.align == 'default') {
     sty <- ""
-    if (options$fig.align == 'default') {
-        sty <- ""
-    } else {
-        sty <- paste0(" style=\"text-align:", options$fig.align, ";\"")
-    }
-    
-    if (is.list(options$fig.cap)) {
-        ## options$fig.cap is a list returned by the function fig$cap()
-        str_caption <- options$fig.cap$cap_txt
-        str_anchr <- options$fig.cap$anchor
-    } else {
-        ## options$fig.cap is a character object (hard coded, no anchor)
-        str_caption <- options$fig.cap
-        str_anchr <- ""
-    }
-    
-    paste('<figure', sty, '>', str_anchr, '<img src="',
+  } else {
+    sty <- paste0(" style=\"text-align:", options$fig.align, ";\"")
+  }
+  
+  if (is.list(options$fig.cap)) {
+    ## options$fig.cap is a list returned by the function fig$cap()
+    str_caption <- options$fig.cap$cap_txt
+    str_anchr <- options$fig.cap$anchor
+  } else {
+    ## options$fig.cap is a character object (hard coded, no anchor)
+    str_caption <- options$fig.cap
+    str_anchr <- ""
+  }
+  
+  paste('<figure', sty, '>', str_anchr, '<img src="',
         opts_knit$get('base.url'), paste(x, collapse = '.'),
         '"><figcaption>', str_caption, '</figcaption></figure>',
         sep = '')
-    
+  
 })
 ```
 
@@ -141,13 +141,13 @@ attr(match_data, "match.length") <- attr(match_data, "match.length") - 1
 fig_labels <- regmatches(rmdLinesSansPre, match_data, invert=FALSE)
 
 if (length(fig_labels) > 0) {
-
-    ## Test for duplicates
-    if (anyDuplicated(fig_labels) > 0) stop("Duplicate caption labels detected")
-    
-    ## Create a named list of Figure numbers
-    ref <- as.list(1:length(fig_labels))
-    names(ref) <- fig_labels
+  
+  ## Test for duplicates
+  if (anyDuplicated(fig_labels) > 0) stop("Duplicate caption labels detected")
+  
+  ## Create a named list of Figure numbers
+  ref <- as.list(1:length(fig_labels))
+  names(ref) <- fig_labels
 }    
 ```
 
@@ -178,8 +178,8 @@ xycentroides <- filter(xycentroides, nie_malla_modi_id %in% snow$nie_malla_modi_
 
 # Read Topographic data 
 rawtopo <- read.csv(file=paste(di, "/data/topo_nie_malla_modis.csv", sep=""),
-                 header=TRUE,
-                 sep = ",") 
+                    header=TRUE,
+                    sep = ",") 
 # function to convert radian to degree 
 rad2deg <- function(rad) {(rad * 180) / (pi)} 
 
@@ -192,7 +192,7 @@ topo <- rawtopo %>%
          aspect50mean_deg = rad2deg(aspect50mean),
          aspect50median_deg = rad2deg(aspect50median)) %>%
   dplyr::select(nie_malla_modi_id, dem50mean, dem50median, slope50mean_deg, 
-         slope50median_deg, aspect50mean_deg, aspect50median_deg) 
+                slope50median_deg, aspect50mean_deg, aspect50median_deg) 
 # -- 
 
 
@@ -212,8 +212,8 @@ for (i in indicadores) {
               se = sd / sqrt (length(vinterest))) %>%
     inner_join(topo, by="nie_malla_modi_id") %>%
     inner_join(xycentroides, by="nie_malla_modi_id") 
-    
-    assign(i, aux)
+  
+  assign(i, aux)
 } 
 
 ```
@@ -222,9 +222,9 @@ for (i in indicadores) {
 ### Spatial pattern of the snowcover indicators 
 
 * Create raster maps of the summary stats for each indicator (`$indicator$`: `scd`, `scod`, `scmd`, `scmc`). Two raster maps will be created:
-
- * `r_mean_$indicator$`: mean values of the indicator for the pixel in the temporal serie.
- * `r_cv_$indicator$`: coefficient of variation of the indicator for the pixel in the temporal serie.
+  
+  * `r_mean_$indicator$`: mean values of the indicator for the pixel in the temporal serie.
+* `r_cv_$indicator$`: coefficient of variation of the indicator for the pixel in the temporal serie.
 
 * Two additional raster maps will be created, with a mask of the elevation (those pixels above 1900 *m asl*). The names of the raster are: `r_mean_$indicator$_1900` and `r_cv_$indicator$_1900`. Pixels below 1900 masl show a value of `-1`. This value can be customized (change `updatevalue=-1` argument of the `mask` function). 
 
@@ -259,7 +259,7 @@ for (i in indicadores) {
   
   # raster auxiliar 
   aux_rast <- raster(aux_spatial, resolution=500)
-
+  
   # raster of Mean values 
   mean_raster <- rasterize(aux_spatial, aux_rast, "mean", fun=mean)
   names(mean_raster) <- i # Set name of the raster layer 
@@ -295,7 +295,7 @@ for (i in indicadores) {
   
   assign(name_cv1900, cv_raster1900)
   writeRaster(cv_raster1900, file=paste(di, "/data/derived/r_cv_", i, "_1900", ".asc", sep=""), overwrite=TRUE)
-  }
+}
 ```
 
 ## Visualization of the Snow Cover indicators 
