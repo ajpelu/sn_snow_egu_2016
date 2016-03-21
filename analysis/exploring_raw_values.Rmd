@@ -6,12 +6,12 @@ output:
   md_document:
       variant: markdown_github
 ---
-  
-  ```{r metadata, echo=FALSE}
+
+```{r metadata, echo=FALSE}
 # Set working directory 
 
-machine <- 'ajpelu'
-# machine <- 'ajpeluLap'
+# machine <- 'ajpelu'
+machine <- 'ajpeluLap'
 di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
 
 ```
@@ -23,6 +23,11 @@ library("rgdal")
 library("sp")
 library("dplyr")
 library("rasterVis") 
+library("multcomp")
+library("broom") # tidy output models
+library("grid") # multiple plots
+library("gridExtra") # multiple plots
+library("ggplot2")
 ```
 
 ```{r, echo=FALSE}
@@ -468,3 +473,129 @@ levelplot(r_cv_scmc_1900,
           at=seq(0,100,by=10),
           main="Snow Cover Melting Date (CV)")
 ```
+
+# Explore patterns of raw values
+
+## Snow Cover Onset Dates 
+
+* Analyze the effect of aspect, slope and longtitude on snow cover onset date
+
+```{r, echo=FALSE}
+# Subset data and classify elevation and aspect
+scod1900 <- scod %>% filter(dem50mean > 1900) %>%
+  mutate(dem50mean_group = cut(dem50mean, 
+                         breaks = seq(from=0, to=3500, by=250),
+                         labels = c("0-250", "251-500","501-750","751-1000",
+                                    "1001-1250","1251-1500","1501-1750","1751-2000",
+                                    "2001-2250","2251-2500","2501-2750", "2751-3000",
+                                    "3001-3250", "3251-3500")),
+         aspect50mean_deg_group = cut(aspect50mean_deg, 
+                                      breaks= c(22.5, 67.5, 112.5, 157.5, 
+                                                202.5, 247.5, 292.5, 337.5, 361),
+                                      labels = c("N", "NE", "E", "SE", "S", "SW", "W", "NW"))) 
+
+
+### Model 
+m_scod <- glm(mean ~ lon + aspect50mean_deg_group + slope50mean_deg, data=scod1900)
+tidy(m_scod)
+```
+
+:red_circle: broom tidy glm factor level
+
+```{r, echo=FALSE, fig.cap=fig$cap("scod_tukey_aspect", "Snow cover onset dates by aspect"), fig.height=8 , fig.width=11}
+# Plot of Snow Cover Onset dates by aspect 
+
+# Remove na level of aspect 
+df <- scod1900 %>% na.omit() 
+
+# Compute multiple comparisons 
+tuk <- glht(m_scod, linfct = mcp(aspect50mean_deg_group= "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(aspect50mean_deg_group = as.factor(lhs),
+         tukey_aspect = letters) 
+
+# Plot 
+ggplot(df, aes(x=aspect50mean_deg_group, y=mean)) +geom_boxplot() + 
+  geom_text(data=df_letter, aes(label = tukey_aspect, x=aspect50mean_deg_group, y=100),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + 
+  ylab('Snow cover onset date (hydrological day)') +
+  xlab('aspect') + 
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        strip.background=element_rect(fill='white')) 
+```
+
+```{r echo=FALSE, fig.cap=fig$cap("scod_tukey_aspect_effects", "Snow cover onset dates by aspect (effect sizes"), fig.height=8 , fig.width=11}
+# Effects comparison (aspect)
+CI <- confint(tuk)
+
+ggplot(mapping = aes(lhs, estimate)) +
+   geom_linerange(aes(ymin = lwr, ymax = upr), data = CI) +
+   geom_point(aes(size = p), data = summary(tuk)) +
+   scale_size(trans = "reverse") + theme_bw()
+```
+
+
+```{r echo=FALSE, fig.cap=fig$cap("scod_lon_slope", "Snow cover onset dates by Longitude and Slope"), fig.height=8 , fig.width=11}
+
+a <- ggplot(scod1900, aes(x=lon, y= mean)) + 
+  geom_point(col='gray') + 
+  geom_smooth(method='lm') +
+    theme_bw() + 
+  ylab('Snow cover onset date (hydrological day)') +
+  xlab('Longitude') + 
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        strip.background=element_rect(fill='white')) 
+  
+
+b <- ggplot(scod1900, aes(x=slope50mean_deg, y= mean)) + 
+  geom_point(col='gray') + 
+  geom_smooth(method='lm') +
+    theme_bw() + 
+  ylab('Snow cover onset date (hydrological day)') +
+  xlab('Slope (degrees') + 
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        strip.background=element_rect(fill='white')) 
+
+grid.arrange(a, b, ncol=2)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+```{r, echo=FALSE, eval=FALSE}
+ggplot(df, aes(x=aspect, y=mean)) + 
+  geom_bar(position=position_dodge(), stat="identity", fill='#084594') +
+  geom_errorbar(aes(ymax = mean + sd, ymin=mean - sd),
+                  width=.25, col= '#084594', 
+                  position=position_dodge(.9)) + 
+  theme_bw() + 
+  ylab('Snow cover onset date (hydrological day)') +
+  xlab('aspect') + 
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        strip.background=element_rect(fill='white')) 
+```
+
+
+
+
+

@@ -5,9 +5,12 @@ library("rgdal")
 library("sp")
 library("dplyr")
 library("rasterVis") 
+library("multcomp")
+library("broom") # tidy output models
+library("grid") # multiple plots
+library("gridExtra") # multiple plots
+library("ggplot2")
 ```
-
-    ## Warning: package 'knitr' was built under R version 3.2.3
 
 Prepare Data
 ------------
@@ -230,5 +233,49 @@ Visualization of the Snow Cover indicators
 <a name="scmc_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-11-1.png">
 <figcaption>
 <span style="color:black; ">Figure 8: Coefficient of Variation of values of Snow cover Melting cycles</span>
+</figcaption>
+</figure>
+Explore patterns of raw values
+==============================
+
+Snow Cover Onset Dates
+----------------------
+
+-   Analyze the effect of aspect, slope and longtitude on snow cover onset date
+
+<!-- -->
+
+    ##                        term    estimate  std.error statistic       p.value
+    ## 1               (Intercept) 130.8567712 4.15831407 31.468708 4.229538e-188
+    ## 2                       lon  24.6661751 1.28805455 19.149946  3.251691e-77
+    ## 3  aspect50mean_deg_groupNE   1.4309457 1.09727864  1.304086  1.923043e-01
+    ## 4   aspect50mean_deg_groupE   1.5597641 1.06765354  1.460927  1.441401e-01
+    ## 5  aspect50mean_deg_groupSE   2.3445620 1.09375115  2.143597  3.214529e-02
+    ## 6   aspect50mean_deg_groupS   3.5721065 1.08303001  3.298253  9.842306e-04
+    ## 7  aspect50mean_deg_groupSW   4.7437110 1.11054941  4.271499  2.001932e-05
+    ## 8   aspect50mean_deg_groupW   2.4348225 1.23419299  1.972805  4.860937e-02
+    ## 9  aspect50mean_deg_groupNW  -4.8064458 4.33730903 -1.108163  2.678802e-01
+    ## 10          slope50mean_deg  -0.1417892 0.03813988 -3.717611  2.047899e-04
+
+:red\_circle: broom tidy glm factor level
+
+<figure>
+<a name="scod_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-13-1.png">
+<figcaption>
+<span style="color:black; ">Figure 9: Snow cover onset dates by aspect</span>
+</figcaption>
+</figure>
+    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
+
+<figure>
+<a name="scod_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-14-1.png">
+<figcaption>
+<span style="color:black; ">Figure 10: Snow cover onset dates by aspect (effect sizes</span>
+</figcaption>
+</figure>
+<figure>
+<a name="scod_lon_slope"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-15-1.png">
+<figcaption>
+<span style="color:black; ">Figure 11: Snow cover onset dates by Longitude and Slope</span>
 </figcaption>
 </figure>
