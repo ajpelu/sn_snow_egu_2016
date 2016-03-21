@@ -175,3 +175,16 @@ Visualization of the Snow Cover indicators
 <span style="color:black; ">Figure 2: Coefficient of Variation of values of Snow cover duration</span>
 </figcaption>
 </figure>
+### Snow Cover Onset Date
+
+<figure>
+<a name="scod_mean"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-6-1.png">
+<figcaption>
+</figcaption>
+</figure>
+<figure>
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-6-2.png">
+<figcaption>
+<span style="color:black; ">Figure 3: Mean values of Snow cover Onset Date</span>
+</figcaption>
+</figure>

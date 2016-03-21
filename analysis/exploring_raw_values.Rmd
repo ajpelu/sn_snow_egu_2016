@@ -342,3 +342,32 @@ levelplot(r_cv_scd_1900,
           main="Snow Cover Duration (CV)")
 ```
 
+
+### Snow Cover Onset Date
+
+```{r, echo=FALSE, fig.cap=fig$cap("scod_mean", "Mean values of Snow cover Onset Date"), fig.height=8 , fig.width=11}
+
+# Select a palette
+# http://colorbrewer2.org/
+mypal <- brewer.pal(9, "YlOrRd")
+# Add a colour for 0 value
+mypal <- c("#D2D2D2", mypal)
+# Specify the color palette
+myTheme=rasterTheme(region=mypal)
+
+
+levelplot(r_mean_scod_1900, 
+          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
+          # Contour options
+          contour=TRUE, labels=TRUE, pretty=TRUE, 
+          # Breaks
+          #cut=20,
+          at=c(0,seq(15,105,by=7)),
+          main="Snow Cover Onset Date (mean values, hydrological day)") 
+
+levelplot(r_mean_scod_1900, 
+          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
+          main="Snow Cover Onset Date (mean values, hydrological day)") 
+```
+
+
