@@ -190,7 +190,7 @@ for (i in indicadores) {
 
 ### Snow Cover Duration
 
-```{r, echo=FALSE, fig.cap='Figure 1', fig.height=8 , fig.width=11}
+```{r, echo=FALSE, fig.height=8 , fig.width=11}
 
 # Select a palette
 # http://colorbrewer2.org/
@@ -215,7 +215,7 @@ levelplot(r_mean_scd_1900,
 
 ```
 
-```{r, echo=FALSE, fig.cap='Figure 1', fig.height=8 , fig.width=11}
+```{r, echo=FALSE, fig.height=8 , fig.width=11}
 # CV plot
 mypal_cv <- brewer.pal(9, "Oranges")
 mypal_cv <- c("#D2D2D2", mypal_cv)

@@ -163,12 +163,5 @@ Visualization of the Snow Cover indicators
 
 ### Snow Cover Duration
 
-<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-4-1.png" alt="Figure 1"  />
-<p class="caption">
-Figure 1
-</p>
-
-<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-5-1.png" alt="Figure 1"  />
-<p class="caption">
-Figure 1
-</p>
+![](exploring_raw_values_files/figure-markdown_github/unnamed-chunk-4-1.png)
+![](exploring_raw_values_files/figure-markdown_github/unnamed-chunk-5-1.png)
