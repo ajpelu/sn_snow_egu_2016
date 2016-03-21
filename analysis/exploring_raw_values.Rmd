@@ -25,6 +25,21 @@ library("dplyr")
 library("rasterVis") 
 ```
 
+```{r, echo=FALSE}
+# Set captions options
+library("knitr")
+opts_knit$set(eval.after='fig.cap')
+cap <- function () {
+    p <- last_plot()
+    if (!is.null(p) && !is.null(p$labels$title)) {
+        paste('Figure:', p$labels$title)
+    } else {
+        NULL # null caption
+    }
+}
+```
+
+
 ## Prepare Data
 
 * Read snow cover indicator data and subset snow cover duration 
