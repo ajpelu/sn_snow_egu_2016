@@ -509,15 +509,18 @@ panderOptions('round', 4)
 pander(format(tidy(drop1(m_scod, test="Chi")), digits=4))
 ```
 
+* What about the Variance Inflation factors? 
+
 
 ```{r, echo=FALSE}
 # Exploring relationship
-pander(corvif(df[,c('lon','aspect50mean_deg_group','slope50mean_deg')]))
+pander(as.data.frame(corvif(df[,c('lon','aspect50mean_deg_group','slope50mean_deg')])))
 detach(package:pander, unload=TRUE)
 ```
 
 
-```{r, echo=FALSE, fig.cap=fig$cap("ggpair_scod", "Explore relationships of covariates (Snow cover onset dates"), fig.height=12 , fig.width=11}
+
+```{r, message=FALSE, echo=FALSE, fig.cap=fig$cap("ggpair_scod", "Explore relationships of covariates (Snow cover onset dates"), fig.height=12 , fig.width=11}
 # See vignettes at GGally package
 # See also http://stackoverflow.com/questions/30858337/how-to-customize-lines-in-ggpairs-ggally
 
@@ -543,6 +546,7 @@ ggpairs(df,
 
 
 
+
 ```{r, echo=FALSE, fig.cap=fig$cap("scod_tukey_aspect", "Snow cover onset dates by aspect"), fig.height=5 , fig.width=7, warning=FALSE, message=FALSE}
 # Plot of Snow Cover Onset dates by aspect 
 
@@ -553,17 +557,20 @@ df_letter <- fortify(cld(tuk)) %>%
   transmute(aspect50mean_deg_group = as.factor(lhs),
          tukey_aspect = letters) 
 
+# Specify theme
+mythemeggplot <- theme(panel.grid.major=element_blank(),
+                       panel.grid.minor=element_blank(),
+                       strip.background=element_rect(fill='white'))
+  
 # Plot 
 ggplot(df, aes(x=aspect50mean_deg_group, y=mean)) +geom_boxplot() + 
   geom_text(data=df_letter, aes(label = tukey_aspect, x=aspect50mean_deg_group, y=100),
            position = position_dodge(width=0.9)) +
-  theme_bw() + 
+  theme_bw() + mythemeggplot + 
   ylab('Snow cover onset date (hydrological day)') +
-  xlab('aspect') + 
-  theme(panel.grid.major=element_blank(),
-        panel.grid.minor=element_blank(),
-        strip.background=element_rect(fill='white')) 
+  xlab('aspect')  
 ```
+
 
 
 
@@ -581,37 +588,259 @@ ggplot(mapping = aes(lhs, estimate)) +
 
 
 ```{r echo=FALSE, fig.cap=fig$cap("scod_lon_slope", "Snow cover onset dates by Longitude and Slope"), fig.height=5 , fig.width=8}
+y_lab <- ylab('Snow cover onset date (hydrological day)') 
 
+
+x_lab <- xlab('Longitude')
 a <- ggplot(scod1900, aes(x=lon, y= mean)) + 
   geom_point(col='gray') + 
   geom_smooth(method='lm') +
-    theme_bw() + 
-  ylab('Snow cover onset date (hydrological day)') +
-  xlab('Longitude') + 
-  theme(panel.grid.major=element_blank(),
-        panel.grid.minor=element_blank(),
-        strip.background=element_rect(fill='white')) 
+  theme_bw() + mythemeggplot + x_lab + y_lab
   
-
+x_lab <- xlab('Slope (degrees)') 
 b <- ggplot(scod1900, aes(x=slope50mean_deg, y= mean)) + 
   geom_point(col='gray') + 
   geom_smooth(method='lm') +
-    theme_bw() + 
-  ylab('Snow cover onset date (hydrological day)') +
-  xlab('Slope (degrees') + 
-  theme(panel.grid.major=element_blank(),
-        panel.grid.minor=element_blank(),
-        strip.background=element_rect(fill='white')) 
+    theme_bw() + mythemeggplot + x_lab + y_lab
 
 grid.arrange(a, b, ncol=2)
 ```
 
 ## Snow Cover Melting Dates 
 
+```{r, echo=FALSE}
+# Subset data and classify elevation and aspect
+scmd1900 <- scmd %>% filter(dem50mean > 1900) %>%
+  mutate(dem50mean_group = cut(dem50mean, 
+                         breaks = seq(from=0, to=3500, by=250),
+                         labels = c("0-250", "251-500","501-750","751-1000",
+                                    "1001-1250","1251-1500","1501-1750","1751-2000",
+                                    "2001-2250","2251-2500","2501-2750", "2751-3000",
+                                    "3001-3250", "3251-3500")),
+         aspect50mean_deg_group = cut(aspect50mean_deg, 
+                                      breaks= c(22.5, 67.5, 112.5, 157.5, 
+                                                202.5, 247.5, 292.5, 337.5, 361),
+                                      labels = c("N", "NE", "E", "SE", "S", "SW", "W", "NW"))) 
+
+
+### Model 
+m_scmd <- glm(mean ~ dem50mean + lon + aspect50mean_deg_group + slope50mean_deg, data=scmd1900)
+
+# Remove na level of aspect 
+df <- scmd1900 %>% na.omit() 
+
+library("pander")
+pander(format(tidy(drop1(m_scmd, test="Chi")), digits=4))
+```
+
+
+* What about the Variance Inflation factors? 
+
+
+```{r, echo=FALSE}
+# Exploring relationship
+pander(as.data.frame(corvif(df[,c('dem50mean','lon','aspect50mean_deg_group','slope50mean_deg')])))
+detach(package:pander, unload=TRUE)
+```
 
 
 
+```{r, message=FALSE, echo=FALSE, fig.cap=fig$cap("ggpair_scmd", "Explore relationships of covariates (Snow cover melting dates"), fig.height=12 , fig.width=11}
+# Plot 
+ggpairs(df, 
+        columns = c("dem50mean","lon","aspect50mean_deg_group","slope50mean_deg"),
+        columnLabels = c('Elevation','Longitude', 'Aspect', 'Slope'),
+        lower = list(continuous = wrap(lowerFn, method="lm"),
+                     combo = wrap("facethist", fill="blue")),
+        upper = list(continuous = wrap("cor", size=11), combo='box'),
+        diag = list(discrete = wrap("barDiag", fill= 'blue'))) +
+   theme_bw() 
+```        
+
+
+
+```{r, echo=FALSE, fig.cap=fig$cap("scmd_tukey_aspect", "Snow cover melting dates by aspect"), fig.height=5 , fig.width=7, warning=FALSE, message=FALSE}
+# Plot of Snow Cover Melting dates by aspect 
+
+# Compute multiple comparisons 
+tuk <- glht(m_scmd, linfct = mcp(aspect50mean_deg_group= "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(aspect50mean_deg_group = as.factor(lhs),
+         tukey_aspect = letters) 
+
+# Plot 
+ggplot(df, aes(x=aspect50mean_deg_group, y=mean)) +geom_boxplot() + 
+  geom_text(data=df_letter, aes(label = tukey_aspect, x=aspect50mean_deg_group, y=135),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + mythemeggplot +
+  ylab('Snow cover onset date (hydrological day)') +
+  xlab('aspect') 
+```
+
+
+
+
+```{r echo=FALSE, fig.cap=fig$cap("scmd_tukey_aspect_effects", "Snow cover melting dates by aspect (effect sizes"), fig.height=8 , fig.width=11}
+# Effects comparison (aspect)
+CI <- confint(tuk)
+
+ggplot(mapping = aes(lhs, estimate)) +
+  geom_linerange(aes(ymin = lwr, ymax = upr), data = CI) +
+  geom_point(aes(size = p), data = summary(tuk)) +
+  scale_size(trans = "reverse") + theme_bw() + 
+  coord_flip()
+```
+
+
+
+
+```{r echo=FALSE, fig.cap=fig$cap("scmd_lon_slope_elev", "Snow cover melting dates by Longitude, Slope and Elevation"), fig.height=6, fig.width=11}
+x_lab <- xlab('Longitude')
+y_lab <- ylab('Snow cover melting date (hydrological day)')
+
+a <- ggplot(scmd1900, aes(x=lon, y= mean)) + 
+  geom_point(col='gray') + 
+  geom_smooth(method="lm", col="gray") +
+  geom_smooth(method='loess') +
+  theme_bw() + mythemeggplot + x_lab + y_lab
   
+
+x_lab <- xlab('Slope (degrees)')  
+b <- ggplot(scmd1900, aes(x=slope50mean_deg, y= mean)) + 
+  geom_point(col='gray') + 
+  geom_smooth(method="lm") +
+  theme_bw() + mythemeggplot + x_lab + y_lab
+  
+x_lab <- xlab('Elevation (m)')  
+c <- ggplot(scmd1900, aes(x=dem50mean, y= mean)) + 
+  geom_point(col='gray') + 
+  geom_smooth(method="lm") +
+  theme_bw() + mythemeggplot + x_lab + y_lab 
+  
+grid.arrange(a, b, c, ncol=3)
+```
+
+
+## Snow Cover Melting Cycles
+
+```{r, echo=FALSE}
+# Subset data and classify elevation and aspect
+scmc1900 <- scmc %>% filter(dem50mean > 1900) %>%
+  mutate(dem50mean_group = cut(dem50mean, 
+                         breaks = seq(from=0, to=3500, by=250),
+                         labels = c("0-250", "251-500","501-750","751-1000",
+                                    "1001-1250","1251-1500","1501-1750","1751-2000",
+                                    "2001-2250","2251-2500","2501-2750", "2751-3000",
+                                    "3001-3250", "3251-3500")),
+         aspect50mean_deg_group = cut(aspect50mean_deg, 
+                                      breaks= c(22.5, 67.5, 112.5, 157.5, 
+                                                202.5, 247.5, 292.5, 337.5, 361),
+                                      labels = c("N", "NE", "E", "SE", "S", "SW", "W", "NW"))) 
+
+
+### Model 
+m_scmc <- glm(mean ~ dem50mean + lon + aspect50mean_deg_group + slope50mean_deg, data=scmc1900)
+
+# Remove na level of aspect 
+df <- scmc1900 %>% na.omit() 
+
+library("pander")
+pander(format(tidy(drop1(m_scmc, test="Chi")), digits=4))
+```
+
+
+* What about the Variance Inflation factors? 
+
+
+```{r, echo=FALSE}
+# Exploring relationship
+pander(as.data.frame(corvif(df[,c('dem50mean','lon','aspect50mean_deg_group','slope50mean_deg')])))
+detach(package:pander, unload=TRUE)
+```
+
+
+
+```{r, message=FALSE, echo=FALSE, fig.cap=fig$cap("ggpair_scmc", "Explore relationships of covariates (Snow cover melting dates"), fig.height=12 , fig.width=11}
+# Plot 
+ggpairs(df, 
+        columns = c("dem50mean","lon","aspect50mean_deg_group","slope50mean_deg"),
+        columnLabels = c('Elevation','Longitude', 'Aspect', 'Slope'),
+        lower = list(continuous = wrap(lowerFn, method="lm"),
+                     combo = wrap("facethist", fill="blue")),
+        upper = list(continuous = wrap("cor", size=11), combo='box'),
+        diag = list(discrete = wrap("barDiag", fill= 'blue'))) +
+   theme_bw() 
+```        
+
+
+
+```{r, echo=FALSE, fig.cap=fig$cap("scmc_tukey_aspect", "Snow cover melting dates by aspect"), fig.height=5 , fig.width=7, warning=FALSE, message=FALSE}
+# Plot of Snow Cover Melting dates by aspect 
+
+# Compute multiple comparisons 
+tuk <- glht(m_scmc, linfct = mcp(aspect50mean_deg_group= "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(aspect50mean_deg_group = as.factor(lhs),
+         tukey_aspect = letters) 
+
+# Plot 
+ggplot(df, aes(x=aspect50mean_deg_group, y=mean)) +geom_boxplot() + 
+  geom_text(data=df_letter, aes(label = tukey_aspect, x=aspect50mean_deg_group, y=5),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + mythemeggplot +
+  ylab('Snow cover melting cycles (n)') +
+  xlab('aspect') 
+```
+
+
+
+
+```{r echo=FALSE, fig.cap=fig$cap("scmc_tukey_aspect_effects", "Snow cover melting dates by aspect (effect sizes"), fig.height=8 , fig.width=11}
+# Effects comparison (aspect)
+CI <- confint(tuk)
+
+ggplot(mapping = aes(lhs, estimate)) +
+  geom_linerange(aes(ymin = lwr, ymax = upr), data = CI) +
+  geom_point(aes(size = p), data = summary(tuk)) +
+  scale_size(trans = "reverse") + theme_bw() + 
+  coord_flip()
+```
+
+
+
+
+```{r echo=FALSE, fig.cap=fig$cap("scmc_lon_slope_elev", "Snow cover melting dates by Longitude, Slope and Elevation"), fig.height=6, fig.width=11}
+x_lab <- xlab('Longitude')
+y_lab <- ylab('Snow cover melting cycles (n)')
+
+a <- ggplot(scmc1900, aes(x=lon, y= mean)) + 
+  geom_point(col='gray') + 
+  geom_smooth(method='lm') +
+  theme_bw() + mythemeggplot + x_lab + y_lab
+  
+
+x_lab <- xlab('Slope (degrees)')  
+b <- ggplot(scmc1900, aes(x=slope50mean_deg, y= mean)) + 
+  geom_point(col='gray') + 
+  geom_smooth(method="lm") +
+  theme_bw() + mythemeggplot + x_lab + y_lab
+  
+x_lab <- xlab('Elevation (m)')  
+c <- ggplot(scmc1900, aes(x=dem50mean, y= mean)) + 
+  geom_point(col='gray') + 
+  geom_smooth(method="lm", col="gray") +
+  geom_smooth(method="loess") +
+  theme_bw() + mythemeggplot + x_lab + y_lab 
+  
+grid.arrange(a, b, c, ncol=3)
+```
+
+
+
+:red_circle: por aqui vas carpinto
+
 ```{r, echo=FALSE, eval=FALSE}
 ggplot(df, aes(x=aspect, y=mean)) + 
   geom_bar(position=position_dodge(), stat="identity", fill='#084594') +

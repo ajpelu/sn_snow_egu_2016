@@ -303,6 +303,8 @@ Snow Cover Onset Dates
 </tbody>
 </table>
 
+-   What about the Variance Inflation factors?
+
 Variance inflation factors
 
                            GVIF Df GVIF^(1/2Df)
@@ -346,9 +348,6 @@ lon 1.109721 1 1.053433 aspect50mean\_deg\_group 1.091876 7 1.006298 slope50mean
 </tbody>
 </table>
 
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-
 <figure>
 <a name="ggpair_scod"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-14-1.png">
 <figcaption>
@@ -361,12 +360,6 @@ lon 1.109721 1 1.053433 aspect50mean\_deg\_group 1.091876 7 1.006298 slope50mean
 <span style="color:black; ">Figure 10: Snow cover onset dates by aspect</span>
 </figcaption>
 </figure>
-    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
-
-    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
-
-    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
-
 <figure>
 <a name="scod_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-16-1.png">
 <figcaption>
@@ -381,3 +374,300 @@ lon 1.109721 1 1.053433 aspect50mean\_deg\_group 1.091876 7 1.006298 slope50mean
 </figure>
 Snow Cover Melting Dates
 ------------------------
+
+    ## 
+    ## Attaching package: 'pander'
+
+    ## The following object is masked from 'package:GGally':
+    ## 
+    ##     wrap
+
+<table style="width:92%;">
+<colgroup>
+<col width="31%" />
+<col width="6%" />
+<col width="11%" />
+<col width="12%" />
+<col width="16%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">term</th>
+<th align="center">df</th>
+<th align="center">sumsq</th>
+<th align="center">meansq</th>
+<th align="center">statistic</th>
+<th align="center">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><none></td>
+<td align="center">NA</td>
+<td align="center">323863</td>
+<td align="center">22661</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+<tr class="even">
+<td align="center">dem50mean</td>
+<td align="center">1</td>
+<td align="center">1153804</td>
+<td align="center">26486</td>
+<td align="center">3826.748</td>
+<td align="center">0.000e+00</td>
+</tr>
+<tr class="odd">
+<td align="center">lon</td>
+<td align="center">1</td>
+<td align="center">324822</td>
+<td align="center">22668</td>
+<td align="center">8.907</td>
+<td align="center">2.841e-03</td>
+</tr>
+<tr class="even">
+<td align="center">aspect50mean_deg_group</td>
+<td align="center">7</td>
+<td align="center">328542</td>
+<td align="center">22690</td>
+<td align="center">43.209</td>
+<td align="center">3.039e-07</td>
+</tr>
+<tr class="odd">
+<td align="center">slope50mean_deg</td>
+<td align="center">1</td>
+<td align="center">339838</td>
+<td align="center">22804</td>
+<td align="center">145.026</td>
+<td align="center">2.120e-33</td>
+</tr>
+</tbody>
+</table>
+
+-   What about the Variance Inflation factors?
+
+Variance inflation factors
+
+                           GVIF Df GVIF^(1/2Df)
+
+dem50mean 1.104429 1 1.050918 lon 1.217001 1 1.103178 aspect50mean\_deg\_group 1.098567 7 1.006737 slope50mean\_deg 1.050885 1 1.025127
+
+<table style="width:76%;">
+<colgroup>
+<col width="40%" />
+<col width="9%" />
+<col width="6%" />
+<col width="19%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">GVIF</th>
+<th align="center">Df</th>
+<th align="center">GVIF^(1/2Df)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>dem50mean</strong></td>
+<td align="center">1.104</td>
+<td align="center">1</td>
+<td align="center">1.051</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>lon</strong></td>
+<td align="center">1.217</td>
+<td align="center">1</td>
+<td align="center">1.103</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>aspect50mean_deg_group</strong></td>
+<td align="center">1.099</td>
+<td align="center">7</td>
+<td align="center">1.007</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>slope50mean_deg</strong></td>
+<td align="center">1.051</td>
+<td align="center">1</td>
+<td align="center">1.025</td>
+</tr>
+</tbody>
+</table>
+
+<figure>
+<a name="ggpair_scmd"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-20-1.png">
+<figcaption>
+<span style="color:black; ">Figure 13: Explore relationships of covariates (Snow cover melting dates</span>
+</figcaption>
+</figure>
+<figure>
+<a name="scmd_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-21-1.png">
+<figcaption>
+<span style="color:black; ">Figure 14: Snow cover melting dates by aspect</span>
+</figcaption>
+</figure>
+<figure>
+<a name="scmd_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-22-1.png">
+<figcaption>
+<span style="color:black; ">Figure 15: Snow cover melting dates by aspect (effect sizes</span>
+</figcaption>
+</figure>
+<figure>
+<a name="scmd_lon_slope_elev"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-23-1.png">
+<figcaption>
+<span style="color:black; ">Figure 16: Snow cover melting dates by Longitude, Slope and Elevation</span>
+</figcaption>
+</figure>
+Snow Cover Melting Cycles
+-------------------------
+
+    ## 
+    ## Attaching package: 'pander'
+
+    ## The following object is masked from 'package:GGally':
+    ## 
+    ##     wrap
+
+<table style="width:92%;">
+<colgroup>
+<col width="31%" />
+<col width="6%" />
+<col width="11%" />
+<col width="12%" />
+<col width="16%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">term</th>
+<th align="center">df</th>
+<th align="center">sumsq</th>
+<th align="center">meansq</th>
+<th align="center">statistic</th>
+<th align="center">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><none></td>
+<td align="center">NA</td>
+<td align="center">345.8</td>
+<td align="center">2053</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+<tr class="even">
+<td align="center">dem50mean</td>
+<td align="center">1</td>
+<td align="center">721.1</td>
+<td align="center">4264</td>
+<td align="center">2213.2234</td>
+<td align="center">0.000e+00</td>
+</tr>
+<tr class="odd">
+<td align="center">lon</td>
+<td align="center">1</td>
+<td align="center">346.5</td>
+<td align="center">2057</td>
+<td align="center">6.0407</td>
+<td align="center">1.398e-02</td>
+</tr>
+<tr class="even">
+<td align="center">aspect50mean_deg_group</td>
+<td align="center">7</td>
+<td align="center">354.9</td>
+<td align="center">2116</td>
+<td align="center">77.5868</td>
+<td align="center">4.273e-14</td>
+</tr>
+<tr class="odd">
+<td align="center">slope50mean_deg</td>
+<td align="center">1</td>
+<td align="center">345.9</td>
+<td align="center">2051</td>
+<td align="center">0.5956</td>
+<td align="center">4.403e-01</td>
+</tr>
+</tbody>
+</table>
+
+-   What about the Variance Inflation factors?
+
+Variance inflation factors
+
+                           GVIF Df GVIF^(1/2Df)
+
+dem50mean 1.104429 1 1.050918 lon 1.217001 1 1.103178 aspect50mean\_deg\_group 1.098567 7 1.006737 slope50mean\_deg 1.050885 1 1.025127
+
+<table style="width:76%;">
+<colgroup>
+<col width="40%" />
+<col width="9%" />
+<col width="6%" />
+<col width="19%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">GVIF</th>
+<th align="center">Df</th>
+<th align="center">GVIF^(1/2Df)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>dem50mean</strong></td>
+<td align="center">1.104</td>
+<td align="center">1</td>
+<td align="center">1.051</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>lon</strong></td>
+<td align="center">1.217</td>
+<td align="center">1</td>
+<td align="center">1.103</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>aspect50mean_deg_group</strong></td>
+<td align="center">1.099</td>
+<td align="center">7</td>
+<td align="center">1.007</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>slope50mean_deg</strong></td>
+<td align="center">1.051</td>
+<td align="center">1</td>
+<td align="center">1.025</td>
+</tr>
+</tbody>
+</table>
+
+<figure>
+<a name="ggpair_scmc"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-26-1.png">
+<figcaption>
+<span style="color:black; ">Figure 17: Explore relationships of covariates (Snow cover melting dates</span>
+</figcaption>
+</figure>
+<figure>
+<a name="scmc_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-27-1.png">
+<figcaption>
+<span style="color:black; ">Figure 18: Snow cover melting dates by aspect</span>
+</figcaption>
+</figure>
+    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
+
+<figure>
+<a name="scmc_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-28-1.png">
+<figcaption>
+<span style="color:black; ">Figure 19: Snow cover melting dates by aspect (effect sizes</span>
+</figcaption>
+</figure>
+<figure>
+<a name="scmc_lon_slope_elev"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-29-1.png">
+<figcaption>
+<span style="color:black; ">Figure 20: Snow cover melting dates by Longitude, Slope and Elevation</span>
+</figcaption>
+</figure>
+:red\_circle: por aqui vas carpinto
