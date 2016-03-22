@@ -10,7 +10,12 @@ library("broom") # tidy output models
 library("grid") # multiple plots
 library("gridExtra") # multiple plots
 library("ggplot2")
+library("GGally")
+library("pander")
+source("http://www.highstat.com/BGS/GAM/RCode/HighstatLibV8.R")
 ```
+
+    ## Warning: package 'knitr' was built under R version 3.2.3
 
 Prepare Data
 ------------
@@ -85,7 +90,7 @@ for (i in indicadores) {
 -   `r_mean_$indicator$`: mean values of the indicator for the pixel in the temporal serie.
 -   `r_cv_$indicator$`: coefficient of variation of the indicator for the pixel in the temporal serie.
 
--   Two additional raster maps will be created, with a mask of the elevation (those pixels above 1900 *m asl*). The names of the raster are: `r_mean_$indicator$_1900` and `r_cv_$indicator$_1900`. Pixels below 1900 masl show a value of `-1`. This value can be customized (change `updatevalue=-1` argument of the `mask` function).
+-   Two additional raster maps will be created, with a mask of the elevation (those pixels above 1900 *m asl*). The names of the raster are: `r_mean_$indicator$_1900` and `r_cv_$indicator$_1900`. Pixels below 1900 masl show a value of `0`. This value can be customized (change `updatevalue=-1` argument of the `mask` function).
 
 -   All these rasters are stored at `./data/derived/`
 
@@ -243,37 +248,159 @@ Snow Cover Onset Dates
 
 -   Analyze the effect of aspect, slope and longtitude on snow cover onset date
 
-<!-- -->
+<table style="width:92%;">
+<colgroup>
+<col width="31%" />
+<col width="6%" />
+<col width="11%" />
+<col width="12%" />
+<col width="16%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">term</th>
+<th align="center">df</th>
+<th align="center">sumsq</th>
+<th align="center">meansq</th>
+<th align="center">statistic</th>
+<th align="center">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><none></td>
+<td align="center">NA</td>
+<td align="center">375417</td>
+<td align="center">23104</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+<tr class="even">
+<td align="center">lon</td>
+<td align="center">1</td>
+<td align="center">421278</td>
+<td align="center">23449</td>
+<td align="center">347.15</td>
+<td align="center">1.773e-77</td>
+</tr>
+<tr class="odd">
+<td align="center">aspect50mean_deg_group</td>
+<td align="center">7</td>
+<td align="center">380547</td>
+<td align="center">23131</td>
+<td align="center">40.88</td>
+<td align="center">8.547e-07</td>
+</tr>
+<tr class="even">
+<td align="center">slope50mean_deg</td>
+<td align="center">1</td>
+<td align="center">377146</td>
+<td align="center">23116</td>
+<td align="center">13.83</td>
+<td align="center">1.996e-04</td>
+</tr>
+</tbody>
+</table>
 
-    ##                        term    estimate  std.error statistic       p.value
-    ## 1               (Intercept) 130.8567712 4.15831407 31.468708 4.229538e-188
-    ## 2                       lon  24.6661751 1.28805455 19.149946  3.251691e-77
-    ## 3  aspect50mean_deg_groupNE   1.4309457 1.09727864  1.304086  1.923043e-01
-    ## 4   aspect50mean_deg_groupE   1.5597641 1.06765354  1.460927  1.441401e-01
-    ## 5  aspect50mean_deg_groupSE   2.3445620 1.09375115  2.143597  3.214529e-02
-    ## 6   aspect50mean_deg_groupS   3.5721065 1.08303001  3.298253  9.842306e-04
-    ## 7  aspect50mean_deg_groupSW   4.7437110 1.11054941  4.271499  2.001932e-05
-    ## 8   aspect50mean_deg_groupW   2.4348225 1.23419299  1.972805  4.860937e-02
-    ## 9  aspect50mean_deg_groupNW  -4.8064458 4.33730903 -1.108163  2.678802e-01
-    ## 10          slope50mean_deg  -0.1417892 0.03813988 -3.717611  2.047899e-04
+    ## 
+    ## 
+    ## Variance inflation factors
+    ## 
+    ##                            GVIF Df GVIF^(1/2Df)
+    ## lon                    1.109721  1     1.053433
+    ## aspect50mean_deg_group 1.091876  7     1.006298
+    ## slope50mean_deg        1.050841  1     1.025106
 
-:red\_circle: broom tidy glm factor level
+<table style="width:76%;">
+<colgroup>
+<col width="40%" />
+<col width="9%" />
+<col width="6%" />
+<col width="19%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">GVIF</th>
+<th align="center">Df</th>
+<th align="center">GVIF^(1/2Df)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>lon</strong></td>
+<td align="center">1.11</td>
+<td align="center">1</td>
+<td align="center">1.053</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>aspect50mean_deg_group</strong></td>
+<td align="center">1.092</td>
+<td align="center">7</td>
+<td align="center">1.006</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>slope50mean_deg</strong></td>
+<td align="center">1.051</td>
+<td align="center">1</td>
+<td align="center">1.025</td>
+</tr>
+</tbody>
+</table>
+
+``` r
+# See vignettes at GGally package
+# See also http://stackoverflow.com/questions/30858337/how-to-customize-lines-in-ggpairs-ggally
+
+
+detach(package:pander, unload=TRUE)
+
+# Define a customized lower part
+lowerFn <- function(data, mapping, method = "lm", ...) {
+  p <- ggplot2::ggplot(data = data, mapping = mapping) +
+    ggplot2::geom_point(colour = "gray") +
+    ggplot2::geom_smooth(method = method , color = "red", ...)
+  p
+}
+
+# Plot 
+ggpairs(df, 
+        columns = c("lon","aspect50mean_deg_group","slope50mean_deg"),
+        columnLabels = c('Longitude', 'Aspect', 'Slope'),
+        lower = list(continuous = wrap(lowerFn, method="lm"),
+                     combo = wrap("facethist", fill="blue")),
+        upper = list(continuous = wrap("cor", size=11), combo='box'),
+        diag = list(discrete = wrap("barDiag", fill= 'blue'))) +
+   theme_bw() 
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
 <figure>
-<a name="scod_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-13-1.png">
+<a name="ggpair_scod"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-14-1.png">
 <figcaption>
-<span style="color:black; ">Figure 9: Snow cover onset dates by aspect</span>
+<span style="color:black; ">Figure 9: Explore relationships of covariates (Snow cover onset dates</span>
 </figcaption>
 </figure>
 <figure>
-<a name="scod_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-14-1.png">
+<a name="scod_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-15-1.png">
 <figcaption>
-<span style="color:black; ">Figure 10: Snow cover onset dates by aspect (effect sizes</span>
+<span style="color:black; ">Figure 10: Snow cover onset dates by aspect</span>
 </figcaption>
 </figure>
 <figure>
-<a name="scod_lon_slope"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-15-1.png">
+<a name="scod_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-16-1.png">
 <figcaption>
-<span style="color:black; ">Figure 11: Snow cover onset dates by Longitude and Slope</span>
+<span style="color:black; ">Figure 11: Snow cover onset dates by aspect (effect sizes</span>
 </figcaption>
 </figure>
+<figure>
+<a name="scod_lon_slope"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-17-1.png">
+<figcaption>
+<span style="color:black; ">Figure 12: Snow cover onset dates by Longitude and Slope</span>
+</figcaption>
+</figure>
+Snow Cover Melting Dates
+------------------------

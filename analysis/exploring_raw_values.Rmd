@@ -10,8 +10,8 @@ output:
 ```{r metadata, echo=FALSE}
 # Set working directory 
 
-# machine <- 'ajpelu'
-machine <- 'ajpeluLap'
+machine <- 'ajpelu'
+# machine <- 'ajpeluLap'
 di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
 
 ```
@@ -28,6 +28,9 @@ library("broom") # tidy output models
 library("grid") # multiple plots
 library("gridExtra") # multiple plots
 library("ggplot2")
+library("GGally")
+library("pander")
+source("http://www.highstat.com/BGS/GAM/RCode/HighstatLibV8.R")
 ```
 
 ```{r, echo=FALSE}
@@ -231,7 +234,7 @@ for (i in indicadores) {
   * `r_mean_$indicator$`: mean values of the indicator for the pixel in the temporal serie.
 * `r_cv_$indicator$`: coefficient of variation of the indicator for the pixel in the temporal serie.
 
-* Two additional raster maps will be created, with a mask of the elevation (those pixels above 1900 *m asl*). The names of the raster are: `r_mean_$indicator$_1900` and `r_cv_$indicator$_1900`. Pixels below 1900 masl show a value of `-1`. This value can be customized (change `updatevalue=-1` argument of the `mask` function). 
+* Two additional raster maps will be created, with a mask of the elevation (those pixels above 1900 *m asl*). The names of the raster are: `r_mean_$indicator$_1900` and `r_cv_$indicator$_1900`. Pixels below 1900 masl show a value of `0`. This value can be customized (change `updatevalue=-1` argument of the `mask` function). 
 
 * All these rasters are stored at `./data/derived/` 
 
@@ -497,16 +500,49 @@ scod1900 <- scod %>% filter(dem50mean > 1900) %>%
 
 ### Model 
 m_scod <- glm(mean ~ lon + aspect50mean_deg_group + slope50mean_deg, data=scod1900)
-tidy(m_scod)
-```
-
-:red_circle: broom tidy glm factor level
-
-```{r, echo=FALSE, fig.cap=fig$cap("scod_tukey_aspect", "Snow cover onset dates by aspect"), fig.height=5 , fig.width=7, warning=FALSE, message=FALSE}
-# Plot of Snow Cover Onset dates by aspect 
 
 # Remove na level of aspect 
 df <- scod1900 %>% na.omit() 
+
+panderOptions('round', 4)
+pander(format(tidy(drop1(m_scod, test="Chi")), digits=4))
+```
+
+```{r, echo=FALSE}
+# Exploring relationship
+x <- corvif(df[,c('lon','aspect50mean_deg_group','slope50mean_deg')])
+pander(x)
+```
+
+```{r, fig.cap=fig$cap("ggpair_scod", "Explore relationships of covariates (Snow cover onset dates"), fig.height=8 , fig.width=11}
+# See vignettes at GGally package
+# See also http://stackoverflow.com/questions/30858337/how-to-customize-lines-in-ggpairs-ggally
+
+
+detach(package:pander, unload=TRUE)
+
+# Define a customized lower part
+lowerFn <- function(data, mapping, method = "lm", ...) {
+  p <- ggplot2::ggplot(data = data, mapping = mapping) +
+    ggplot2::geom_point(colour = "gray") +
+    ggplot2::geom_smooth(method = method , color = "red", ...)
+  p
+}
+
+# Plot 
+ggpairs(df, 
+        columns = c("lon","aspect50mean_deg_group","slope50mean_deg"),
+        columnLabels = c('Longitude', 'Aspect', 'Slope'),
+        lower = list(continuous = wrap(lowerFn, method="lm"),
+                     combo = wrap("facethist", fill="blue")),
+        upper = list(continuous = wrap("cor", size=11), combo='box'),
+        diag = list(discrete = wrap("barDiag", fill= 'blue'))) +
+   theme_bw() 
+```        
+
+
+```{r, echo=FALSE, fig.cap=fig$cap("scod_tukey_aspect", "Snow cover onset dates by aspect"), fig.height=5 , fig.width=7, warning=FALSE, message=FALSE}
+# Plot of Snow Cover Onset dates by aspect 
 
 # Compute multiple comparisons 
 tuk <- glht(m_scod, linfct = mcp(aspect50mean_deg_group= "Tukey"))
@@ -538,7 +574,6 @@ ggplot(mapping = aes(lhs, estimate)) +
   coord_flip()
 ```
 
-
 ```{r echo=FALSE, fig.cap=fig$cap("scod_lon_slope", "Snow cover onset dates by Longitude and Slope"), fig.height=5 , fig.width=8}
 
 a <- ggplot(scod1900, aes(x=lon, y= mean)) + 
@@ -565,22 +600,11 @@ b <- ggplot(scod1900, aes(x=slope50mean_deg, y= mean)) +
 grid.arrange(a, b, ncol=2)
 ```
 
+## Snow Cover Melting Dates 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-  
   
 ```{r, echo=FALSE, eval=FALSE}
 ggplot(df, aes(x=aspect, y=mean)) + 
