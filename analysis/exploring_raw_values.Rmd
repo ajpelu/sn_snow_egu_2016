@@ -421,6 +421,7 @@ levelplot(r_mean_scmd_1900,
           at=c(0,seq(140,280,by=5)))
 ```
 
+
 ```{r, echo=FALSE, fig.cap=fig$cap("scmd_cv", "Coefficient of Variation of values of Snow cover Melting date"), fig.height=8 , fig.width=11}
 # CV plot
 mypal_cv <- brewer.pal(9, "Oranges")
@@ -508,18 +509,18 @@ panderOptions('round', 4)
 pander(format(tidy(drop1(m_scod, test="Chi")), digits=4))
 ```
 
+
 ```{r, echo=FALSE}
 # Exploring relationship
-x <- corvif(df[,c('lon','aspect50mean_deg_group','slope50mean_deg')])
-pander(x)
+pander(corvif(df[,c('lon','aspect50mean_deg_group','slope50mean_deg')]))
+detach(package:pander, unload=TRUE)
 ```
 
-```{r, fig.cap=fig$cap("ggpair_scod", "Explore relationships of covariates (Snow cover onset dates"), fig.height=8 , fig.width=11}
+
+```{r, echo=FALSE, fig.cap=fig$cap("ggpair_scod", "Explore relationships of covariates (Snow cover onset dates"), fig.height=12 , fig.width=11}
 # See vignettes at GGally package
 # See also http://stackoverflow.com/questions/30858337/how-to-customize-lines-in-ggpairs-ggally
 
-
-detach(package:pander, unload=TRUE)
 
 # Define a customized lower part
 lowerFn <- function(data, mapping, method = "lm", ...) {
@@ -539,6 +540,7 @@ ggpairs(df,
         diag = list(discrete = wrap("barDiag", fill= 'blue'))) +
    theme_bw() 
 ```        
+
 
 
 ```{r, echo=FALSE, fig.cap=fig$cap("scod_tukey_aspect", "Snow cover onset dates by aspect"), fig.height=5 , fig.width=7, warning=FALSE, message=FALSE}
@@ -563,6 +565,8 @@ ggplot(df, aes(x=aspect50mean_deg_group, y=mean)) +geom_boxplot() +
         strip.background=element_rect(fill='white')) 
 ```
 
+
+
 ```{r echo=FALSE, fig.cap=fig$cap("scod_tukey_aspect_effects", "Snow cover onset dates by aspect (effect sizes"), fig.height=8 , fig.width=11}
 # Effects comparison (aspect)
 CI <- confint(tuk)
@@ -573,6 +577,8 @@ ggplot(mapping = aes(lhs, estimate)) +
   scale_size(trans = "reverse") + theme_bw() + 
   coord_flip()
 ```
+
+
 
 ```{r echo=FALSE, fig.cap=fig$cap("scod_lon_slope", "Snow cover onset dates by Longitude and Slope"), fig.height=5 , fig.width=8}
 

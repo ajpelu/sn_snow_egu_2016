@@ -303,14 +303,11 @@ Snow Cover Onset Dates
 </tbody>
 </table>
 
-    ## 
-    ## 
-    ## Variance inflation factors
-    ## 
-    ##                            GVIF Df GVIF^(1/2Df)
-    ## lon                    1.109721  1     1.053433
-    ## aspect50mean_deg_group 1.091876  7     1.006298
-    ## slope50mean_deg        1.050841  1     1.025106
+Variance inflation factors
+
+                           GVIF Df GVIF^(1/2Df)
+
+lon 1.109721 1 1.053433 aspect50mean\_deg\_group 1.091876 7 1.006298 slope50mean\_deg 1.050841 1 1.025106
 
 <table style="width:76%;">
 <colgroup>
@@ -349,32 +346,6 @@ Snow Cover Onset Dates
 </tbody>
 </table>
 
-``` r
-# See vignettes at GGally package
-# See also http://stackoverflow.com/questions/30858337/how-to-customize-lines-in-ggpairs-ggally
-
-
-detach(package:pander, unload=TRUE)
-
-# Define a customized lower part
-lowerFn <- function(data, mapping, method = "lm", ...) {
-  p <- ggplot2::ggplot(data = data, mapping = mapping) +
-    ggplot2::geom_point(colour = "gray") +
-    ggplot2::geom_smooth(method = method , color = "red", ...)
-  p
-}
-
-# Plot 
-ggpairs(df, 
-        columns = c("lon","aspect50mean_deg_group","slope50mean_deg"),
-        columnLabels = c('Longitude', 'Aspect', 'Slope'),
-        lower = list(continuous = wrap(lowerFn, method="lm"),
-                     combo = wrap("facethist", fill="blue")),
-        upper = list(continuous = wrap("cor", size=11), combo='box'),
-        diag = list(discrete = wrap("barDiag", fill= 'blue'))) +
-   theme_bw() 
-```
-
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
@@ -390,6 +361,12 @@ ggpairs(df,
 <span style="color:black; ">Figure 10: Snow cover onset dates by aspect</span>
 </figcaption>
 </figure>
+    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
+
+    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
+
+    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
+
 <figure>
 <a name="scod_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-16-1.png">
 <figcaption>
