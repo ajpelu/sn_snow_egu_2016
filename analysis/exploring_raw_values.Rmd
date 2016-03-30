@@ -357,6 +357,35 @@ levelplot(r_cv_scmc_1900,
 
 # Explore patterns of raw values
 
+## Snow Cover Duration 
+
+* Analyze the effect of elevation
+
+```{r, echo=FALSE}
+# Subset data and classify elevation 
+scd1900 <- scd %>% filter(dem50mean > 1900) %>%
+  mutate(dem50mean_group = cut(dem50mean, 
+                         breaks = seq(from=0, to=3500, by=250),
+                         labels = c("0-250", "251-500","501-750","751-1000",
+                                    "1001-1250","1251-1500","1501-1750","1751-2000",
+                                    "2001-2250","2251-2500","2501-2750", "2751-3000",
+                                    "3001-3250", "3251-3500")),
+         aspect50mean_deg_group = cut(aspect50mean_deg, 
+                                      breaks= c(22.5, 67.5, 112.5, 157.5, 
+                                                202.5, 247.5, 292.5, 337.5, 361),
+                                      labels = c("N", "NE", "E", "SE", "S", "SW", "W", "NW"))) 
+
+
+
+
+ggplot(scd, aes(x=dem50mean, y=mean)) + geom_point()
+```
+
+
+
+
+
+
 ## Snow Cover Onset Dates 
 
 * Analyze the effect of aspect, slope and longtitude on snow cover onset date
