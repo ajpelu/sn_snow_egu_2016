@@ -10,8 +10,8 @@ output:
 ```{r metadata, echo=FALSE}
 # Set working directory 
 
-machine <- 'ajpelu'
-# machine <- 'ajpeluLap'
+# machine <- 'ajpelu'
+machine <- 'ajpeluLap'
 di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
 
 ```
@@ -31,6 +31,7 @@ library("ggplot2")
 library("GGally")
 library("pander")
 source("http://www.highstat.com/BGS/GAM/RCode/HighstatLibV8.R")
+source(paste0(di,"/R/exportpdf.R")) # function to export raster levelplots maps as pdf
 ```
 
 ```{r, code=readLines(paste(di,'/R/autocaption.R', sep='')), echo=FALSE}
@@ -109,7 +110,7 @@ for (i in indicadores) {
 * Create raster maps of the summary stats for each indicator (`$indicator$`: `scd`, `scod`, `scmd`, `scmc`). Two raster maps will be created:
   
   * `r_mean_$indicator$`: mean values of the indicator for the pixel in the temporal serie.
-* `r_cv_$indicator$`: coefficient of variation of the indicator for the pixel in the temporal serie.
+  * `r_cv_$indicator$`: coefficient of variation of the indicator for the pixel in the temporal serie.
 
 * Two additional raster maps will be created, with a mask of the elevation (those pixels above 1900 *m asl*). The names of the raster are: `r_mean_$indicator$_1900` and `r_cv_$indicator$_1900`. Pixels below 1900 masl show a value of `0`. This value can be customized (change `updatevalue=-1` argument of the `mask` function). 
 
@@ -185,6 +186,8 @@ for (i in indicadores) {
 
 ## Visualization of the Snow Cover indicators 
 
+For each indicator we plot several maps. See `/images/raster_maps/`
+
 ### Snow Cover Duration
 
 ```{r, echo=FALSE, fig.cap=fig$cap("scd_mean", "Mean values of Snow cover duration"), fig.height=8 , fig.width=11}
@@ -202,14 +205,17 @@ myTheme=rasterTheme(region=mypal)
 # myTheme$panel.background$col <- 'gray'
 
 # Mean plot
-levelplot(r_mean_scd_1900, 
+lp <- levelplot(r_mean_scd_1900, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
           at=c(0,seq(50,250,by=25)),
           main="Snow Cover Duration (mean values, days)")
+print(lp)
 
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scd_1900.pdf'), lp) 
+          
 ```
 
 ```{r, echo=FALSE, fig.cap=fig$cap("scd_cv", "Coefficient of Variation of values of Snow cover duration"), fig.height=8 , fig.width=11}
@@ -219,12 +225,16 @@ mypal_cv <- c("#D2D2D2", mypal_cv)
 
 myTheme_cv=rasterTheme(region=mypal_cv)
 
-levelplot(r_cv_scd_1900, 
+lp <- levelplot(r_cv_scd_1900, 
           par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
           at=seq(0,100,by=10),
           main="Snow Cover Duration (CV)")
+print(lp)
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scd_1900.pdf'), lp) 
+  
+
 ```
 
 
@@ -241,7 +251,7 @@ mypal <- c("#D2D2D2", mypal)
 myTheme=rasterTheme(region=mypal)
 
 
-levelplot(r_mean_scod_1900, 
+lp <- levelplot(r_mean_scod_1900, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
@@ -249,10 +259,17 @@ levelplot(r_mean_scod_1900,
           #cut=20,
           at=c(0,seq(15,105,by=7)),
           main="Snow Cover Onset Date (mean values, hydrological day)") 
+print(lp)
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scod_1900.pdf'), lp) 
+  
 
-levelplot(r_mean_scod_1900, 
+lp <- levelplot(r_mean_scod_1900, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           main="Snow Cover Onset Date (mean values, hydrological day)") 
+
+print(lp)
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scod_1900_non_isolines.pdf'), lp) 
+
 ```
 
 ```{r, echo=FALSE, fig.cap=fig$cap("scod_cv", "Coefficient of Variation of values of Snow cover Onset date"), fig.height=8 , fig.width=11}
@@ -262,12 +279,16 @@ mypal_cv <- c("#D2D2D2", mypal_cv)
 
 myTheme_cv=rasterTheme(region=mypal_cv)
 
-levelplot(r_cv_scod_1900, 
+lp <- levelplot(r_cv_scod_1900, 
           par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
           at=seq(0,100,by=10),
           main="Snow Cover Onset Date (CV)")
+
+print(lp)
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scod_1900.pdf'), lp) 
+ 
 ```
 
 ### Snow Cover Melting Date
@@ -283,7 +304,7 @@ mypal <- c("#D2D2D2", mypal)
 myTheme=rasterTheme(region=mypal)
 
 
-levelplot(r_mean_scmd_1900, 
+lp <- levelplot(r_mean_scmd_1900, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
@@ -292,10 +313,17 @@ levelplot(r_mean_scmd_1900,
           at=c(0,seq(140,280,by=20)),
           main="Snow Cover Melting Date (mean values, hydrological day)") 
 
-levelplot(r_mean_scmd_1900, 
+print(lp)
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmd_1900.pdf'), lp) 
+ 
+
+lp <- levelplot(r_mean_scmd_1900, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           main="Snow Cover Melting Date (mean values, hydrological day)", 
           at=c(0,seq(140,280,by=5)))
+
+print(lp)
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmd_1900_non_isolines.pdf'), lp) 
 ```
 
 
@@ -306,12 +334,15 @@ mypal_cv <- c("#D2D2D2", mypal_cv)
 
 myTheme_cv=rasterTheme(region=mypal_cv)
 
-levelplot(r_cv_scmd_1900, 
+lp <- levelplot(r_cv_scmd_1900, 
           par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
           #contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
           #at=seq(0,50,by=7.5),
           main="Snow Cover Melting Date (CV)")
+print(lp)
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scmd_1900.pdf'), lp) 
+ 
 ```
 
 ### Snow Cover Melting Cycles
@@ -327,17 +358,23 @@ mypal <- c("#D2D2D2", mypal)
 myTheme=rasterTheme(region=mypal)
 
 
-levelplot(r_mean_scmc_1900, 
+lp <- levelplot(r_mean_scmc_1900, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
           at=seq(0,5,by=1),
           main="Snow Cover Melting cycles (mean values, number)") 
+print(lp)
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmc_1900.pdf'), lp) 
 
-levelplot(r_mean_scmc_1900, 
+lp <- levelplot(r_mean_scmc_1900, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           main="Snow Cover Melting cycles (mean values, number)")
+
+print(lp)
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmc_1900_non_isolines.pdf'), lp) 
+
 ```
 
 ```{r, echo=FALSE, fig.cap=fig$cap("scmc_cv", "Coefficient of Variation of values of Snow cover Melting cycles"), fig.height=8 , fig.width=11}
@@ -347,12 +384,17 @@ mypal_cv <- c("#D2D2D2", mypal_cv)
 
 myTheme_cv=rasterTheme(region=mypal_cv)
 
-levelplot(r_cv_scmc_1900, 
+lp <- levelplot(r_cv_scmc_1900, 
           par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
           at=seq(0,100,by=10),
           main="Snow Cover Melting Date (CV)")
+
+print(lp)
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scmc_1900.pdf'), lp) 
+
+
 ```
 
 # Explore patterns of raw values
@@ -361,7 +403,7 @@ levelplot(r_cv_scmc_1900,
 
 * Analyze the effect of elevation
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 # Subset data and classify elevation 
 scd1900 <- scd %>% filter(dem50mean > 1900) %>%
   mutate(dem50mean_group = cut(dem50mean, 

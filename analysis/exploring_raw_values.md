@@ -13,11 +13,10 @@ library("ggplot2")
 library("GGally")
 library("pander")
 source("http://www.highstat.com/BGS/GAM/RCode/HighstatLibV8.R")
+source(paste0(di,"/R/exportpdf.R")) # function to export raster levelplots maps as pdf
 ```
 
     ## Loading required package: knitr
-
-    ## Warning: package 'knitr' was built under R version 3.2.3
 
 Prepare Data
 ------------
@@ -171,6 +170,8 @@ for (i in indicadores) {
 Visualization of the Snow Cover indicators
 ------------------------------------------
 
+For each indicator we plot several maps. See `/images/raster_maps/`
+
 ### Snow Cover Duration
 
 <figure>
@@ -179,12 +180,18 @@ Visualization of the Snow Cover indicators
 <span style="color:black; ">Figure 1: Mean values of Snow cover duration</span>
 </figcaption>
 </figure>
+    ## quartz_off_screen 
+    ##                 2
+
 <figure>
 <a name="scd_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-5-1.png">
 <figcaption>
 <span style="color:black; ">Figure 2: Coefficient of Variation of values of Snow cover duration</span>
 </figcaption>
 </figure>
+    ## quartz_off_screen 
+    ##                 2
+
 ### Snow Cover Onset Date
 
 <figure>
@@ -192,18 +199,27 @@ Visualization of the Snow Cover indicators
 <figcaption>
 </figcaption>
 </figure>
+    ## quartz_off_screen 
+    ##                 2
+
 <figure>
 <img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-6-2.png">
 <figcaption>
 <span style="color:black; ">Figure 3: Mean values of Snow cover Onset Date</span>
 </figcaption>
 </figure>
+    ## quartz_off_screen 
+    ##                 2
+
 <figure>
 <a name="scod_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-7-1.png">
 <figcaption>
 <span style="color:black; ">Figure 4: Coefficient of Variation of values of Snow cover Onset date</span>
 </figcaption>
 </figure>
+    ## quartz_off_screen 
+    ##                 2
+
 ### Snow Cover Melting Date
 
 <figure>
@@ -211,18 +227,27 @@ Visualization of the Snow Cover indicators
 <figcaption>
 </figcaption>
 </figure>
+    ## quartz_off_screen 
+    ##                 2
+
 <figure>
 <img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-8-2.png">
 <figcaption>
 <span style="color:black; ">Figure 5: Mean values of Snow cover Melting Date</span>
 </figcaption>
 </figure>
+    ## quartz_off_screen 
+    ##                 2
+
 <figure>
 <a name="scmd_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-9-1.png">
 <figcaption>
 <span style="color:black; ">Figure 6: Coefficient of Variation of values of Snow cover Melting date</span>
 </figcaption>
 </figure>
+    ## quartz_off_screen 
+    ##                 2
+
 ### Snow Cover Melting Cycles
 
 <figure>
@@ -230,43 +255,63 @@ Visualization of the Snow Cover indicators
 <figcaption>
 </figcaption>
 </figure>
+    ## quartz_off_screen 
+    ##                 2
+
 <figure>
 <img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-10-2.png">
 <figcaption>
 <span style="color:black; ">Figure 7: Mean values of Snow cover Melting Date</span>
 </figcaption>
 </figure>
+    ## quartz_off_screen 
+    ##                 2
+
 <figure>
 <a name="scmc_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-11-1.png">
 <figcaption>
 <span style="color:black; ">Figure 8: Coefficient of Variation of values of Snow cover Melting cycles</span>
 </figcaption>
 </figure>
+    ## quartz_off_screen 
+    ##                 2
+
 Explore patterns of raw values
 ==============================
+
+Snow Cover Duration
+-------------------
+
+-   Analyze the effect of elevation
 
 Snow Cover Onset Dates
 ----------------------
 
 -   Analyze the effect of aspect, slope and longtitude on snow cover onset date
 
-<table style="width:92%;">
+<!-- -->
+
+    ## Warning in tidy.anova(drop1(m_scod, test = "Chi")): The following column
+    ## names in ANOVA output were not recognized or transformed: Deviance, AIC,
+    ## scaled.dev., Pr..Chi.
+
+<table style="width:96%;">
 <colgroup>
 <col width="31%" />
 <col width="6%" />
-<col width="11%" />
-<col width="12%" />
-<col width="16%" />
-<col width="12%" />
+<col width="15%" />
+<col width="8%" />
+<col width="19%" />
+<col width="13%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th align="center">term</th>
 <th align="center">df</th>
-<th align="center">sumsq</th>
-<th align="center">meansq</th>
-<th align="center">statistic</th>
-<th align="center">p.value</th>
+<th align="center">Deviance</th>
+<th align="center">AIC</th>
+<th align="center">scaled.dev.</th>
+<th align="center">Pr..Chi.</th>
 </tr>
 </thead>
 <tbody>
@@ -351,13 +396,13 @@ lon 1.109721 1 1.053433 aspect50mean\_deg\_group 1.091876 7 1.006298 slope50mean
 </table>
 
 <figure>
-<a name="ggpair_scod"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-14-1.png">
+<a name="ggpair_scod"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-15-1.png">
 <figcaption>
 <span style="color:black; ">Figure 9: Explore relationships of covariates (Snow cover onset dates</span>
 </figcaption>
 </figure>
 <figure>
-<a name="scod_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-15-1.png">
+<a name="scod_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-16-1.png">
 <figcaption>
 <span style="color:black; ">Figure 10: Snow cover onset dates by aspect</span>
 </figcaption>
@@ -365,13 +410,13 @@ lon 1.109721 1 1.053433 aspect50mean\_deg\_group 1.091876 7 1.006298 slope50mean
     ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
 
 <figure>
-<a name="scod_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-16-1.png">
+<a name="scod_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-17-1.png">
 <figcaption>
 <span style="color:black; ">Figure 11: Snow cover onset dates by aspect (effect sizes</span>
 </figcaption>
 </figure>
 <figure>
-<a name="scod_lon_slope"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-17-1.png">
+<a name="scod_lon_slope"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-18-1.png">
 <figcaption>
 <span style="color:black; ">Figure 12: Snow cover onset dates by Longitude and Slope</span>
 </figcaption>
@@ -381,28 +426,32 @@ Snow Cover Melting Dates
 
     ## 
     ## Attaching package: 'pander'
-
+    ## 
     ## The following object is masked from 'package:GGally':
     ## 
     ##     wrap
 
-<table style="width:92%;">
+    ## Warning in tidy.anova(drop1(m_scmd, test = "Chi")): The following column
+    ## names in ANOVA output were not recognized or transformed: Deviance, AIC,
+    ## scaled.dev., Pr..Chi.
+
+<table style="width:96%;">
 <colgroup>
 <col width="31%" />
 <col width="6%" />
-<col width="11%" />
-<col width="12%" />
-<col width="16%" />
-<col width="12%" />
+<col width="15%" />
+<col width="8%" />
+<col width="19%" />
+<col width="13%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th align="center">term</th>
 <th align="center">df</th>
-<th align="center">sumsq</th>
-<th align="center">meansq</th>
-<th align="center">statistic</th>
-<th align="center">p.value</th>
+<th align="center">Deviance</th>
+<th align="center">AIC</th>
+<th align="center">scaled.dev.</th>
+<th align="center">Pr..Chi.</th>
 </tr>
 </thead>
 <tbody>
@@ -501,27 +550,25 @@ dem50mean 1.104429 1 1.050918 lon 1.217001 1 1.103178 aspect50mean\_deg\_group 1
 </table>
 
 <figure>
-<a name="ggpair_scmd"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-20-1.png">
+<a name="ggpair_scmd"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-21-1.png">
 <figcaption>
 <span style="color:black; ">Figure 13: Explore relationships of covariates (Snow cover melting dates</span>
 </figcaption>
 </figure>
 <figure>
-<a name="scmd_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-21-1.png">
+<a name="scmd_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-22-1.png">
 <figcaption>
 <span style="color:black; ">Figure 14: Snow cover melting dates by aspect</span>
 </figcaption>
 </figure>
-    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
-
 <figure>
-<a name="scmd_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-22-1.png">
+<a name="scmd_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-23-1.png">
 <figcaption>
 <span style="color:black; ">Figure 15: Snow cover melting dates by aspect (effect sizes</span>
 </figcaption>
 </figure>
 <figure>
-<a name="scmd_lon_slope_elev"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-23-1.png">
+<a name="scmd_lon_slope_elev"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-24-1.png">
 <figcaption>
 <span style="color:black; ">Figure 16: Snow cover melting dates by Longitude, Slope and Elevation</span>
 </figcaption>
@@ -531,28 +578,32 @@ Snow Cover Melting Cycles
 
     ## 
     ## Attaching package: 'pander'
-
+    ## 
     ## The following object is masked from 'package:GGally':
     ## 
     ##     wrap
 
-<table style="width:92%;">
+    ## Warning in tidy.anova(drop1(m_scmc, test = "Chi")): The following column
+    ## names in ANOVA output were not recognized or transformed: Deviance, AIC,
+    ## scaled.dev., Pr..Chi.
+
+<table style="width:96%;">
 <colgroup>
 <col width="31%" />
 <col width="6%" />
-<col width="11%" />
-<col width="12%" />
-<col width="16%" />
-<col width="12%" />
+<col width="15%" />
+<col width="8%" />
+<col width="19%" />
+<col width="13%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th align="center">term</th>
 <th align="center">df</th>
-<th align="center">sumsq</th>
-<th align="center">meansq</th>
-<th align="center">statistic</th>
-<th align="center">p.value</th>
+<th align="center">Deviance</th>
+<th align="center">AIC</th>
+<th align="center">scaled.dev.</th>
+<th align="center">Pr..Chi.</th>
 </tr>
 </thead>
 <tbody>
@@ -651,13 +702,13 @@ dem50mean 1.104429 1 1.050918 lon 1.217001 1 1.103178 aspect50mean\_deg\_group 1
 </table>
 
 <figure>
-<a name="ggpair_scmc"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-26-1.png">
+<a name="ggpair_scmc"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-27-1.png">
 <figcaption>
 <span style="color:black; ">Figure 17: Explore relationships of covariates (Snow cover melting dates</span>
 </figcaption>
 </figure>
 <figure>
-<a name="scmc_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-27-1.png">
+<a name="scmc_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-28-1.png">
 <figcaption>
 <span style="color:black; ">Figure 18: Snow cover melting dates by aspect</span>
 </figcaption>
@@ -665,13 +716,13 @@ dem50mean 1.104429 1 1.050918 lon 1.217001 1 1.103178 aspect50mean\_deg\_group 1
     ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
 
 <figure>
-<a name="scmc_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-28-1.png">
+<a name="scmc_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-29-1.png">
 <figcaption>
 <span style="color:black; ">Figure 19: Snow cover melting dates by aspect (effect sizes</span>
 </figcaption>
 </figure>
 <figure>
-<a name="scmc_lon_slope_elev"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-29-1.png">
+<a name="scmc_lon_slope_elev"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-30-1.png">
 <figcaption>
 <span style="color:black; ">Figure 20: Snow cover melting dates by Longitude, Slope and Elevation</span>
 </figcaption>
