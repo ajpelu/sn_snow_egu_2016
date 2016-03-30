@@ -33,7 +33,7 @@ library("pander")
 source("http://www.highstat.com/BGS/GAM/RCode/HighstatLibV8.R")
 ```
 
-```{r, code=readLines(paste(di,'/R/autocaption.R', sep=''))}
+```{r, code=readLines(paste(di,'/R/autocaption.R', sep='')), echo=FALSE}
 ```
 
 
