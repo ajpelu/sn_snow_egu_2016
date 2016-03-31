@@ -82,8 +82,8 @@ plot(centroides, add=TRUE, col='red', pch=20, cex=0.1)
 <span style="color:black; ">Figure 1: Plot of basin, protected areas and modis (centroids)</span>
 </figcaption>
 </figure>
--   The easiest way to get the right pixels is using the snow\_cover dataset
--   Select the pixels of the centroides that match the snow\_cover dataset
+-   The easiest way to get the right pixels is using the `snow_cover` dataset
+-   Select the pixels of the centroides that match the `snow_cover` dataset
 -   Then apply the overlay opperations
 
 ``` r
@@ -106,7 +106,13 @@ plot(centroides_sn, add=TRUE, col='red', pch=20, cex=0.1)
 <span style="color:black; ">Figure 2: Plot of basin, protected areas (sn) and modis (centroids) inside SN</span>
 </figcaption>
 </figure>
-Now, we extract info of each region (hydrological basin) by pixel. For each pixel there are two new attributes with info of the region (`basin_code` and `basin_name`). The basin name is: \* 1 = `Genil` \* 2 = `Guadalfeo` \* 3 = `Adra` \* 4 = `Andarax` \* 5 = `Fardes`
+Now, we extract info of each region (hydrological basin) by pixel. For each pixel there are two new attributes with info of the region (`basin_code` and `basin_name`). The basin name is:
+
+-   1 = `Genil`
+-   2 = `Guadalfeo`
+-   3 = `Adra`
+-   4 = `Andarax`
+-   5 = `Fardes`
 
 At the end, a `csv` file is exported and store at `./data/derived/pixel_region.csv`
 

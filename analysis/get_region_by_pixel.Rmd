@@ -32,6 +32,7 @@ library("rgeos")
 ```
 
 ## Read data and prepare projections 
+
 ```{r, fig.cap=fig$cap("explora_maps", "Plot of basin, protected areas and modis (centroids)"), fig.height=8 , fig.width=11}
 ## Read region data 
 basin_raw <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
@@ -77,9 +78,14 @@ plot(centroides, add=TRUE, col='red', pch=20, cex=0.1)
  
 ```
 
-* The easiest way to get the right pixels is using the snow_cover dataset
-* Select the pixels of the centroides that match the snow_cover dataset 
+
+
+
+* The easiest way to get the right pixels is using the `snow_cover` dataset
+* Select the pixels of the centroides that match the `snow_cover` dataset 
 * Then apply the overlay opperations 
+
+
 
 ```{r, fig.cap=fig$cap("explora_maps_sn", "Plot of basin, protected areas (sn) and modis (centroids) inside SN"), fig.height=8 , fig.width=11}
 # Read data (snow cover)
@@ -96,6 +102,7 @@ plot(centroides_sn, add=TRUE, col='red', pch=20, cex=0.1)
 ```
 
 Now, we extract info of each region (hydrological basin) by pixel. For each pixel there are two new attributes with info of the region (`basin_code` and `basin_name`). The basin name is: 
+
 * 1 = `Genil`
 * 2 = `Guadalfeo`
 * 3 = `Adra`
