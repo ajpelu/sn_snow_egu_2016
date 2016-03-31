@@ -1,0 +1,125 @@
+---
+title: "Assign region to modis pixel"
+author: "AJ Perez-Luque (@ajpelu); FJ Bonet; J Herrero and R. Perez-Perez"
+date: "2016 March"
+output:
+  md_document:
+      variant: markdown_github
+---
+
+```{r metadata, echo=FALSE}
+# Set working directory 
+
+machine <- 'ajpelu'
+# machine <- 'ajpeluLap'
+di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
+
+```
+
+```{r packages, warning=FALSE, message=FALSE}
+# Load packages 
+library("raster")
+library("rgdal")
+library("sp")
+library("plyr")
+
+library("dplyr")
+library("ggplot2")
+library("rgeos")
+```
+
+```{r, code=readLines(paste(di,'/R/autocaption.R', sep='')), echo=FALSE}
+```
+
+## Read data and prepare projections 
+```{r, fig.cap=fig$cap("explora_maps", "Plot of basin, protected areas and modis (centroids)"), fig.height=8 , fig.width=11}
+## Read region data 
+basin_raw <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
+                             layer = "subcuencas", verbose = FALSE)
+# Select only basin code (GRIDCODE) and rename
+basin_raw <- basin_raw[c("GRIDCODE")]
+names(basin_raw) <- "basin_code"
+basin_raw@data$basin_code <- as.numeric(basin_raw@data$basin_code)
+
+# Check projection basin layer 
+projection(basin_raw)
+# --- 
+
+## Read spatial modis centroids 
+centroides <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
+                             layer = "centroides_selected", verbose = FALSE)
+# Select only attributes of interest and rename them
+centroides <- centroides[c("id")]
+names(centroides) <- "nie_malla_modi_id"
+
+# Check projection modis centroides
+projection(centroides)
+# --- 
+
+## Read pn boundaries 
+sn_raw <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
+                             layer = "pnsierranevada", verbose = FALSE)
+# Check projection basin layer 
+projection(sn_raw)
+# --- 
+
+## Reprojection 
+# Reproject basin layer to match centroides projection
+basin <- spTransform(basin_raw, crs(centroides))
+
+# Reproject sn layer to match centroides projection
+sn <- spTransform(sn_raw, crs(centroides))
+
+# Exploratory plot 
+plot(basin)
+plot(sn, add=TRUE, border='blue')
+plot(centroides, add=TRUE, col='red', pch=20, cex=0.1)
+ 
+```
+
+* The easiest way to get the right pixels is using the snow_cover dataset
+* Select the pixels of the centroides that match the snow_cover dataset 
+* Then apply the overlay opperations 
+
+```{r, fig.cap=fig$cap("explora_maps_sn", "Plot of basin, protected areas (sn) and modis (centroids) inside SN"), fig.height=8 , fig.width=11}
+# Read data (snow cover)
+snow <- read.csv(file=paste(di, "/data/raw/snow_sn.csv", sep= ""), header = TRUE) 
+# --
+
+# Subset centroides
+centroides_sn <- centroides[centroides$nie_malla_modi_id %in% snow$nie_malla_modi_id,]
+
+# Exploratory plot 
+plot(basin)
+plot(sn, add=TRUE, border='blue')
+plot(centroides_sn, add=TRUE, col='red', pch=20, cex=0.1)
+```
+
+Now, we extract info of each region (hydrological basin) by pixel. For each pixel there are two new attributes with info of the region (`basin_code` and `basin_name`). The basin name is: 
+* 1 = `Genil`
+* 2 = `Guadalfeo`
+* 3 = `Adra`
+* 4 = `Andarax`
+* 5 = `Fardes`
+
+
+At the end, a `csv` file is exported and store at `./data/derived/pixel_region.csv`  
+
+```{r, fig.cap=fig$cap("explora_maps_sn_pixel", "Modis pixel coloured by basin"), fig.height=8 , fig.width=11}
+# Extract (overlay)
+centroides_sn <- cbind(centroides_sn, over(centroides_sn, basin))
+
+# Create factor with basin names
+centroides_sn$basin_name <- as.factor(mapvalues(centroides_sn$basin_code, 
+                                  c(1,2,3,4,5), 
+                                  c("Genil", "Guadalfeo", "Adra", "Andarax", "Fardes")))
+
+# Exploratory plot
+plot(basin)
+plot(sn, add=TRUE, border='blue')
+points(centroides_sn$coords.x1, centroides_sn$coords.x2, 
+       col=centroides_sn$basin_code, pch=20, cex=0.1)
+
+# Export table 
+write.table(centroides_sn[,c("nie_malla_modi_id","basin_code", "basin_name")], file=paste(di, "/data/derived/pixel_region.csv", sep=""), row.names=FALSE, sep=',')
+```
