@@ -4,10 +4,6 @@ library("raster")
 library("rgdal")
 library("sp")
 library("plyr")
-
-library("dplyr")
-library("ggplot2")
-library("rgeos")
 ```
 
     ## Loading required package: knitr

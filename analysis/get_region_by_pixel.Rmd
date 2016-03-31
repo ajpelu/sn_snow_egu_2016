@@ -22,10 +22,6 @@ library("raster")
 library("rgdal")
 library("sp")
 library("plyr")
-
-library("dplyr")
-library("ggplot2")
-library("rgeos")
 ```
 
 ```{r, code=readLines(paste(di,'/R/autocaption.R', sep='')), echo=FALSE}
