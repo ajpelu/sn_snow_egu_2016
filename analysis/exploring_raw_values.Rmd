@@ -10,10 +10,9 @@ output:
 ```{r metadata, echo=FALSE}
 # Set working directory 
 
-machine <- 'ajpelu'
-# machine <- 'ajpeluLap'
+# machine <- 'ajpelu'
+machine <- 'ajpeluLap'
 di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
-
 ```
 
 ```{r packages, warning=FALSE, message=FALSE}
@@ -112,18 +111,21 @@ for (i in indicadores) {
 
 ```
 
-## Elevation filter 
 
-```{r} 
+```{r echo=FALSE}
+# Set theme ggplot options
 mythemeggplot <- theme_bw() + theme(panel.grid.major=element_blank(),
                        panel.grid.minor=element_blank(),
                        strip.background=element_rect(fill='white'))
-  
-a <- ggplot(scd, aes(x=dem50mean, y=mean)) + 
-  geom_point() +  
-  mythemeggplot + 
-  xlab('Elevation') + ylab('Snow cover duration (days)')
+```
 
+
+## Elevation filter 
+
+* Explore the range of elevation to set the filter
+* Explore elevation by hydrological basin 
+
+```{r, echo=FALSE, fig.cap=fig$cap("elev_filter", "Profile of elevation"), fig.height=8 , fig.width=8}
 
 # Get quantiles based on scd 
 x <- as.data.frame(round(quantile(scd$mean, probs = seq(0, 1, 0.1))))
@@ -135,7 +137,7 @@ xe <- as.data.frame(round(quantile(scd$dem50mean, probs = seq(0, 1, 0.1))))
 xe$per <- rownames(xe) 
 names(xe)[1] <- 'q'
 
-pdf(file="elevation.pdf", height = 10, width = 10)
+# pdf(file="elevation.pdf", height = 10, width = 10)
 ggplot(scd, aes(x=dem50mean, y=mean)) + 
   geom_hline(yintercept=x$q, col='blue') +
   geom_label(data=x, aes(x=3700, y=q), label=x$per, colour='blue') +
@@ -146,33 +148,18 @@ ggplot(scd, aes(x=dem50mean, y=mean)) +
   mythemeggplot + 
   xlab('Elevation') + ylab('Snow cover duration (days)') + 
   ylim(0,225) + xlim(0,4000)
-dev.off()
-
-grid.arrange(a, b, ncol=2)
-
-
-
-
-
-scd1900 <- scd %>% filter(dem50mean > 1900) %>%
-  mutate(dem50mean_group = cut(dem50mean, 
-                         breaks = seq(from=0, to=3500, by=250),
-                         labels = c("0-250", "251-500","501-750","751-1000",
-                                    "1001-1250","1251-1500","1501-1750","1751-2000",
-                                    "2001-2250","2251-2500","2501-2750", "2751-3000",
-                                    "3001-3250", "3251-3500")),
-         aspect50mean_deg_group = cut(aspect50mean_deg, 
-                                      breaks= c(22.5, 67.5, 112.5, 157.5, 
-                                                202.5, 247.5, 292.5, 337.5, 361),
-                                      labels = c("N", "NE", "E", "SE", "S", "SW", "W", "NW"))) 
-
-
-
-
-ggplot(scd, aes(x=dem50mean, y=mean)) + geom_point()
+# dev.off()
 ```
 
 
+```{r, echo=FALSE, fig.cap=fig$cap("elev_filter_basin", "Profile of elevation by basin"), fig.height=6 , fig.width=15}
+# Explore elevation by hydrological basin 
+ggplot(scd, aes(x=dem50mean, y=mean)) + 
+  geom_point(size=.5) +  
+  facet_wrap(~basin_name, nrow = 1) +
+  mythemeggplot + 
+  xlab('Elevation') + ylab('Snow cover duration (days)') 
+```
 
 
 ### Spatial pattern of the snowcover indicators 
@@ -182,7 +169,7 @@ ggplot(scd, aes(x=dem50mean, y=mean)) + geom_point()
   * `r_mean_$indicator$`: mean values of the indicator for the pixel in the temporal serie.
   * `r_cv_$indicator$`: coefficient of variation of the indicator for the pixel in the temporal serie.
 
-* Two additional raster maps will be created, with a mask of the elevation (those pixels above 1900 *m asl*). The names of the raster are: `r_mean_$indicator$_1900` and `r_cv_$indicator$_1900`. Pixels below 1900 masl show a value of `0`. This value can be customized (change `updatevalue=-1` argument of the `mask` function). 
+* Two additional raster maps will be created, with a mask of the elevation (those pixels above 1000 *m asl*). The names of the raster are: `r_mean_$indicator$_1000` and `r_cv_$indicator$_1000`. Pixels below 1000 masl show a value of `0`. This value can be customized (change `updatevalue=-1` argument of the `mask` function). 
 
 * All these rasters are stored at `./data/derived/` 
 
@@ -204,6 +191,9 @@ pix_comunes <- match(snow$nie_malla_modi_id, centroides$nie_malla_modi_id)
 # Create spatial objetc with centroid of Sierra Nevada
 centroides_sn <- centroides[pix_comunes,]
 
+# elevation filter
+el <- '1000'
+el_numeric <- 1000
 
 # Loop to create raster map 
 for (i in indicadores) { 
@@ -226,19 +216,30 @@ for (i in indicadores) {
   
   # raster of Elevation
   elev_raster <- rasterize(aux_spatial_elev, aux_rast, "dem50mean", fun=mean)
-  elev_raster1900 <- elev_raster
-  elev_raster1900[elev_raster1900 < 1900] <- NA
+  # Fitler by elevation threshold 
+  elev_raster_filtro <- elev_raster
+  elev_raster_filtro[elev_raster_filtro < el_numeric] <- NA
   
-  # Mask by 1900
-  mean_raster1900 <- mask(mean_raster, elev_raster1900, updatevalue=0)
-  cv_raster1900 <- mask(cv_raster, elev_raster1900, updatevalue=0)
+  # name_elev_raster <- paste("elev_raster", el, sep='')
+  # assign(name_elev_raster, elev_raster)
+
+  # valid old
+  ## elev_raster1000 <- elev_raster
+  ## elev_raster1000[elev_raster1000 < 1000] <- NA
+  
+  # Mask by 1000
+  mean_raster_filtro <- mask(mean_raster, elev_raster_filtro, updatevalue=-1)
+  cv_raster_filtro <- mask(cv_raster, elev_raster_filtro, updatevalue=-1)
+  
+  # mean_raster1000 <- mask(mean_raster, elev_raster1000, updatevalue=0)
+  # cv_raster1000 <- mask(cv_raster, elev_raster1000, updatevalue=0)
   
   
   # assign 
   name_mean <- paste("r_mean_",i, sep="")
   name_cv <- paste("r_cv_",i, sep="")
-  name_mean1900 <- paste("r_mean_",i,"_1900", sep="")
-  name_cv1900 <- paste("r_cv_",i,"_1900", sep="")
+  name_mean_filtro <- paste("r_mean_",i,"_",el, sep="")
+  name_cv_filtro <- paste("r_cv_",i,"_",el, sep="")
   
   assign(name_mean, mean_raster)
   writeRaster(mean_raster, file=paste(di, "/data/derived/r_mean_", i, ".asc", sep=""), overwrite=TRUE)
@@ -246,11 +247,11 @@ for (i in indicadores) {
   assign(name_cv, cv_raster)
   writeRaster(cv_raster, file=paste(di, "/data/derived/r_cv_", i, ".asc", sep=""), overwrite=TRUE)
   
-  assign(name_mean1900, mean_raster1900)
-  writeRaster(mean_raster1900, file=paste(di, "/data/derived/r_mean_", i, "_1900", ".asc", sep=""), overwrite=TRUE)
+  assign(name_mean_filtro, mean_raster_filtro)
+  writeRaster(mean_raster_filtro, file=paste(di, "/data/derived/r_mean_", i, "_", el, ".asc", sep=""), overwrite=TRUE)
   
-  assign(name_cv1900, cv_raster1900)
-  writeRaster(cv_raster1900, file=paste(di, "/data/derived/r_cv_", i, "_1900", ".asc", sep=""), overwrite=TRUE)
+  assign(name_cv_filtro, cv_raster_filtro)
+  writeRaster(cv_raster_filtro, file=paste(di, "/data/derived/r_cv_", i, "_", el, ".asc", sep=""), overwrite=TRUE)
 }
 ```
 
@@ -275,16 +276,16 @@ myTheme=rasterTheme(region=mypal)
 # myTheme$panel.background$col <- 'gray'
 
 # Mean plot
-lp <- levelplot(r_mean_scd_1900, 
-          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
+lp <- levelplot(r_mean_scd_1000, 
+          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE,
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
-          at=c(0,seq(50,250,by=25)),
+          at=c(-1,seq(0,225,by=25)),
           main="Snow Cover Duration (mean values, days)")
 print(lp)
 
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scd_1900.pdf'), lp) 
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scd_', el, '.pdf'), lp) 
           
 ```
 
@@ -295,14 +296,14 @@ mypal_cv <- c("#D2D2D2", mypal_cv)
 
 myTheme_cv=rasterTheme(region=mypal_cv)
 
-lp <- levelplot(r_cv_scd_1900, 
+lp <- levelplot(r_cv_scd_1000, 
           par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
-          at=seq(0,100,by=10),
+          at=c(-1, seq(0,maxValue(r_cv_scd_1000),by=20)),
           main="Snow Cover Duration (CV)")
 print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scd_1900.pdf'), lp) 
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scd_', el, '.pdf'), lp) 
   
 
 ```
@@ -321,24 +322,24 @@ mypal <- c("#D2D2D2", mypal)
 myTheme=rasterTheme(region=mypal)
 
 
-lp <- levelplot(r_mean_scod_1900, 
+lp <- levelplot(r_mean_scod_1000, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
           #cut=20,
-          at=c(0,seq(15,105,by=7)),
+          at=c(-1,seq(15,maxValue(r_mean_scd_1000),by=20)),
           main="Snow Cover Onset Date (mean values, hydrological day)") 
 print(lp)
 exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scod_1900.pdf'), lp) 
   
 
-lp <- levelplot(r_mean_scod_1900, 
+lp <- levelplot(r_mean_scod_1000, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           main="Snow Cover Onset Date (mean values, hydrological day)") 
 
 print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scod_1900_non_isolines.pdf'), lp) 
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scod_', el, '_non_isolines.pdf'), lp) 
 
 ```
 
@@ -349,15 +350,15 @@ mypal_cv <- c("#D2D2D2", mypal_cv)
 
 myTheme_cv=rasterTheme(region=mypal_cv)
 
-lp <- levelplot(r_cv_scod_1900, 
+lp <- levelplot(r_cv_scod_1000, 
           par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
-          at=seq(0,100,by=10),
+          at=c(-1, seq(0,maxValue(r_cv_scod_1000),by=20)),
           main="Snow Cover Onset Date (CV)")
 
 print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scod_1900.pdf'), lp) 
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scod_', el, '.pdf'), lp) 
  
 ```
 
@@ -374,26 +375,26 @@ mypal <- c("#D2D2D2", mypal)
 myTheme=rasterTheme(region=mypal)
 
 
-lp <- levelplot(r_mean_scmd_1900, 
+lp <- levelplot(r_mean_scmd_1000, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
           #cut=20,
-          at=c(0,seq(140,280,by=20)),
+          at=c(-1, 0,seq(100,280,by=20)),
           main="Snow Cover Melting Date (mean values, hydrological day)") 
 
 print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmd_1900.pdf'), lp) 
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmd_', el, '.pdf'), lp) 
  
 
-lp <- levelplot(r_mean_scmd_1900, 
+lp <- levelplot(r_mean_scmd_1000, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           main="Snow Cover Melting Date (mean values, hydrological day)", 
-          at=c(0,seq(140,280,by=5)))
+          at=c(-1,seq(0,280,by=10)))
 
 print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmd_1900_non_isolines.pdf'), lp) 
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmd_', el, '_non_isolines.pdf'), lp) 
 ```
 
 
@@ -404,14 +405,14 @@ mypal_cv <- c("#D2D2D2", mypal_cv)
 
 myTheme_cv=rasterTheme(region=mypal_cv)
 
-lp <- levelplot(r_cv_scmd_1900, 
+lp <- levelplot(r_cv_scmd_1000, 
           par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
           #contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
           #at=seq(0,50,by=7.5),
           main="Snow Cover Melting Date (CV)")
 print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scmd_1900.pdf'), lp) 
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scmd_', el, '.pdf'), lp) 
  
 ```
 
@@ -428,7 +429,7 @@ mypal <- c("#D2D2D2", mypal)
 myTheme=rasterTheme(region=mypal)
 
 
-lp <- levelplot(r_mean_scmc_1900, 
+lp <- levelplot(r_mean_scmc_1000, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
@@ -436,14 +437,14 @@ lp <- levelplot(r_mean_scmc_1900,
           at=seq(0,5,by=1),
           main="Snow Cover Melting cycles (mean values, number)") 
 print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmc_1900.pdf'), lp) 
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmc_', el, '.pdf'), lp) 
 
-lp <- levelplot(r_mean_scmc_1900, 
+lp <- levelplot(r_mean_scmc_1000, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           main="Snow Cover Melting cycles (mean values, number)")
 
 print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmc_1900_non_isolines.pdf'), lp) 
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmc_', el, '_non_isolines.pdf'), lp) 
 
 ```
 
@@ -454,18 +455,21 @@ mypal_cv <- c("#D2D2D2", mypal_cv)
 
 myTheme_cv=rasterTheme(region=mypal_cv)
 
-lp <- levelplot(r_cv_scmc_1900, 
+lp <- levelplot(r_cv_scmc_1000, 
           par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
-          at=seq(0,100,by=10),
+          at=seq(0,maxValue(r_cv_scmc_1000),by=20),
           main="Snow Cover Melting Date (CV)")
 
 print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scmc_1900.pdf'), lp) 
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scmc_', el, '.pdf'), lp) 
 
 
 ```
+
+# :red_circle: CARPIN!!!!!! TOOOOOOOOOOO
+
 
 # Explore patterns of raw values
 
