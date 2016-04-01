@@ -20,6 +20,7 @@ di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016',
 library("raster")
 library("rgdal")
 library("sp")
+library("plyr")
 library("dplyr")
 library("rasterVis") 
 library("multcomp")
@@ -153,6 +154,22 @@ ggplot(scd, aes(x=dem50mean, y=mean)) +
 
 
 
+* Select the pixels above 14 days (scd) 
+
+```{r}
+scdfilter <- scd %>% filter(mean > 14)
+
+ggplot(scd, aes(x=dem50mean, y=mean)) + 
+  geom_point() + mythemeggplot + 
+  geom_point(data=scdfilter, aes(dem50mean, mean), col='blue') + 
+  geom_vline(xintercept = 1250, col='red') 
+
+# How many pixels (from filter data) are above 1250 m? 
+(nrow(subset(scdfilter, dem50mean > 1250))/nrow(scdfilter))*100 
+```
+
+
+
 ```{r, echo=FALSE, fig.cap=fig$cap("elev_filter_basin", "Profile of elevation by basin"), fig.height=6 , fig.width=15}
 # Explore elevation by hydrological basin 
 ggplot(scd, aes(x=dem50mean, y=mean)) + 
@@ -160,6 +177,27 @@ ggplot(scd, aes(x=dem50mean, y=mean)) +
   facet_wrap(~basin_name, nrow = 1) +
   mythemeggplot + 
   xlab('Elevation') + ylab('Snow cover duration (days)') 
+```
+
+
+
+```{r, echo=FALSE, fig.cap=fig$cap("elev_filter_basin_col", "Profile of elevation by basin"), fig.height=6 , fig.width=15}
+g <- ggplot(scd, aes(x=dem50mean, y=mean)) + 
+  geom_point(col='grey') + mythemeggplot + 
+  xlab('Elevation') + ylab('Snow cover duration (days)') 
+
+ad <- g + geom_point(data=subset(scd, basin_name == 'Adra'), aes(dem50mean, mean), col='blue') +
+  annotate("text", x = 500, y = 200, label = "Adra")
+an <- g + geom_point(data=subset(scd, basin_name == 'Andarax'), aes(dem50mean, mean), col='blue') +
+  annotate("text", x = 500, y = 200, label = "Andarax")
+fa <- g + geom_point(data=subset(scd, basin_name == 'Fardes'), aes(dem50mean, mean), col='blue') +
+  annotate("text", x = 500, y = 200, label = "Fardes")
+ge <- g + geom_point(data=subset(scd, basin_name == 'Genil'), aes(dem50mean, mean), col='blue') +
+  annotate("text", x = 500, y = 200, label = "Genil")
+gu <- g + geom_point(data=subset(scd, basin_name == 'Guadalfeo'), aes(dem50mean, mean), col='blue') + 
+  annotate("text", x = 500, y = 200, label = "Guadalfeo")
+
+grid.arrange(ad, an, fa, ge, gu, nrow=1)
 ```
 
 
@@ -193,8 +231,8 @@ pix_comunes <- match(snow$nie_malla_modi_id, centroides$nie_malla_modi_id)
 centroides_sn <- centroides[pix_comunes,]
 
 # elevation filter
-el <- '1000'
-el_numeric <- 1000
+el <- '1250'
+el_numeric <- 1250
 
 # Loop to create raster map 
 for (i in indicadores) { 
@@ -277,7 +315,7 @@ myTheme=rasterTheme(region=mypal)
 # myTheme$panel.background$col <- 'gray'
 
 # Mean plot
-lp <- levelplot(r_mean_scd_1000, 
+lp <- levelplot(r_mean_scd_1250, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE,
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
@@ -299,11 +337,11 @@ mypal_cv <- c("#D2D2D2", mypal_cv)
 
 myTheme_cv=rasterTheme(region=mypal_cv)
 
-lp <- levelplot(r_cv_scd_1000, 
+lp <- levelplot(r_cv_scd_1250, 
           par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
-          at=c(-1, seq(0,maxValue(r_cv_scd_1000),by=20)),
+          at=c(-1, seq(0,maxValue(r_cv_scd_1250),by=20)),
           main="Snow Cover Duration (CV)")
 print(lp)
 exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scd_', el, '.pdf'), lp) 
@@ -326,19 +364,19 @@ mypal <- c("#D2D2D2", mypal)
 myTheme=rasterTheme(region=mypal)
 
 
-lp <- levelplot(r_mean_scod_1000, 
+lp <- levelplot(r_mean_scod_1250, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
           #cut=20,
-          at=c(-1,seq(15,maxValue(r_mean_scd_1000),by=20)),
+          at=c(-1,seq(15,maxValue(r_mean_scd_1250),by=20)),
           main="Snow Cover Onset Date (mean values, hydrological day)") 
 print(lp)
 exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scod_1900.pdf'), lp) 
   
 
-lp <- levelplot(r_mean_scod_1000, 
+lp <- levelplot(r_mean_scod_1250, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           main="Snow Cover Onset Date (mean values, hydrological day)") 
 
@@ -356,11 +394,11 @@ mypal_cv <- c("#D2D2D2", mypal_cv)
 
 myTheme_cv=rasterTheme(region=mypal_cv)
 
-lp <- levelplot(r_cv_scod_1000, 
+lp <- levelplot(r_cv_scod_1250, 
           par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
-          at=c(-1, seq(0,maxValue(r_cv_scod_1000),by=20)),
+          at=c(-1, seq(0,maxValue(r_cv_scod_1250),by=20)),
           main="Snow Cover Onset Date (CV)")
 
 print(lp)
@@ -382,7 +420,7 @@ mypal <- c("#D2D2D2", mypal)
 myTheme=rasterTheme(region=mypal)
 
 
-lp <- levelplot(r_mean_scmd_1000, 
+lp <- levelplot(r_mean_scmd_1250, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
@@ -395,7 +433,7 @@ print(lp)
 exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmd_', el, '.pdf'), lp) 
  
 
-lp <- levelplot(r_mean_scmd_1000, 
+lp <- levelplot(r_mean_scmd_1250, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           main="Snow Cover Melting Date (mean values, hydrological day)", 
           at=c(-1,seq(0,280,by=10)))
@@ -413,7 +451,7 @@ mypal_cv <- c("#D2D2D2", mypal_cv)
 
 myTheme_cv=rasterTheme(region=mypal_cv)
 
-lp <- levelplot(r_cv_scmd_1000, 
+lp <- levelplot(r_cv_scmd_1250, 
           par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
           #contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
@@ -438,7 +476,7 @@ mypal <- c("#D2D2D2", mypal)
 myTheme=rasterTheme(region=mypal)
 
 
-lp <- levelplot(r_mean_scmc_1000, 
+lp <- levelplot(r_mean_scmc_1250, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
@@ -448,7 +486,7 @@ lp <- levelplot(r_mean_scmc_1000,
 print(lp)
 exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmc_', el, '.pdf'), lp) 
 
-lp <- levelplot(r_mean_scmc_1000, 
+lp <- levelplot(r_mean_scmc_1250, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
           main="Snow Cover Melting cycles (mean values, number)")
 
@@ -466,11 +504,11 @@ mypal_cv <- c("#D2D2D2", mypal_cv)
 
 myTheme_cv=rasterTheme(region=mypal_cv)
 
-lp <- levelplot(r_cv_scmc_1000, 
+lp <- levelplot(r_cv_scmc_1250, 
           par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
-          at=seq(0,maxValue(r_cv_scmc_1000),by=20),
+          at=seq(0,maxValue(r_cv_scmc_1250),by=20),
           main="Snow Cover Melting Date (CV)")
 
 print(lp)
