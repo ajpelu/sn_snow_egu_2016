@@ -236,6 +236,16 @@ pnSeas <- pn_monthly %>%
 
 
 
+
+
+
+
+
+
+
+
+
+
 str_extract_all("T_mXpxXyear_month02.csv", "\\d+")
 
 myfiles_month[1]
