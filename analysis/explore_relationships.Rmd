@@ -18,8 +18,8 @@ output:
 ```{r metadata, echo=FALSE}
 # Set working directory 
 
-machine <- 'ajpelu'
-#machine <- 'ajpeluLap'
+# machine <- 'ajpelu'
+machine <- 'ajpeluLap'
 di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
 ```
 
