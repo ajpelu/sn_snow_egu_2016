@@ -1,7 +1,12 @@
 ## Script's list 
 
-* [SQL queries](./analysis/get_auxiliar_data.md) to get topographic attributes and coordinates of pixels
+# Prepare data
 
+## Auxiliar data 
+* [SQL queries](./analysis/get_auxiliar_data.md) to get topographic attributes and coordinates of pixels. 
+* [Script](./analysis/get_region_by_pixel.md) to obtain the hydrological basin of each pixel
+
+# Analysis 
 ## Mann-Kendall Seil Sen Slope Analysis 
 This [script](./analysis/computeMK_all.md) computes Mann-Kendall trend test and Sen's slope estimator for each variable. We computed the MKTS for different variables at different temporal scales. 
 
