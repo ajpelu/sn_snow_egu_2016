@@ -6,6 +6,9 @@ output:
     md_document:
       variant: markdown_github
 ---
+## Mann-Kendal Seil Slope analysis for annual and monthly data
+
+### Annual data
 
 ```{r metadata, echo=FALSE}
 ################################################################
@@ -119,3 +122,173 @@ for (j in indicadores){
   write.table(aux_na[,c("nie_malla_modi_id","var")], file=paste(di, "/data/derived/na_", j, ".csv", sep=""), row.names=FALSE, sep=',')
 } 
 ```
+
+
+## Monthly data 
+
+```{r}
+my_var <- c('P_n', 'Pre', 'T_m')  
+
+for (i in my_var){ 
+
+# Get file names
+myfiles_month <- list.files(path = paste(di, "/data/raw_month/", sep=""), pattern = paste0("(.*", i, ")"))
+
+# Create a auxiliar file to store all monthly data by variable
+superauxiliar <- c() 
+
+# Loop to read files 
+for (j in myfiles_month){ 
+  aux <- read.csv(file=paste(di, "/data/raw_month/", j, sep= ""),
+              header = TRUE,
+              sep = ',')
+  name_aux <- str_replace(j, "\\..*", "") 
+  
+  ### Create a variable with the name of the month 
+  aux$month <- paste0('m', str_extract_all(j, "\\d+")) 
+  
+  
+  #aux_name <- str_replace(j, "(.*month)","")
+  #aux_month <- as.numeric(str_replace(aux_name, "\\..*", ""))
+  #aux$month <-  aux_month
+  
+  # Change name of some variables
+  names(aux)[1] <- 'nie_malla_modi_id'
+  names(aux)[3] <- 'year' 
+  
+  # Select only pixel matching snow_cover 
+  aux <- aux[aux$nie_malla_modi_id %in% snow_sn$nie_malla_modi_id, ]
+  
+  # Remove data from 2015 and 2000  
+  aux <- aux %>% 
+    filter(year < 2015) %>%
+    filter(year > 2000)
+
+  # Store as object 
+  superauxiliar <- rbind(superauxiliar, aux)
+  name_superauxiliar <- i 
+  assign(name_superauxiliar, superauxiliar)
+}
+ 
+}
+
+
+# Aggregate value by season: 
+# winter = 1,2,3 
+# spring = 4,5,6 
+# summer = 7,8,9
+# autumn = 10,11,12 
+
+# Temperature data (remove year = 2015 data)
+temp_monthly <- as.data.frame(dcast(T_m, nie_malla_modi_id + year ~ month, value.var = "T_m"))
+
+temp_season <- temp_monthly %>% 
+  group_by(nie_malla_modi_id, year) %>% 
+  summarise(wi = mean(m01,m02,m03),
+         sp = mean(m04,m05,m06),
+         su = mean(m07,m08,m09),
+         au = mean(m10,m11,m12)) 
+
+%>% 
+  dplyr::filter(nie_malla_modi_id, year, wi, sp, su, au)
+
+
+
+
+
+pre_monthly <- as.data.frame(dcast(Pre, nie_malla_modi_id + year ~ month, value.var = "Pre"))
+
+pre_monthly_m <- pre_monthly %>% 
+  dplyr::select(-nie_malla_modi_id) %>% 
+  summarise_each(funs(mean))
+
+
+
+
+str_extract_all("T_mXpxXyear_month02.csv", "\\d+")
+
+myfiles_month[1]
+
+x1 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[1], sep= ""),
+              header = TRUE,
+              sep = ',')
+x1$month <- 1
+
+x2 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[2], sep= ""),
+              header = TRUE,
+              sep = ',')
+
+x2$month <- 2
+
+x3 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[3], sep= ""),
+              header = TRUE,
+              sep = ',')
+
+x3$month <- 3
+
+
+x4 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[4], sep= ""),
+              header = TRUE,
+              sep = ',')
+
+x4$month <- 4
+
+x5 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[5], sep= ""),
+              header = TRUE,
+              sep = ',')
+
+x5$month <- 5
+
+x6 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[6], sep= ""),
+              header = TRUE,
+              sep = ',')
+
+x6$month <- 6
+
+x7 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[7], sep= ""),
+              header = TRUE,
+              sep = ',')
+
+x7$month <- 7
+
+x8 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[8], sep= ""),
+              header = TRUE,
+              sep = ',')
+
+x8$month <- 8
+
+
+
+x9 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[9], sep= ""),
+              header = TRUE,
+              sep = ',')
+
+x9$month <- 9
+
+
+
+xx <- rbind(x1, x2, x3, x4, x5, x6, x7,x8,x9)
+
+temp_xx <- dcast(xx, Id.px + Year ~ month, value.var = "T_m") 
+
+
+
+
+
+TXpxXyear[TXpxXyear$id == 1675994, ]
+table(TXpxXyear$year)
+
+
+
+
+
+my_var <- c('P_n', 'Pre', 'T_m')  
+
+
+
+ms <- list.files(path = paste(di, "/data/raw_month/", sep=""), pattern = "(P_n)")
+  
+  
+
+jj <- str_replace(j, "(.*month)","")
+jjj <- str_replace(jj, "\\..*", "")
