@@ -241,6 +241,7 @@ pnSeas <- pn_monthly %>%
 ```
 
 
+#### Trend of temperatures by month and by season 
 
 ```{r}
 # Vector of variables 
@@ -298,6 +299,68 @@ for (j in indicadores_temp){
   aux_na$var <- rep(j,nrow(aux_na))
   write.table(aux_na[,c("nie_malla_modi_id","var")], file=paste(di, "/data/derived/na_temp", j, ".csv", sep=""), row.names=FALSE, sep=',')
 }
+```
+
+
+#### Trend of precipitation (cummulative) by month and by season 
+
+```{r}
+# Vector of variables 
+## Get names of variables 
+indicadores_pre <- names(preSeas)
+## Remove year and nie_modi_id
+indicadores_pre <- indicadores_pre[-c(1,2)]
+
+
+# 
+mydf <- preSeas
+
+# subset by indicator
+for (j in indicadores_pre){ 
+  # Create a subset by indicator
+  subdf <- mydf[, names(mydf) %in% c("nie_malla_modi_id", "year", j )]
+  
+  # Manipule data. Transpose 
+  # la funcion aggregate es porque tenemos duplicados 
+  aux <- dcast(subdf, year ~ nie_malla_modi_id, value.var = j, fun.aggregate = mean) 
+
+  # Create a zoo object 
+  auxts <- zoo(aux[-1],aux[,1])
+  
+  # Compute Mann Kendall and Theil 
+  theil <- mannKen(as.ts(auxts))
+  
+  # Prepare data output
+  theil <- as.data.frame(theil)
+  
+  theil_df <- theil %>% 
+    mutate(nie_malla_modi_id = as.numeric(rownames(theil))) %>%
+    mutate(sen_slope = round(sen.slope, 3),
+           sen_slope_per = round(sen.slope.pct, 2),
+           p_value = round(p.value, 5),
+           tau = round(tau, 3)) %>%
+    dplyr::select(nie_malla_modi_id, sen_slope, sen_slope_per, p_value, tau)
+  
+  # As data.frame
+  theil_df <- as.data.frame(theil_df)
+  
+  # Rename variables adding dataframe name
+  
+  # Create vector of new names 
+  new_names <- c(paste(names(theil_df), paste0('pre', j) , sep='_'))
+  
+  theil_rename <- theil_df %>% rename_(.dots = setNames(names(.), new_names)) %>%
+    dplyr::select(nie_malla_modi_id = starts_with("nie_malla_modi_id"), everything())
+  
+  # Write table 
+  write.table(assign(j, theil_rename), file=paste(di, "/data/derived/pre", j, ".csv", sep=""), row.names=FALSE, sep=',')
+  
+  # Check Results. Get the pixel with NA in pvalue. Save results
+  aux_na <- theil_df[!complete.cases(theil_df),]
+  aux_na$var <- rep(j,nrow(aux_na))
+  write.table(aux_na[,c("nie_malla_modi_id","var")], file=paste(di, "/data/derived/na_pre", j, ".csv", sep=""), row.names=FALSE, sep=',')
+}
+```
 
 
 
