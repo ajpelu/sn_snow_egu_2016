@@ -127,3 +127,477 @@ fulldf1250 <- fulldf %>%
 ```
 
 
+# Explore Snow-Cover trends by basin 
+
+We explore the pattern of snow-cover indicators trends by hydrological basin. 
+
+```{r}
+# Set theme ggplot options
+mythemeggplot <- theme_bw() + theme(panel.grid.major=element_blank(),
+                       panel.grid.minor=element_blank(),
+                       strip.background=element_rect(fill='white'))
+```
+
+### Snow cover duration 
+
+```{r}
+## Summary statistics 
+misvariables<- c('tau_scd', 'sen_slope_scd')
+variable_agrupa <- 'basin_name' 
+prefijo  <- 'basin_' 
+df <- fulldf1250
+
+  
+for (i in misvariables){
+  vnames <- c(variable_agrupa, i)
+  aux <- df %>%
+    dplyr::select(one_of(vnames)) %>%
+    mutate_(vinterest = i) %>%
+    group_by_(.dots=variable_agrupa) %>%
+    summarise(mean=mean(vinterest),
+              sd = sd(vinterest),
+              se = sd / sqrt (length(vinterest))) 
+   assign(paste0(prefijo,i), aux)
+   
+}
+:::: TODO TABLA CON TODOS LOS ESTATIDISTOS PARA TODAS LAS VARIABLES 
+```
+
+
+
+
+
+
+
+
+
+
+
+
+ggplot(fulldf1250, aes(y=tau_scd, x=basin_name)) + geom_boxplot() +
+  mythemeggplot + xlab('') + ylab('Tau (Snow cover duration)') 
+
+
+ggplot(fulldf1250, aes(y=tau_scd, x=basin_name)) + geom_boxplot() +
+  mythemeggplot + xlab('') + ylab('Tau (Snow cover duration)') + 
+  facet_wrap(~dem50mean_group) + 
+  geom_hline(yintercept=0, col='grey') 
+
+
+ggplot(fulldf1250, aes(y=sen_slope_scd, x=basin_name)) + geom_boxplot() +
+  mythemeggplot + xlab('') + ylab('Tau (Snow cover duration)') 
+
+ggplot(fulldf1250, aes(y=sen_slope_scd, x=basin_name)) + geom_boxplot() +
+  mythemeggplot + xlab('') + ylab('Tau (Snow cover duration)') + 
+  facet_wrap(~dem50mean_group) + 
+  geom_hline(yintercept=0, col='grey') 
+
+
+
+
+ggplot(fulldf, aes(x=tau_scod, y=tau_scmd)) + 
+  geom_point(alpha=0.5) + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  annotate('text', label='early',  x=-.9, y=-.9) + 
+  annotate('text', label='late', x=.9, y=.9)+
+  annotate('text', label='contraction', x=.9, y=-.9)+
+  annotate('text', label='expansion', x=-.9, y=.9) + 
+  theme_bw() + 
+  labs(title= 'scod vs. scmd',
+    x= 'trend (tau) of Snow cover onset date',
+    y='trend (tau) of Snow cover melting date') 
+
+
+
+
+
+
+
+
+## Explore Snow-cover related indicators
+
+We explore the pattern of the trend (*tau*) of the snow-cover indicators (see figure 1). 
+
+By exploring the relationship between the trend of two indicators of snow cover (scod: snow cover onset date; and scmd: snow cover melting date) we can describe the temporal evolution of snow cover in Sierra Nevada from 2000-2014. This relationship is evaluated at pixel scale (figure 1c) and we have four potential scenarios:
+
+* Expansion
+* Contraction
+* Shift (delay and advance)
+
+**Figure 1**
+![Figure 1.](/images/snow_cover_profile.png) 
+
+We applied this exploratory analysis for all pixels and for all pixels above 1900 *m asl*. 
+
+```{r fig.cap='Figure 2', echo=FALSE}
+# Exploratory for all pixels 
+ggplot(fulldf, aes(x=tau_scod, y=tau_scmd)) + 
+  geom_point(alpha=0.5) + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  annotate('text', label='early',  x=-.9, y=-.9) + 
+  annotate('text', label='late', x=.9, y=.9)+
+  annotate('text', label='contraction', x=.9, y=-.9)+
+  annotate('text', label='expansion', x=-.9, y=.9) + 
+  theme_bw() + 
+  labs(title= 'scod vs. scmd',
+    x= 'trend (tau) of Snow cover onset date',
+    y='trend (tau) of Snow cover melting date') 
+```
+  
+```{r fig.cap='Figure 3', echo=FALSE}  
+# Exploratory for pixels >1900
+ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) + 
+  geom_point(alpha=0.5) + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  annotate('text', label='early',  x=-.9, y=-.9) + 
+  annotate('text', label='late', x=.9, y=.9)+
+  annotate('text', label='retraction', x=.9, y=-.9)+
+  annotate('text', label='expansion', x=-.9, y=.9) + 
+  theme_bw() + 
+  labs(title= 'scod vs. scmd (>1900 masl)',
+    x= 'trend (tau) of Snow cover onset date',
+    y='trend (tau) of Snow cover melting date') 
+```
+
+```{r, echo=FALSE}
+aux <- round(((fulldf1900 %>% filter(tau_scod > 0) %>% filter(tau_scmd < 0) %>% count()) / fulldf1900 %>% count())*100, 2)
+```
+
+A total of `r aux` % of pixels (of all above 1900) showed a positive trend in snow cover onset date (late onset) and a negative trend in snow cover melting date (earlier melting date). It means that of `r aux` % of the pixels above 1900 m, have suffered a trend to rectraction of the snow cover period in the last years (Figure 3). 
+
+We also can explore this relationship by elevation (Figure 4), and we obtanied that the *retraction pattern* is more evident at low elevations 
+
+```{r, fig.cap='Figure 4', fig.height=10, fig.width=8, echo=FALSE}
+# Exploratory by elevatin groups 
+ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) + 
+  geom_point(alpha=0.5) + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  facet_wrap(~dem50mean_group) + 
+  theme_bw() + 
+  labs(title= 'scod vs. scmd (>1900 masl)',
+       x= 'trend (tau) of Snow cover onset date',
+       y='trend (tau) of Snow cover melting date') +
+  theme(strip.background = element_rect(fill = "white"))
+```
+
+```{r, results='asis'}
+# Compute percentage of pixels (tau scod > 0, tau_scmd < 0)   
+aux <- fulldf1900 %>% group_by(dem50mean_group) %>% 
+  summarise(total=n())
+
+aux1 <- fulldf1900 %>% group_by(dem50mean_group) %>% 
+  filter(tau_scod > 0) %>% 
+  filter(tau_scmd < 0) %>% 
+  summarise(n=n()) %>%
+  inner_join(aux, by="dem50mean_group") %>%
+  mutate(freq = round((n / total)*100),2)
+pander(aux1)
+```
+
+First we explore the relationship between topographic variables and snow-cover related variables. 
+
+## Notas
+(see Chen et al. 2015)
+* Dd <- duration of snow cover 
+* Do <- day of onset 
+* De <- day of end 
+
+Analysis of the spatio-temporal pattern of this variables 
+
+### Elevation pattern
+
+```{r}
+# Compute mean, sd, se of tau variables by elevation interval and plot them 
+taus <- fulldf1900 %>% 
+  select(contains("tau"), dem50mean_group) 
+taus <- melt(taus, id=c("dem50mean_group"))
+
+taus <- taus %>% 
+  group_by(dem50mean_group, variable) %>% 
+  summarise(mean = mean(value),
+            sd = sd(value),
+            se=sd(value)/sqrt(length(value)))
+
+ggplot(taus, aes(x=dem50mean_group, y=mean, group=variable)) +
+  geom_line() + geom_errorbar(aes(ymax = mean + se, ymin= mean - se), width=.15) +
+  geom_point(size=3, shape=21, fill="white") +
+  facet_wrap(~variable) +
+  theme_bw() + xlab('elevation') + ylab('tau (average value)') +
+  theme(axis.text.x=element_text(angle = -90, hjust = 0))
+
+
+# Explore trends of temperatures and snow-cover indicators potentially related with temperature
+df <- taus %>% filter(variable %in% c("tau_scod","tau_scmd", "tau_scd", "tau_temp"))
+
+ggplot(df, aes(x=dem50mean_group, y=mean, group=variable)) +
+  geom_line(aes(col=variable)) + 
+  geom_errorbar(aes(col=variable, ymax = mean + se, ymin= mean - se), width=.15) +
+  geom_point(aes(col=variable), size=3, shape=21, fill="white") + 
+  theme_bw() + xlab('elevation') + ylab('tau (average value)') +
+  theme(axis.text.x=element_text(angle = -90, hjust = 0))
+ 
+
+# Explore trends of temperatures and snow-cover indicators potentially related with temperature
+df <- taus %>% filter(variable %in% c("tau_scod","tau_scmd", "tau_scd", "tau_pre_snow"))
+
+ggplot(df, aes(x=dem50mean_group, y=mean, group=variable)) +
+  geom_line(aes(col=variable)) + 
+  geom_errorbar(aes(col=variable, ymax = mean + se, ymin= mean - se), width=.15) +
+  geom_point(aes(col=variable), size=3, shape=21, fill="white") + 
+  theme_bw() + xlab('elevation') + ylab('tau (average value)') +
+  theme(axis.text.x=element_text(angle = -90, hjust = 0))
+
+
+####
+
+# Compute mean, sd, se of tau variables by elevation interval and plot them 
+sen <- fulldf1900 %>% 
+  select(contains("sen_slope"), aspect50mean_deg) %>%
+  select(-contains("slope_per")) %>% 
+  mutate(aspect50mean_deg_group = cut(aspect50mean_deg, 
+    breaks= c(22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5, 359.5),
+    labels = c("N", "NE", "E", "SE", "S", "SW", "W", "NW")))
+
+taus <- fulldf1900 %>% 
+  select(contains("tau"), aspect50mean_deg) %>%
+  mutate(aspect50mean_deg_group = cut(aspect50mean_deg, 
+    breaks= c(22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5, 359.5),
+    labels = c("N", "NE", "E", "SE", "S", "SW", "W", "NW")))
+
+plot(taus$tau_scmd~taus$aspect50mean_deg_group, col='grey')
+abline(lm(taus$tau_scod~taus$aspect50mean_deg))
+
+plot(taus$tau_scd~taus$aspect50mean_deg, col='grey')
+abline(lm(taus$tau_scd~taus$aspect50mean_deg))
+
+
+
+
+
+
+
+
+
+sen <- melt(sen, id=c("dem50mean_group"))
+
+sen <- sen %>% 
+  group_by(dem50mean_group, variable) %>% 
+  summarise(mean = mean(value),
+            sd = sd(value),
+            se=sd(value)/sqrt(length(value)))
+
+ggplot(sen, aes(x=dem50mean_group, y=mean, group=variable)) +
+  geom_line() + geom_errorbar(aes(ymax = mean + se, ymin= mean - se), width=.15) +
+  geom_point(size=3, shape=21, fill="white") +
+  facet_wrap(~variable) +
+  theme_bw() + xlab('elevation') + ylab('tau (average value)') +
+  theme(axis.text.x=element_text(angle = -90, hjust = 0))
+
+
+
+
+
+
+)## Analysis of the correlation between taus. 
+
+### Relation between *scod* and *scmd* 
+
+
+
+## Explore Slopes 
+
+```{r, fig.height=10, fig.width=8}
+# Exploratory for pixels >1900
+ggplot(fulldf1900, aes(x=sen_slope_scod, y=sen_slope_scmd)) +
+  geom_point(alpha=0.5) + 
+  xlim(-7.5,7.5) + ylim(-7.5,7) + 
+  geom_vline(xintercept=0) + geom_hline(yintercept=0) + 
+  theme_bw() + 
+  labs(title= 'scod vs. scmd (>1900 masl)',
+       x= 'Slope (days) of Snow cover onset date',
+       y='Slope (days) of Snow cover melting date') 
+
+# by elevation group 
+ggplot(fulldf1900, aes(x=sen_slope_scod, y=sen_slope_scmd)) + 
+  geom_point(alpha=0.5) + 
+  xlim(-7.5,7.5) + ylim(-7.5,7) +
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) +
+  labs(title= 'scod vs. scmd (>1900 masl)',
+       x= 'Slope (days) of Snow cover onset date',
+       y='Slope (days) of Snow cover melting date') +
+  theme_bw() + 
+  theme(strip.background = element_rect(fill = "white")) +
+  facet_wrap(~dem50mean_group)
+
+```
+
+
+
+
+
+
+
+```{r, eval=FALSE, echo=FALSE}
+# Create a subset for only taus 
+
+taus <- fulldf %>%
+  dplyr::select(nie_malla_modi_id, 
+                dem50mean,
+                starts_with("tau"))
+
+
+tau1900 <- fulldf %>% 
+  filter(elevacion > 1900) %>% 
+  dplyr::select(nie_malla_modi_id, elevacion, elevGroup, starts_with("tau"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+### Create subset of data > 1900 elev and only taus
+
+taus <- fulldf %>%
+  dplyr::select(nie_malla_modi_id, 
+                elevacion,
+                starts_with("tau"))
+
+
+tau1900 <- fulldf %>% 
+  filter(elevacion > 1900) %>% 
+  dplyr::select(nie_malla_modi_id, elevacion, elevGroup, starts_with("tau"))
+
+ss1900 <- fulldf %>% 
+  filter(elevacion > 1900) %>% 
+  dplyr::select(nie_malla_modi_id, elevacion, elevGroup, starts_with("sen_slope"))
+
+tau <- fulldf %>% 
+  dplyr::select(nie_malla_modi_id, elevacion, elevGroup, starts_with("tau"))
+
+
+
+plot(tau1900)
+
+
+
+ggplot(tau, aes(tau_temp, tau_scmd)) + geom_point() + 
+  facet_wrap(~elevGroup)
+
+ggplot(tau1900, aes(elevacion,tau_scd)) + geom_point()
+  geom_point(aes(colour=elevGroup))
+  
+ggplot(ss1900, aes(elevacion,sen_slope_pre_snow_per)) + geom_point()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # Loop to add elevation data and to create subsets with elevation > 1900 
+# for (k in indicadores){
+#   auxmk <- get(k) # Get object
+#   aux_elev <- inner_join(elev, auxmk, by="nie_malla_modi_id") # Join elevation data
+#   
+#   aux_elev1900 <- aux_elev %>% filter(elevacion > 1900)
+#   
+#   assign(k, aux_elev)
+#   assign(paste(k,'1900',sep=''), aux_elev1900)
+#   }
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+#   
+#   
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# # Asignamos proyección al raster anterior
+# crs(raster_tendencia)<-"+proj=utm +zone=30"
+# 
+# # reproyectar a geográficas
+# raster_tendencia<-projectRaster(raster_tendencia, crs = "+proj=longlat")
+# 
+# # creamos máscara para recortar y remuestrear. Le ponemos la resolución y la extensión de raster_tendencia
+# mascara<-raster(crs = "+proj=longlat")
+# extent(mascara)<-extent(raster_tendencia)
+# res(mascara)<-c(0.00418,0.00418)
+# 
+# raster_tendencia<-resample(raster_tendencia, mascara)
+# plot(raster_tendencia)
+# 
+# 
+# 
+# 
+# plot(mm1)
+# 
+# 
+# 
+# head(pixels)
+# summary(pixels)
+# 
+# extent(pixels)
+# projection(pixels)
+# 
+# 
+# head(pixels)
+```
+
+
+
+
+
+
