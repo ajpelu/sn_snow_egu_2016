@@ -179,28 +179,59 @@ for (j in myfiles_month){
 # summer = 7,8,9
 # autumn = 10,11,12 
 
-# Temperature data (remove year = 2015 data)
+# Temperature data 
 temp_monthly <- as.data.frame(dcast(T_m, nie_malla_modi_id + year ~ month, value.var = "T_m"))
 
-temp_season <- temp_monthly %>% 
+temp_season4 <- temp_monthly %>% 
   group_by(nie_malla_modi_id, year) %>% 
   summarise(wi = mean(m01,m02,m03),
          sp = mean(m04,m05,m06),
          su = mean(m07,m08,m09),
          au = mean(m10,m11,m12)) 
 
-%>% 
-  dplyr::filter(nie_malla_modi_id, year, wi, sp, su, au)
+# Join data 
+
+tempSeas <- temp_monthly %>% 
+  inner_join(temp_season4, by=c("nie_malla_modi_id","year"))
+## 
 
 
-
-
-
+# Precipitation data
 pre_monthly <- as.data.frame(dcast(Pre, nie_malla_modi_id + year ~ month, value.var = "Pre"))
 
-pre_monthly_m <- pre_monthly %>% 
-  dplyr::select(-nie_malla_modi_id) %>% 
-  summarise_each(funs(mean))
+pre_season4 <- pre_monthly %>% 
+  group_by(nie_malla_modi_id, year) %>% 
+  summarise(wi = sum(m01,m02,m03),
+         sp = sum(m04,m05,m06),
+         su = sum(m07,m08,m09),
+         au = sum(m10,m11,m12)) 
+
+# Join data 
+preSeas <- pre_monthly %>% 
+  inner_join(pre_season4, by=c("nie_malla_modi_id","year"))
+## 
+
+
+
+
+# Precipitation data
+pn_monthly <- as.data.frame(dcast(P_n, nie_malla_modi_id + year ~ month, value.var = "P_n"))
+
+pn_season4 <- pn_monthly %>% 
+  group_by(nie_malla_modi_id, year) %>% 
+  summarise(wi = sum(m01,m02,m03),
+         sp = sum(m04,m05,m06),
+         su = sum(m07,m08,m09),
+         au = sum(m10,m11,m12)) 
+
+# Join data 
+pnSeas <- pn_monthly %>% 
+  inner_join(pn_season4, by=c("nie_malla_modi_id","year"))
+## 
+
+
+
+
 
 
 
