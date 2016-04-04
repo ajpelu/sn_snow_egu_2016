@@ -364,100 +364,65 @@ for (j in indicadores_pre){
 
 
 
+#### Trend of precipitation snow (cummulative) by month and by season 
+
+```{r}
+# Vector of variables 
+## Get names of variables 
+indicadores_pn <- names(pnSeas)
+## Remove year and nie_modi_id
+indicadores_pn <- indicadores_pn[-c(1,2)]
 
 
+# 
+mydf <- pnSeas
 
-
-
-
-
-
-
-
-str_extract_all("T_mXpxXyear_month02.csv", "\\d+")
-
-myfiles_month[1]
-
-x1 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[1], sep= ""),
-              header = TRUE,
-              sep = ',')
-x1$month <- 1
-
-x2 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[2], sep= ""),
-              header = TRUE,
-              sep = ',')
-
-x2$month <- 2
-
-x3 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[3], sep= ""),
-              header = TRUE,
-              sep = ',')
-
-x3$month <- 3
-
-
-x4 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[4], sep= ""),
-              header = TRUE,
-              sep = ',')
-
-x4$month <- 4
-
-x5 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[5], sep= ""),
-              header = TRUE,
-              sep = ',')
-
-x5$month <- 5
-
-x6 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[6], sep= ""),
-              header = TRUE,
-              sep = ',')
-
-x6$month <- 6
-
-x7 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[7], sep= ""),
-              header = TRUE,
-              sep = ',')
-
-x7$month <- 7
-
-x8 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[8], sep= ""),
-              header = TRUE,
-              sep = ',')
-
-x8$month <- 8
-
-
-
-x9 <- read.csv(file=paste(di, "/data/raw_month/", myfiles_month[9], sep= ""),
-              header = TRUE,
-              sep = ',')
-
-x9$month <- 9
-
-
-
-xx <- rbind(x1, x2, x3, x4, x5, x6, x7,x8,x9)
-
-temp_xx <- dcast(xx, Id.px + Year ~ month, value.var = "T_m") 
-
-
-
-
-
-TXpxXyear[TXpxXyear$id == 1675994, ]
-table(TXpxXyear$year)
-
-
-
-
-
-my_var <- c('P_n', 'Pre', 'T_m')  
-
-
-
-ms <- list.files(path = paste(di, "/data/raw_month/", sep=""), pattern = "(P_n)")
+# subset by indicator
+for (j in indicadores_pn){ 
+  # Create a subset by indicator
+  subdf <- mydf[, names(mydf) %in% c("nie_malla_modi_id", "year", j )]
   
-  
+  # Manipule data. Transpose 
+  # la funcion aggregate es porque tenemos duplicados 
+  aux <- dcast(subdf, year ~ nie_malla_modi_id, value.var = j, fun.aggregate = mean) 
 
-jj <- str_replace(j, "(.*month)","")
-jjj <- str_replace(jj, "\\..*", "")
+  # Create a zoo object 
+  auxts <- zoo(aux[-1],aux[,1])
+  
+  # Compute Mann Kendall and Theil 
+  theil <- mannKen(as.ts(auxts))
+  
+  # Prepare data output
+  theil <- as.data.frame(theil)
+  
+  theil_df <- theil %>% 
+    mutate(nie_malla_modi_id = as.numeric(rownames(theil))) %>%
+    mutate(sen_slope = round(sen.slope, 3),
+           sen_slope_per = round(sen.slope.pct, 2),
+           p_value = round(p.value, 5),
+           tau = round(tau, 3)) %>%
+    dplyr::select(nie_malla_modi_id, sen_slope, sen_slope_per, p_value, tau)
+  
+  # As data.frame
+  theil_df <- as.data.frame(theil_df)
+  
+  # Rename variables adding dataframe name
+  
+  # Create vector of new names 
+  new_names <- c(paste(names(theil_df), paste0('pn', j) , sep='_'))
+  
+  theil_rename <- theil_df %>% rename_(.dots = setNames(names(.), new_names)) %>%
+    dplyr::select(nie_malla_modi_id = starts_with("nie_malla_modi_id"), everything())
+  
+  # Write table 
+  write.table(assign(j, theil_rename), file=paste(di, "/data/derived/pn", j, ".csv", sep=""), row.names=FALSE, sep=',')
+  
+  # Check Results. Get the pixel with NA in pvalue. Save results
+  aux_na <- theil_df[!complete.cases(theil_df),]
+  aux_na$var <- rep(j,nrow(aux_na))
+  write.table(aux_na[,c("nie_malla_modi_id","var")], file=paste(di, "/data/derived/na_pn", j, ".csv", sep=""), row.names=FALSE, sep=',')
+}
+```
+
+
+
