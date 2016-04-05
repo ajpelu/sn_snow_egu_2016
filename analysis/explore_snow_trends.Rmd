@@ -25,8 +25,8 @@ output:
 ```{r metadata, echo=FALSE}
 # Set working directory 
 
-# machine <- 'ajpelu'
-machine <- 'ajpeluLap'
+machine <- 'ajpelu'
+# machine <- 'ajpeluLap'
 di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
 ```
 
@@ -142,11 +142,13 @@ mythemeggplot <- theme_bw() + theme(panel.grid.major=element_blank(),
 
 ```{r}
 ## Summary statistics 
-misvariables<- c('tau_scd', 'sen_slope_scd')
+misvariables<- c('tau_scd', 'sen_slope_scd', 'tau_scod', 'sen_slope_scod',
+                 'tau_scmd', 'sen_slope_scmd', 'tau_scmc', 'sen_slope_scmc')
 variable_agrupa <- 'basin_name' 
 prefijo  <- 'basin_' 
 df <- fulldf1250
 
+stats_basin <- dataframe() 
   
 for (i in misvariables){
   vnames <- c(variable_agrupa, i)
@@ -156,8 +158,12 @@ for (i in misvariables){
     group_by_(.dots=variable_agrupa) %>%
     summarise(mean=mean(vinterest),
               sd = sd(vinterest),
-              se = sd / sqrt (length(vinterest))) 
-   assign(paste0(prefijo,i), aux)
+              se = sd / sqrt (length(vinterest)))
+  aux <- aux %>% 
+    mutate(variable = i)
+  
+  stats_basin <- rbind(stats_basin, aux)
+  # assign(paste0(prefijo,i), aux)
    
 }
 :::: TODO TABLA CON TODOS LOS ESTATIDISTOS PARA TODAS LAS VARIABLES 
