@@ -408,193 +408,6 @@ ggplot(df_basin_tau, aes(x=basin_name, y=mean)) +
 ![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-12-1.png)
 
 ``` r
-pander(df_basin_tau) 
-```
-
-<table>
-<colgroup>
-<col width="17%" />
-<col width="15%" />
-<col width="13%" />
-<col width="15%" />
-<col width="14%" />
-<col width="23%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">basin_name</th>
-<th align="center">mean</th>
-<th align="center">sd</th>
-<th align="center">se</th>
-<th align="center">variable</th>
-<th align="center">tukey_basin_name</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">Adra</td>
-<td align="center">-0.15399157</td>
-<td align="center">0.1299276</td>
-<td align="center">0.004217628</td>
-<td align="center">tau_scd</td>
-<td align="center">b</td>
-</tr>
-<tr class="even">
-<td align="center">Andarax</td>
-<td align="center">-0.17815803</td>
-<td align="center">0.1347095</td>
-<td align="center">0.003958622</td>
-<td align="center">tau_scd</td>
-<td align="center">a</td>
-</tr>
-<tr class="odd">
-<td align="center">Fardes</td>
-<td align="center">-0.15093188</td>
-<td align="center">0.1552694</td>
-<td align="center">0.004588631</td>
-<td align="center">tau_scd</td>
-<td align="center">b</td>
-</tr>
-<tr class="even">
-<td align="center">Genil</td>
-<td align="center">-0.11645614</td>
-<td align="center">0.1748347</td>
-<td align="center">0.005312675</td>
-<td align="center">tau_scd</td>
-<td align="center">c</td>
-</tr>
-<tr class="odd">
-<td align="center">Guadalfeo</td>
-<td align="center">-0.16140195</td>
-<td align="center">0.1566468</td>
-<td align="center">0.003455537</td>
-<td align="center">tau_scd</td>
-<td align="center">b</td>
-</tr>
-<tr class="even">
-<td align="center">Adra</td>
-<td align="center">0.13508641</td>
-<td align="center">0.1661481</td>
-<td align="center">0.005393396</td>
-<td align="center">tau_scod</td>
-<td align="center">c</td>
-</tr>
-<tr class="odd">
-<td align="center">Andarax</td>
-<td align="center">0.16170725</td>
-<td align="center">0.1799857</td>
-<td align="center">0.005289125</td>
-<td align="center">tau_scod</td>
-<td align="center">d</td>
-</tr>
-<tr class="even">
-<td align="center">Fardes</td>
-<td align="center">0.08508559</td>
-<td align="center">0.1760358</td>
-<td align="center">0.005202333</td>
-<td align="center">tau_scod</td>
-<td align="center">a</td>
-</tr>
-<tr class="odd">
-<td align="center">Genil</td>
-<td align="center">0.17786334</td>
-<td align="center">0.1532622</td>
-<td align="center">0.004657156</td>
-<td align="center">tau_scod</td>
-<td align="center">d</td>
-</tr>
-<tr class="even">
-<td align="center">Guadalfeo</td>
-<td align="center">0.11700681</td>
-<td align="center">0.1651432</td>
-<td align="center">0.003642962</td>
-<td align="center">tau_scod</td>
-<td align="center">b</td>
-</tr>
-<tr class="odd">
-<td align="center">Adra</td>
-<td align="center">-0.18339621</td>
-<td align="center">0.1688657</td>
-<td align="center">0.005481613</td>
-<td align="center">tau_scmd</td>
-<td align="center">b</td>
-</tr>
-<tr class="even">
-<td align="center">Andarax</td>
-<td align="center">-0.14401468</td>
-<td align="center">0.1583987</td>
-<td align="center">0.004654762</td>
-<td align="center">tau_scmd</td>
-<td align="center">c</td>
-</tr>
-<tr class="odd">
-<td align="center">Fardes</td>
-<td align="center">-0.20676943</td>
-<td align="center">0.1745326</td>
-<td align="center">0.005157911</td>
-<td align="center">tau_scmd</td>
-<td align="center">a</td>
-</tr>
-<tr class="even">
-<td align="center">Genil</td>
-<td align="center">-0.13841459</td>
-<td align="center">0.1364387</td>
-<td align="center">0.004145942</td>
-<td align="center">tau_scmd</td>
-<td align="center">c</td>
-</tr>
-<tr class="odd">
-<td align="center">Guadalfeo</td>
-<td align="center">-0.20161606</td>
-<td align="center">0.1757420</td>
-<td align="center">0.003876768</td>
-<td align="center">tau_scmd</td>
-<td align="center">a</td>
-</tr>
-<tr class="even">
-<td align="center">Adra</td>
-<td align="center">-0.13998419</td>
-<td align="center">0.1235027</td>
-<td align="center">0.004009066</td>
-<td align="center">tau_scmc</td>
-<td align="center">d</td>
-</tr>
-<tr class="odd">
-<td align="center">Andarax</td>
-<td align="center">-0.17458290</td>
-<td align="center">0.1393072</td>
-<td align="center">0.004093732</td>
-<td align="center">tau_scmc</td>
-<td align="center">c</td>
-</tr>
-<tr class="even">
-<td align="center">Fardes</td>
-<td align="center">-0.18793275</td>
-<td align="center">0.1565802</td>
-<td align="center">0.004627370</td>
-<td align="center">tau_scmc</td>
-<td align="center">c</td>
-</tr>
-<tr class="odd">
-<td align="center">Genil</td>
-<td align="center">-0.22667405</td>
-<td align="center">0.1757618</td>
-<td align="center">0.005340850</td>
-<td align="center">tau_scmc</td>
-<td align="center">a</td>
-</tr>
-<tr class="even">
-<td align="center">Guadalfeo</td>
-<td align="center">-0.20895036</td>
-<td align="center">0.1448464</td>
-<td align="center">0.003195228</td>
-<td align="center">tau_scmc</td>
-<td align="center">b</td>
-</tr>
-</tbody>
-</table>
-
-``` r
 # Create a df with letter and variables
 df_basin_sen <- df_basin %>%
   dplyr::filter(grepl("sen", variable))
@@ -614,8 +427,386 @@ ggplot(df_basin_sen, aes(x=basin_name, y=mean)) +
 
 ![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
+#### Tau Snow cover duration
+
 ``` r
-pander(df_basin_slope) 
+pander(filter(df_basin_tau, variable=="tau_scd")) 
 ```
 
-Quitting from lines 428-446 (explore\_snow\_trends.Rmd) Error in pander(df\_basin\_slope) : objeto 'df\_basin\_slope' no encontrado Calls: <Anonymous> ... withCallingHandlers -&gt; withVisible -&gt; eval -&gt; eval -&gt; pander Además: Warning message: package 'ggplot2' was built under R version 3.2.3
+<table>
+<colgroup>
+<col width="17%" />
+<col width="14%" />
+<col width="13%" />
+<col width="16%" />
+<col width="14%" />
+<col width="24%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">basin_name</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+<th align="center">se</th>
+<th align="center">variable</th>
+<th align="center">tukey_basin_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Adra</td>
+<td align="center">-0.1539916</td>
+<td align="center">0.1299276</td>
+<td align="center">0.004217628</td>
+<td align="center">tau_scd</td>
+<td align="center">b</td>
+</tr>
+<tr class="even">
+<td align="center">Andarax</td>
+<td align="center">-0.1781580</td>
+<td align="center">0.1347095</td>
+<td align="center">0.003958622</td>
+<td align="center">tau_scd</td>
+<td align="center">a</td>
+</tr>
+<tr class="odd">
+<td align="center">Fardes</td>
+<td align="center">-0.1509319</td>
+<td align="center">0.1552694</td>
+<td align="center">0.004588631</td>
+<td align="center">tau_scd</td>
+<td align="center">b</td>
+</tr>
+<tr class="even">
+<td align="center">Genil</td>
+<td align="center">-0.1164561</td>
+<td align="center">0.1748347</td>
+<td align="center">0.005312675</td>
+<td align="center">tau_scd</td>
+<td align="center">c</td>
+</tr>
+<tr class="odd">
+<td align="center">Guadalfeo</td>
+<td align="center">-0.1614019</td>
+<td align="center">0.1566468</td>
+<td align="center">0.003455537</td>
+<td align="center">tau_scd</td>
+<td align="center">b</td>
+</tr>
+</tbody>
+</table>
+
+#### Sen Slope Snow cover duration
+
+``` r
+pander(filter(df_basin_sen, variable=="tau_scd")) 
+```
+
+<table style="width:99%;">
+<colgroup>
+<col width="20%" />
+<col width="12%" />
+<col width="9%" />
+<col width="9%" />
+<col width="18%" />
+<col width="27%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>basin_name</strong></td>
+<td align="left"><strong>mean</strong></td>
+<td align="left"><strong>sd</strong></td>
+<td align="left"><strong>se</strong></td>
+<td align="left"><strong>variable</strong></td>
+<td align="left"><strong>tukey_basin_name</strong></td>
+</tr>
+</tbody>
+</table>
+
+#### Tau Snow cover onset date
+
+``` r
+pander(filter(df_basin_tau, variable=="tau_scod")) 
+```
+
+<table>
+<colgroup>
+<col width="17%" />
+<col width="14%" />
+<col width="13%" />
+<col width="16%" />
+<col width="14%" />
+<col width="24%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">basin_name</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+<th align="center">se</th>
+<th align="center">variable</th>
+<th align="center">tukey_basin_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Adra</td>
+<td align="center">0.13508641</td>
+<td align="center">0.1661481</td>
+<td align="center">0.005393396</td>
+<td align="center">tau_scod</td>
+<td align="center">c</td>
+</tr>
+<tr class="even">
+<td align="center">Andarax</td>
+<td align="center">0.16170725</td>
+<td align="center">0.1799857</td>
+<td align="center">0.005289125</td>
+<td align="center">tau_scod</td>
+<td align="center">d</td>
+</tr>
+<tr class="odd">
+<td align="center">Fardes</td>
+<td align="center">0.08508559</td>
+<td align="center">0.1760358</td>
+<td align="center">0.005202333</td>
+<td align="center">tau_scod</td>
+<td align="center">a</td>
+</tr>
+<tr class="even">
+<td align="center">Genil</td>
+<td align="center">0.17786334</td>
+<td align="center">0.1532622</td>
+<td align="center">0.004657156</td>
+<td align="center">tau_scod</td>
+<td align="center">d</td>
+</tr>
+<tr class="odd">
+<td align="center">Guadalfeo</td>
+<td align="center">0.11700681</td>
+<td align="center">0.1651432</td>
+<td align="center">0.003642962</td>
+<td align="center">tau_scod</td>
+<td align="center">b</td>
+</tr>
+</tbody>
+</table>
+
+#### Sen Slope Snow onset date
+
+``` r
+pander(filter(df_basin_sen, variable=="tau_scod")) 
+```
+
+<table style="width:99%;">
+<colgroup>
+<col width="20%" />
+<col width="12%" />
+<col width="9%" />
+<col width="9%" />
+<col width="18%" />
+<col width="27%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>basin_name</strong></td>
+<td align="left"><strong>mean</strong></td>
+<td align="left"><strong>sd</strong></td>
+<td align="left"><strong>se</strong></td>
+<td align="left"><strong>variable</strong></td>
+<td align="left"><strong>tukey_basin_name</strong></td>
+</tr>
+</tbody>
+</table>
+
+#### Tau Snow cover melting date
+
+``` r
+pander(filter(df_basin_tau, variable=="tau_scmd")) 
+```
+
+<table>
+<colgroup>
+<col width="17%" />
+<col width="14%" />
+<col width="13%" />
+<col width="16%" />
+<col width="14%" />
+<col width="24%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">basin_name</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+<th align="center">se</th>
+<th align="center">variable</th>
+<th align="center">tukey_basin_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Adra</td>
+<td align="center">-0.1833962</td>
+<td align="center">0.1688657</td>
+<td align="center">0.005481613</td>
+<td align="center">tau_scmd</td>
+<td align="center">b</td>
+</tr>
+<tr class="even">
+<td align="center">Andarax</td>
+<td align="center">-0.1440147</td>
+<td align="center">0.1583987</td>
+<td align="center">0.004654762</td>
+<td align="center">tau_scmd</td>
+<td align="center">c</td>
+</tr>
+<tr class="odd">
+<td align="center">Fardes</td>
+<td align="center">-0.2067694</td>
+<td align="center">0.1745326</td>
+<td align="center">0.005157911</td>
+<td align="center">tau_scmd</td>
+<td align="center">a</td>
+</tr>
+<tr class="even">
+<td align="center">Genil</td>
+<td align="center">-0.1384146</td>
+<td align="center">0.1364387</td>
+<td align="center">0.004145942</td>
+<td align="center">tau_scmd</td>
+<td align="center">c</td>
+</tr>
+<tr class="odd">
+<td align="center">Guadalfeo</td>
+<td align="center">-0.2016161</td>
+<td align="center">0.1757420</td>
+<td align="center">0.003876768</td>
+<td align="center">tau_scmd</td>
+<td align="center">a</td>
+</tr>
+</tbody>
+</table>
+
+#### Sen Slope Snow melting date
+
+``` r
+pander(filter(df_basin_sen, variable=="tau_scmd")) 
+```
+
+<table style="width:99%;">
+<colgroup>
+<col width="20%" />
+<col width="12%" />
+<col width="9%" />
+<col width="9%" />
+<col width="18%" />
+<col width="27%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>basin_name</strong></td>
+<td align="left"><strong>mean</strong></td>
+<td align="left"><strong>sd</strong></td>
+<td align="left"><strong>se</strong></td>
+<td align="left"><strong>variable</strong></td>
+<td align="left"><strong>tukey_basin_name</strong></td>
+</tr>
+</tbody>
+</table>
+
+#### Tau Snow cover melting cycles
+
+``` r
+pander(filter(df_basin_tau, variable=="tau_scmc")) 
+```
+
+<table>
+<colgroup>
+<col width="17%" />
+<col width="14%" />
+<col width="13%" />
+<col width="16%" />
+<col width="14%" />
+<col width="24%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">basin_name</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+<th align="center">se</th>
+<th align="center">variable</th>
+<th align="center">tukey_basin_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Adra</td>
+<td align="center">-0.1399842</td>
+<td align="center">0.1235027</td>
+<td align="center">0.004009066</td>
+<td align="center">tau_scmc</td>
+<td align="center">d</td>
+</tr>
+<tr class="even">
+<td align="center">Andarax</td>
+<td align="center">-0.1745829</td>
+<td align="center">0.1393072</td>
+<td align="center">0.004093732</td>
+<td align="center">tau_scmc</td>
+<td align="center">c</td>
+</tr>
+<tr class="odd">
+<td align="center">Fardes</td>
+<td align="center">-0.1879328</td>
+<td align="center">0.1565802</td>
+<td align="center">0.004627370</td>
+<td align="center">tau_scmc</td>
+<td align="center">c</td>
+</tr>
+<tr class="even">
+<td align="center">Genil</td>
+<td align="center">-0.2266741</td>
+<td align="center">0.1757618</td>
+<td align="center">0.005340850</td>
+<td align="center">tau_scmc</td>
+<td align="center">a</td>
+</tr>
+<tr class="odd">
+<td align="center">Guadalfeo</td>
+<td align="center">-0.2089504</td>
+<td align="center">0.1448464</td>
+<td align="center">0.003195228</td>
+<td align="center">tau_scmc</td>
+<td align="center">b</td>
+</tr>
+</tbody>
+</table>
+
+#### Sen Slope Snow melting date
+
+``` r
+pander(filter(df_basin_sen, variable=="tau_scmc")) 
+```
+
+<table style="width:99%;">
+<colgroup>
+<col width="20%" />
+<col width="12%" />
+<col width="9%" />
+<col width="9%" />
+<col width="18%" />
+<col width="27%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>basin_name</strong></td>
+<td align="left"><strong>mean</strong></td>
+<td align="left"><strong>sd</strong></td>
+<td align="left"><strong>se</strong></td>
+<td align="left"><strong>variable</strong></td>
+<td align="left"><strong>tukey_basin_name</strong></td>
+</tr>
+</tbody>
+</table>
