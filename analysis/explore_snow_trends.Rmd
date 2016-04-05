@@ -446,7 +446,7 @@ pander(filter(df_basin_tau, variable=="tau_scd"))
 
 #### Sen Slope Snow cover duration
 ```{r}
-pander(filter(df_basin_sen, variable=="tau_scd")) 
+pander(filter(df_basin_sen, variable=="sen_slope_scd")) 
 ```
 
 
@@ -457,7 +457,7 @@ pander(filter(df_basin_tau, variable=="tau_scod"))
 
 #### Sen Slope Snow onset date
 ```{r}
-pander(filter(df_basin_sen, variable=="tau_scod")) 
+pander(filter(df_basin_sen, variable=="sen_slope_scod")) 
 ```
 
 
@@ -468,7 +468,7 @@ pander(filter(df_basin_tau, variable=="tau_scmd"))
 
 #### Sen Slope Snow melting date
 ```{r}
-pander(filter(df_basin_sen, variable=="tau_scmd")) 
+pander(filter(df_basin_sen, variable=="sen_slope_scmd")) 
 ```
 
 
@@ -479,7 +479,7 @@ pander(filter(df_basin_tau, variable=="tau_scmc"))
 
 #### Sen Slope Snow melting date
 ```{r}
-pander(filter(df_basin_sen, variable=="tau_scmc")) 
+pander(filter(df_basin_sen, variable=="sen_slope_scmc")) 
 ```
 
 

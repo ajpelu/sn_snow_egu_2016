@@ -499,26 +499,68 @@ pander(filter(df_basin_tau, variable=="tau_scd"))
 #### Sen Slope Snow cover duration
 
 ``` r
-pander(filter(df_basin_sen, variable=="tau_scd")) 
+pander(filter(df_basin_sen, variable=="sen_slope_scd")) 
 ```
 
-<table style="width:99%;">
+<table style="width:100%;">
 <colgroup>
-<col width="20%" />
+<col width="17%" />
+<col width="13%" />
 <col width="12%" />
-<col width="9%" />
-<col width="9%" />
+<col width="14%" />
 <col width="18%" />
-<col width="27%" />
+<col width="24%" />
 </colgroup>
+<thead>
+<tr class="header">
+<th align="center">basin_name</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+<th align="center">se</th>
+<th align="center">variable</th>
+<th align="center">tukey_basin_name</th>
+</tr>
+</thead>
 <tbody>
 <tr class="odd">
-<td align="left"><strong>basin_name</strong></td>
-<td align="left"><strong>mean</strong></td>
-<td align="left"><strong>sd</strong></td>
-<td align="left"><strong>se</strong></td>
-<td align="left"><strong>variable</strong></td>
-<td align="left"><strong>tukey_basin_name</strong></td>
+<td align="center">Adra</td>
+<td align="center">-1.212126</td>
+<td align="center">1.330570</td>
+<td align="center">0.04319214</td>
+<td align="center">sen_slope_scd</td>
+<td align="center">b</td>
+</tr>
+<tr class="even">
+<td align="center">Andarax</td>
+<td align="center">-1.165116</td>
+<td align="center">1.187804</td>
+<td align="center">0.03490522</td>
+<td align="center">sen_slope_scd</td>
+<td align="center">b</td>
+</tr>
+<tr class="odd">
+<td align="center">Fardes</td>
+<td align="center">-1.256298</td>
+<td align="center">1.450748</td>
+<td align="center">0.04287353</td>
+<td align="center">sen_slope_scd</td>
+<td align="center">b</td>
+</tr>
+<tr class="even">
+<td align="center">Genil</td>
+<td align="center">-1.227084</td>
+<td align="center">1.616166</td>
+<td align="center">0.04911019</td>
+<td align="center">sen_slope_scd</td>
+<td align="center">b</td>
+</tr>
+<tr class="odd">
+<td align="center">Guadalfeo</td>
+<td align="center">-1.726302</td>
+<td align="center">1.703237</td>
+<td align="center">0.03757242</td>
+<td align="center">sen_slope_scd</td>
+<td align="center">a</td>
 </tr>
 </tbody>
 </table>
@@ -595,26 +637,68 @@ pander(filter(df_basin_tau, variable=="tau_scod"))
 #### Sen Slope Snow onset date
 
 ``` r
-pander(filter(df_basin_sen, variable=="tau_scod")) 
+pander(filter(df_basin_sen, variable=="sen_slope_scod")) 
 ```
 
-<table style="width:99%;">
+<table style="width:100%;">
 <colgroup>
-<col width="20%" />
-<col width="12%" />
-<col width="9%" />
-<col width="9%" />
-<col width="18%" />
-<col width="27%" />
+<col width="17%" />
+<col width="13%" />
+<col width="11%" />
+<col width="14%" />
+<col width="19%" />
+<col width="23%" />
 </colgroup>
+<thead>
+<tr class="header">
+<th align="center">basin_name</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+<th align="center">se</th>
+<th align="center">variable</th>
+<th align="center">tukey_basin_name</th>
+</tr>
+</thead>
 <tbody>
 <tr class="odd">
-<td align="left"><strong>basin_name</strong></td>
-<td align="left"><strong>mean</strong></td>
-<td align="left"><strong>sd</strong></td>
-<td align="left"><strong>se</strong></td>
-<td align="left"><strong>variable</strong></td>
-<td align="left"><strong>tukey_basin_name</strong></td>
+<td align="center">Adra</td>
+<td align="center">1.3561486</td>
+<td align="center">1.880254</td>
+<td align="center">0.06103564</td>
+<td align="center">sen_slope_scod</td>
+<td align="center">c</td>
+</tr>
+<tr class="even">
+<td align="center">Andarax</td>
+<td align="center">1.2622073</td>
+<td align="center">2.081075</td>
+<td align="center">0.06115520</td>
+<td align="center">sen_slope_scod</td>
+<td align="center">c</td>
+</tr>
+<tr class="odd">
+<td align="center">Fardes</td>
+<td align="center">0.7328856</td>
+<td align="center">1.579219</td>
+<td align="center">0.04667019</td>
+<td align="center">sen_slope_scod</td>
+<td align="center">a</td>
+</tr>
+<tr class="even">
+<td align="center">Genil</td>
+<td align="center">1.3788957</td>
+<td align="center">1.519216</td>
+<td align="center">0.04616421</td>
+<td align="center">sen_slope_scod</td>
+<td align="center">c</td>
+</tr>
+<tr class="odd">
+<td align="center">Guadalfeo</td>
+<td align="center">1.0376273</td>
+<td align="center">1.738225</td>
+<td align="center">0.03834423</td>
+<td align="center">sen_slope_scod</td>
+<td align="center">b</td>
 </tr>
 </tbody>
 </table>
@@ -691,26 +775,68 @@ pander(filter(df_basin_tau, variable=="tau_scmd"))
 #### Sen Slope Snow melting date
 
 ``` r
-pander(filter(df_basin_sen, variable=="tau_scmd")) 
+pander(filter(df_basin_sen, variable=="sen_slope_scmd")) 
 ```
 
-<table style="width:99%;">
+<table style="width:100%;">
 <colgroup>
-<col width="20%" />
-<col width="12%" />
-<col width="9%" />
-<col width="9%" />
-<col width="18%" />
-<col width="27%" />
+<col width="17%" />
+<col width="13%" />
+<col width="11%" />
+<col width="14%" />
+<col width="19%" />
+<col width="23%" />
 </colgroup>
+<thead>
+<tr class="header">
+<th align="center">basin_name</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+<th align="center">se</th>
+<th align="center">variable</th>
+<th align="center">tukey_basin_name</th>
+</tr>
+</thead>
 <tbody>
 <tr class="odd">
-<td align="left"><strong>basin_name</strong></td>
-<td align="left"><strong>mean</strong></td>
-<td align="left"><strong>sd</strong></td>
-<td align="left"><strong>se</strong></td>
-<td align="left"><strong>variable</strong></td>
-<td align="left"><strong>tukey_basin_name</strong></td>
+<td align="center">Adra</td>
+<td align="center">-1.632706</td>
+<td align="center">1.907522</td>
+<td align="center">0.06192079</td>
+<td align="center">sen_slope_scmd</td>
+<td align="center">b</td>
+</tr>
+<tr class="even">
+<td align="center">Andarax</td>
+<td align="center">-1.399011</td>
+<td align="center">1.984965</td>
+<td align="center">0.05833088</td>
+<td align="center">sen_slope_scmd</td>
+<td align="center">c</td>
+</tr>
+<tr class="odd">
+<td align="center">Fardes</td>
+<td align="center">-1.968318</td>
+<td align="center">2.106212</td>
+<td align="center">0.06224426</td>
+<td align="center">sen_slope_scmd</td>
+<td align="center">a</td>
+</tr>
+<tr class="even">
+<td align="center">Genil</td>
+<td align="center">-1.111770</td>
+<td align="center">1.399082</td>
+<td align="center">0.04251370</td>
+<td align="center">sen_slope_scmd</td>
+<td align="center">d</td>
+</tr>
+<tr class="odd">
+<td align="center">Guadalfeo</td>
+<td align="center">-1.817089</td>
+<td align="center">1.902809</td>
+<td align="center">0.04197486</td>
+<td align="center">sen_slope_scmd</td>
+<td align="center">ab</td>
 </tr>
 </tbody>
 </table>
@@ -787,26 +913,68 @@ pander(filter(df_basin_tau, variable=="tau_scmc"))
 #### Sen Slope Snow melting date
 
 ``` r
-pander(filter(df_basin_sen, variable=="tau_scmc")) 
+pander(filter(df_basin_sen, variable=="sen_slope_scmc")) 
 ```
 
-<table style="width:99%;">
+<table style="width:100%;">
 <colgroup>
-<col width="20%" />
-<col width="12%" />
-<col width="9%" />
-<col width="9%" />
+<col width="16%" />
+<col width="14%" />
+<col width="13%" />
+<col width="14%" />
 <col width="18%" />
-<col width="27%" />
+<col width="22%" />
 </colgroup>
+<thead>
+<tr class="header">
+<th align="center">basin_name</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+<th align="center">se</th>
+<th align="center">variable</th>
+<th align="center">tukey_basin_name</th>
+</tr>
+</thead>
 <tbody>
 <tr class="odd">
-<td align="left"><strong>basin_name</strong></td>
-<td align="left"><strong>mean</strong></td>
-<td align="left"><strong>sd</strong></td>
-<td align="left"><strong>se</strong></td>
-<td align="left"><strong>variable</strong></td>
-<td align="left"><strong>tukey_basin_name</strong></td>
+<td align="center">Adra</td>
+<td align="center">-0.04459536</td>
+<td align="center">0.06725779</td>
+<td align="center">0.002183280</td>
+<td align="center">sen_slope_scmc</td>
+<td align="center">c</td>
+</tr>
+<tr class="even">
+<td align="center">Andarax</td>
+<td align="center">-0.05264162</td>
+<td align="center">0.07425655</td>
+<td align="center">0.002182129</td>
+<td align="center">sen_slope_scmc</td>
+<td align="center">c</td>
+</tr>
+<tr class="odd">
+<td align="center">Fardes</td>
+<td align="center">-0.07982009</td>
+<td align="center">0.09181152</td>
+<td align="center">0.002713279</td>
+<td align="center">sen_slope_scmc</td>
+<td align="center">b</td>
+</tr>
+<tr class="even">
+<td align="center">Genil</td>
+<td align="center">-0.09900277</td>
+<td align="center">0.10182727</td>
+<td align="center">0.003094211</td>
+<td align="center">sen_slope_scmc</td>
+<td align="center">a</td>
+</tr>
+<tr class="odd">
+<td align="center">Guadalfeo</td>
+<td align="center">-0.08545109</td>
+<td align="center">0.08909295</td>
+<td align="center">0.001965339</td>
+<td align="center">sen_slope_scmc</td>
+<td align="center">b</td>
 </tr>
 </tbody>
 </table>
