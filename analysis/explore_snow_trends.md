@@ -143,6 +143,7 @@ for (i in misvariables){
 ```
 
 Analyze differences in trends statistics between hydrological basins
+====================================================================
 
 ### Snow cover duration
 
@@ -157,7 +158,14 @@ df <- fulldf1250
 variable <- 'tau_scd'
 my_ylab <- 'Tau Snow cover duration'
 mod <- aov(tau_scd ~ basin_name, data=df)
+tidy(mod)
+```
 
+    ##         term   df      sumsq     meansq statistic      p.value
+    ## 1 basin_name    4   2.325569 0.58139218  25.07314 1.239364e-20
+    ## 2  Residuals 6385 148.054427 0.02318785        NA           NA
+
+``` r
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
 # Convert comparisons into letters 
@@ -185,7 +193,14 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scd'
 my_ylab <- 'Sen slope Snow cover duration'
 mod <- aov(sen_slope_scd ~ basin_name, data=df)
+tidy(mod)
+```
 
+    ##         term   df      sumsq    meansq statistic      p.value
+    ## 1 basin_name    4   369.5038 92.375948  40.66789 1.055819e-33
+    ## 2  Residuals 6385 14503.3443  2.271471        NA           NA
+
+``` r
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
 # Convert comparisons into letters 
@@ -216,7 +231,14 @@ Snow cover onset date
 variable <- 'tau_scod'
 my_ylab <- 'Tau Snow cover onset date'
 mod <- aov(tau_scod ~ basin_name, data=df)
+tidy(mod)
+```
 
+    ##         term   df      sumsq     meansq statistic      p.value
+    ## 1 basin_name    4   6.290132 1.57253293  55.61619 3.550453e-46
+    ## 2  Residuals 6385 180.534182 0.02827473        NA           NA
+
+``` r
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
 # Convert comparisons into letters 
@@ -244,7 +266,14 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scod'
 my_ylab <- 'Sen slope Snow cover onset date'
 mod <- aov(sen_slope_scod ~ basin_name, data=df)
+tidy(mod)
+```
 
+    ##         term   df      sumsq    meansq statistic      p.value
+    ## 1 basin_name    4   333.9589 83.489735  26.76292 4.745272e-22
+    ## 2  Residuals 6385 19918.6788  3.119605        NA           NA
+
+``` r
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
 # Convert comparisons into letters 
@@ -275,7 +304,14 @@ Snow cover melting date
 variable <- 'tau_scmd'
 my_ylab <- 'Tau Snow cover melting date'
 mod <- aov(tau_scmd ~ basin_name, data=df)
+tidy(mod)
+```
 
+    ##         term   df      sumsq    meansq statistic      p.value
+    ## 1 basin_name    4   5.153013 1.2882532  47.14007 4.112493e-39
+    ## 2  Residuals 6385 174.490564 0.0273282        NA           NA
+
+``` r
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
 # Convert comparisons into letters 
@@ -303,7 +339,14 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scmd'
 my_ylab <- 'Sen slope Snow cover melting date'
 mod <- aov(sen_slope_scmd ~ basin_name, data=df)
+tidy(mod)
+```
 
+    ##         term   df      sumsq     meansq statistic      p.value
+    ## 1 basin_name    4   555.1691 138.792272  39.14631 1.981672e-32
+    ## 2  Residuals 6385 22637.8603   3.545475        NA           NA
+
+``` r
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
 # Convert comparisons into letters 
@@ -334,7 +377,14 @@ Snow cover melting cycles
 variable <- 'tau_scmc'
 my_ylab <- 'Tau Snow cover melting cycles'
 mod <- aov(tau_scmc ~ basin_name, data=df)
+tidy(mod)
+```
 
+    ##         term   df      sumsq     meansq statistic      p.value
+    ## 1 basin_name    4   4.829886 1.20747142  54.49315 3.053059e-45
+    ## 2  Residuals 6385 141.480261 0.02215822        NA           NA
+
+``` r
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
 # Convert comparisons into letters 
@@ -362,7 +412,14 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scmc'
 my_ylab <- 'Sen slope Snow cover melting cycles'
 mod <- aov(sen_slope_scmc ~ basin_name, data=df)
+tidy(mod)
+```
 
+    ##         term   df     sumsq      meansq statistic      p.value
+    ## 1 basin_name    4  2.330707 0.582676721    77.777 1.629835e-64
+    ## 2  Residuals 6385 47.834074 0.007491633        NA           NA
+
+``` r
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
 # Convert comparisons into letters 
