@@ -99,3 +99,523 @@ fulldf <- topo %>%
 fulldf1250 <- fulldf %>% 
   filter(dem50mean > 1250)  
 ```
+
+Explore Snow-Cover trends by basin
+==================================
+
+We explore the pattern of snow-cover indicators trends by hydrological basin.
+
+``` r
+# Set theme ggplot options
+mythemeggplot <- theme_bw() + theme(panel.grid.major=element_blank(),
+                       panel.grid.minor=element_blank(),
+                       strip.background=element_rect(fill='white'))
+```
+
+### Snow cover duration
+
+``` r
+## Summary statistics 
+misvariables<- c('tau_scd', 'sen_slope_scd', 'tau_scod', 'sen_slope_scod',
+                 'tau_scmd', 'sen_slope_scmd', 'tau_scmc', 'sen_slope_scmc')
+variable_agrupa <- 'basin_name' 
+prefijo  <- 'basin_' 
+df <- fulldf1250
+
+stats_basin <- data.frame() 
+  
+for (i in misvariables){
+  vnames <- c(variable_agrupa, i)
+  aux <- df %>%
+    dplyr::select(one_of(vnames)) %>%
+    mutate_(vinterest = i) %>%
+    group_by_(.dots=variable_agrupa) %>%
+    summarise(mean=mean(vinterest),
+              sd = sd(vinterest),
+              se = sd / sqrt (length(vinterest)))
+  aux <- aux %>% 
+    mutate(variable = i)
+  
+  stats_basin <- rbind(stats_basin, aux)
+  # assign(paste0(prefijo,i), aux)
+   
+}
+```
+
+Analyze differences in trends statistics between hydrological basins
+
+### Snow cover duration
+
+``` r
+df_letter_aux <- data.frame() 
+df <- fulldf1250
+```
+
+``` r
+# Tau scd 
+# ANOVA 
+variable <- 'tau_scd'
+my_ylab <- 'Tau Snow cover duration'
+mod <- aov(tau_scd ~ basin_name, data=df)
+
+## Multiple comparisons 
+tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(basin_name = as.factor(lhs),
+         tukey_basin_name = letters) %>%
+  mutate(variable = variable)
+
+df_letter_aux <- rbind(df_letter_aux, df_letter)
+
+## ANOVA plots
+ggplot(df, aes_string(x='basin_name', y=variable)) + 
+  geom_boxplot() +
+  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.5),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + mythemeggplot + 
+  ylab(my_ylab) + xlab('')
+```
+
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-4-1.png)
+
+``` r
+# Sen scd 
+# ANOVA 
+variable <- 'sen_slope_scd'
+my_ylab <- 'Sen slope Snow cover duration'
+mod <- aov(sen_slope_scd ~ basin_name, data=df)
+
+## Multiple comparisons 
+tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(basin_name = as.factor(lhs),
+         tukey_basin_name = letters) %>%
+  mutate(variable = variable)
+
+df_letter_aux <- rbind(df_letter_aux, df_letter)
+
+## ANOVA plots
+ggplot(df, aes_string(x='basin_name', y=variable)) + 
+  geom_boxplot() +
+  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=4.5),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + mythemeggplot + 
+  ylab(my_ylab) + xlab('')
+```
+
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-5-1.png)
+
+Snow cover onset date
+=====================
+
+``` r
+# Tau scod 
+# ANOVA 
+variable <- 'tau_scod'
+my_ylab <- 'Tau Snow cover onset date'
+mod <- aov(tau_scod ~ basin_name, data=df)
+
+## Multiple comparisons 
+tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(basin_name = as.factor(lhs),
+         tukey_basin_name = letters) %>%
+  mutate(variable = variable)
+
+df_letter_aux <- rbind(df_letter_aux, df_letter)
+
+## ANOVA plots
+ggplot(df, aes_string(x='basin_name', y=variable)) + 
+  geom_boxplot() +
+  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.7),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + mythemeggplot + 
+  ylab(my_ylab) + xlab('')
+```
+
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-6-1.png)
+
+``` r
+# Sen scod 
+# ANOVA 
+variable <- 'sen_slope_scod'
+my_ylab <- 'Sen slope Snow cover onset date'
+mod <- aov(sen_slope_scod ~ basin_name, data=df)
+
+## Multiple comparisons 
+tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(basin_name = as.factor(lhs),
+         tukey_basin_name = letters) %>%
+  mutate(variable = variable)
+
+df_letter_aux <- rbind(df_letter_aux, df_letter)
+
+## ANOVA plots
+ggplot(df, aes_string(x='basin_name', y=variable)) + 
+  geom_boxplot() +
+  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=10),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + mythemeggplot + 
+  ylab(my_ylab) + xlab('')
+```
+
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-7-1.png)
+
+Snow cover melting date
+=======================
+
+``` r
+# Tau scmd 
+# ANOVA 
+variable <- 'tau_scmd'
+my_ylab <- 'Tau Snow cover melting date'
+mod <- aov(tau_scmd ~ basin_name, data=df)
+
+## Multiple comparisons 
+tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(basin_name = as.factor(lhs),
+         tukey_basin_name = letters) %>%
+  mutate(variable = variable)
+
+df_letter_aux <- rbind(df_letter_aux, df_letter)
+
+## ANOVA plots
+ggplot(df, aes_string(x='basin_name', y=variable)) + 
+  geom_boxplot() +
+  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.5),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + mythemeggplot + 
+  ylab(my_ylab) + xlab('')
+```
+
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-8-1.png)
+
+``` r
+# Sen scmd 
+# ANOVA 
+variable <- 'sen_slope_scmd'
+my_ylab <- 'Sen slope Snow cover melting date'
+mod <- aov(sen_slope_scmd ~ basin_name, data=df)
+
+## Multiple comparisons 
+tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(basin_name = as.factor(lhs),
+         tukey_basin_name = letters) %>%
+  mutate(variable = variable)
+
+df_letter_aux <- rbind(df_letter_aux, df_letter)
+
+## ANOVA plots
+ggplot(df, aes_string(x='basin_name', y=variable)) + 
+  geom_boxplot() +
+  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=10),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + mythemeggplot + 
+  ylab(my_ylab) + xlab('')
+```
+
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-9-1.png)
+
+Snow cover melting cycles
+=========================
+
+``` r
+# Tau scmc 
+# ANOVA 
+variable <- 'tau_scmc'
+my_ylab <- 'Tau Snow cover melting cycles'
+mod <- aov(tau_scmc ~ basin_name, data=df)
+
+## Multiple comparisons 
+tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(basin_name = as.factor(lhs),
+         tukey_basin_name = letters) %>%
+  mutate(variable = variable)
+
+df_letter_aux <- rbind(df_letter_aux, df_letter)
+
+## ANOVA plots
+ggplot(df, aes_string(x='basin_name', y=variable)) + 
+  geom_boxplot() +
+  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.5),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + mythemeggplot + 
+  ylab(my_ylab) + xlab('')
+```
+
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-10-1.png)
+
+``` r
+# Sen scmc 
+# ANOVA 
+variable <- 'sen_slope_scmc'
+my_ylab <- 'Sen slope Snow cover melting cycles'
+mod <- aov(sen_slope_scmc ~ basin_name, data=df)
+
+## Multiple comparisons 
+tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(basin_name = as.factor(lhs),
+         tukey_basin_name = letters) %>%
+  mutate(variable = variable)
+
+df_letter_aux <- rbind(df_letter_aux, df_letter)
+
+## ANOVA plots
+ggplot(df, aes_string(x='basin_name', y=variable)) + 
+  geom_boxplot() +
+  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=.5),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + mythemeggplot + 
+  ylab(my_ylab) + xlab('')
+```
+
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-11-1.png)
+
+``` r
+# Create a df with letter and variables
+df_basin <- stats_basin %>%
+  dplyr::inner_join(df_letter_aux, by=c('basin_name', 'variable'))
+
+df_basin_tau <- df_basin %>%
+  dplyr::filter(grepl("tau", variable))
+
+
+ggplot(df_basin_tau, aes(x=basin_name, y=mean)) + 
+  geom_point(stat='identity', size=3, fill='#222943') + 
+  geom_errorbar(aes(ymin=mean - sd, ymax= mean + sd), 
+                width=0.1,
+                colour='#222943',
+                position=position_dodge(.9)) +
+  facet_wrap(~variable) + 
+  geom_text(aes(label = tukey_basin_name, x=basin_name, y=mean),
+           hjust=0, nudge_x = 0.2) + mythemeggplot +
+  xlab('') + ylab('Taus')
+```
+
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-12-1.png)
+
+``` r
+pander(df_basin_tau) 
+```
+
+<table>
+<colgroup>
+<col width="17%" />
+<col width="15%" />
+<col width="13%" />
+<col width="15%" />
+<col width="14%" />
+<col width="23%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">basin_name</th>
+<th align="center">mean</th>
+<th align="center">sd</th>
+<th align="center">se</th>
+<th align="center">variable</th>
+<th align="center">tukey_basin_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Adra</td>
+<td align="center">-0.15399157</td>
+<td align="center">0.1299276</td>
+<td align="center">0.004217628</td>
+<td align="center">tau_scd</td>
+<td align="center">b</td>
+</tr>
+<tr class="even">
+<td align="center">Andarax</td>
+<td align="center">-0.17815803</td>
+<td align="center">0.1347095</td>
+<td align="center">0.003958622</td>
+<td align="center">tau_scd</td>
+<td align="center">a</td>
+</tr>
+<tr class="odd">
+<td align="center">Fardes</td>
+<td align="center">-0.15093188</td>
+<td align="center">0.1552694</td>
+<td align="center">0.004588631</td>
+<td align="center">tau_scd</td>
+<td align="center">b</td>
+</tr>
+<tr class="even">
+<td align="center">Genil</td>
+<td align="center">-0.11645614</td>
+<td align="center">0.1748347</td>
+<td align="center">0.005312675</td>
+<td align="center">tau_scd</td>
+<td align="center">c</td>
+</tr>
+<tr class="odd">
+<td align="center">Guadalfeo</td>
+<td align="center">-0.16140195</td>
+<td align="center">0.1566468</td>
+<td align="center">0.003455537</td>
+<td align="center">tau_scd</td>
+<td align="center">b</td>
+</tr>
+<tr class="even">
+<td align="center">Adra</td>
+<td align="center">0.13508641</td>
+<td align="center">0.1661481</td>
+<td align="center">0.005393396</td>
+<td align="center">tau_scod</td>
+<td align="center">c</td>
+</tr>
+<tr class="odd">
+<td align="center">Andarax</td>
+<td align="center">0.16170725</td>
+<td align="center">0.1799857</td>
+<td align="center">0.005289125</td>
+<td align="center">tau_scod</td>
+<td align="center">d</td>
+</tr>
+<tr class="even">
+<td align="center">Fardes</td>
+<td align="center">0.08508559</td>
+<td align="center">0.1760358</td>
+<td align="center">0.005202333</td>
+<td align="center">tau_scod</td>
+<td align="center">a</td>
+</tr>
+<tr class="odd">
+<td align="center">Genil</td>
+<td align="center">0.17786334</td>
+<td align="center">0.1532622</td>
+<td align="center">0.004657156</td>
+<td align="center">tau_scod</td>
+<td align="center">d</td>
+</tr>
+<tr class="even">
+<td align="center">Guadalfeo</td>
+<td align="center">0.11700681</td>
+<td align="center">0.1651432</td>
+<td align="center">0.003642962</td>
+<td align="center">tau_scod</td>
+<td align="center">b</td>
+</tr>
+<tr class="odd">
+<td align="center">Adra</td>
+<td align="center">-0.18339621</td>
+<td align="center">0.1688657</td>
+<td align="center">0.005481613</td>
+<td align="center">tau_scmd</td>
+<td align="center">b</td>
+</tr>
+<tr class="even">
+<td align="center">Andarax</td>
+<td align="center">-0.14401468</td>
+<td align="center">0.1583987</td>
+<td align="center">0.004654762</td>
+<td align="center">tau_scmd</td>
+<td align="center">c</td>
+</tr>
+<tr class="odd">
+<td align="center">Fardes</td>
+<td align="center">-0.20676943</td>
+<td align="center">0.1745326</td>
+<td align="center">0.005157911</td>
+<td align="center">tau_scmd</td>
+<td align="center">a</td>
+</tr>
+<tr class="even">
+<td align="center">Genil</td>
+<td align="center">-0.13841459</td>
+<td align="center">0.1364387</td>
+<td align="center">0.004145942</td>
+<td align="center">tau_scmd</td>
+<td align="center">c</td>
+</tr>
+<tr class="odd">
+<td align="center">Guadalfeo</td>
+<td align="center">-0.20161606</td>
+<td align="center">0.1757420</td>
+<td align="center">0.003876768</td>
+<td align="center">tau_scmd</td>
+<td align="center">a</td>
+</tr>
+<tr class="even">
+<td align="center">Adra</td>
+<td align="center">-0.13998419</td>
+<td align="center">0.1235027</td>
+<td align="center">0.004009066</td>
+<td align="center">tau_scmc</td>
+<td align="center">d</td>
+</tr>
+<tr class="odd">
+<td align="center">Andarax</td>
+<td align="center">-0.17458290</td>
+<td align="center">0.1393072</td>
+<td align="center">0.004093732</td>
+<td align="center">tau_scmc</td>
+<td align="center">c</td>
+</tr>
+<tr class="even">
+<td align="center">Fardes</td>
+<td align="center">-0.18793275</td>
+<td align="center">0.1565802</td>
+<td align="center">0.004627370</td>
+<td align="center">tau_scmc</td>
+<td align="center">c</td>
+</tr>
+<tr class="odd">
+<td align="center">Genil</td>
+<td align="center">-0.22667405</td>
+<td align="center">0.1757618</td>
+<td align="center">0.005340850</td>
+<td align="center">tau_scmc</td>
+<td align="center">a</td>
+</tr>
+<tr class="even">
+<td align="center">Guadalfeo</td>
+<td align="center">-0.20895036</td>
+<td align="center">0.1448464</td>
+<td align="center">0.003195228</td>
+<td align="center">tau_scmc</td>
+<td align="center">b</td>
+</tr>
+</tbody>
+</table>
+
+``` r
+# Create a df with letter and variables
+df_basin_sen <- df_basin %>%
+  dplyr::filter(grepl("sen", variable))
+
+
+ggplot(df_basin_sen, aes(x=basin_name, y=mean)) + 
+  geom_point(stat='identity', size=3, fill='#222943') + 
+  geom_errorbar(aes(ymin=mean - sd, ymax= mean + sd), 
+                width=0.1,
+                colour='#222943',
+                position=position_dodge(.9)) +
+  facet_wrap(~variable) + 
+  geom_text(aes(label = tukey_basin_name, x=basin_name, y=mean),
+           hjust=0, nudge_x = 0.2) + mythemeggplot +
+  xlab('') + ylab('Sen Slopes')
+```
+
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-13-1.png)
+
+``` r
+pander(df_basin_slope) 
+```
+
+Quitting from lines 428-446 (explore\_snow\_trends.Rmd) Error in pander(df\_basin\_slope) : objeto 'df\_basin\_slope' no encontrado Calls: <Anonymous> ... withCallingHandlers -&gt; withVisible -&gt; eval -&gt; eval -&gt; pander Además: Warning message: package 'ggplot2' was built under R version 3.2.3
