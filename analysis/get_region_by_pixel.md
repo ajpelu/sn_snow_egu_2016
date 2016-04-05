@@ -8,8 +8,6 @@ library("plyr")
 
     ## Loading required package: knitr
 
-    ## Warning: package 'knitr' was built under R version 3.2.3
-
 Read data and prepare projections
 ---------------------------------
 
@@ -125,7 +123,9 @@ centroides_sn$basin_name <- as.factor(mapvalues(centroides_sn$basin_code,
 plot(basin)
 plot(sn, add=TRUE, border='blue')
 points(centroides_sn$coords.x1, centroides_sn$coords.x2, 
-       col=centroides_sn$basin_code, pch=20, cex=0.1)
+       col=as.numeric(centroides_sn$basin_name), pch=20, cex=0.1)
+legend(legend = unique(centroides_sn$basin_name), fill=unique(centroides_sn$basin_name), 
+       "topright", horiz = TRUE, cex=.7, bg='transparent', bty='n')
 ```
 
 <figure>
