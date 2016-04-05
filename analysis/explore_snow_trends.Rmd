@@ -404,10 +404,17 @@ df_basin <- stats_basin %>%
   dplyr::inner_join(df_letter_aux, by=c('basin_name', 'variable'))
 
 df_basin_tau <- df_basin %>%
-  filter_(oneway.test())
+  dplyr::filter(grepl("tau", variable))
 
-ggplot(subset(df_basin, , aes(x=basin_name, y=mean)) + geom_bar(stat='identity') + 
-  facet_wrap(~variable)
+
+ggplot(df_basin_tau, aes(x=basin_name, y=mean)) + 
+  geom_bar(stat='identity') + 
+  geom_errorbar(aes(ymin=mean - se, ymax= mean + se), width=0.25,
+                position=position_dodge(.9)) +
+  facet_wrap(~variable) + 
+  geom_text(aes(label = tukey_basin_name, x=basin_name, y=0.22),
+           position = position_dodge(width=0.9)) +
+  mythemeggplot + scale
 
 
 
