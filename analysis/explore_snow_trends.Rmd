@@ -148,7 +148,7 @@ variable_agrupa <- 'basin_name'
 prefijo  <- 'basin_' 
 df <- fulldf1250
 
-stats_basin <- dataframe() 
+stats_basin <- data.frame() 
   
 for (i in misvariables){
   vnames <- c(variable_agrupa, i)
@@ -166,11 +166,40 @@ for (i in misvariables){
   # assign(paste0(prefijo,i), aux)
    
 }
-:::: TODO TABLA CON TODOS LOS ESTATIDISTOS PARA TODAS LAS VARIABLES 
+```
+
+Analyze differences in trends statistics between hydrological basins
+
+
+```{r}
+df <- fulldf1250
+
+# ANOVA 
+mod <- aov(tau_scd ~ basin_name, data=df)
+
+
+## Multiple comparisons 
+tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(basin_name = as.factor(lhs),
+         tukey_basin_name = letters) 
+
+
+ggplot(df, aes(x=basin_name, y=tau_scd)) + 
+  geom_boxplot() +
+  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.5),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + mythemeggplot + 
+  ylab('Tau Snow cover duration') + xlab('')
+
+
 ```
 
 
-
+```{r}
+ggplot(fulldf1250, aes(y=tau_scd, x=basin_name)) + geom_boxplot() +
+  mythemeggplot + xlab('') + ylab('Tau (Snow cover duration)') 
 
 
 
