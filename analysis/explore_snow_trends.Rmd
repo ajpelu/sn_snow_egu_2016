@@ -398,7 +398,16 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
+```{r}
+# Create a df with letter and variables
+df_basin <- stats_basin %>%
+  dplyr::inner_join(df_letter_aux, by=c('basin_name', 'variable'))
 
+df_basin_tau <- df_basin %>%
+  filter_(oneway.test())
+
+ggplot(subset(df_basin, , aes(x=basin_name, y=mean)) + geom_bar(stat='identity') + 
+  facet_wrap(~variable)
 
 
 
