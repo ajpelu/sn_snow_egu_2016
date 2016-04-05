@@ -134,14 +134,14 @@ fulldf1250 <- fulldf %>%
 
 We explore the pattern of snow-cover indicators trends by hydrological basin. 
 
-```{r}
+```{r, echo=FALSE}
 # Set theme ggplot options
 mythemeggplot <- theme_bw() + theme(panel.grid.major=element_blank(),
                        panel.grid.minor=element_blank(),
                        strip.background=element_rect(fill='white'))
 ```
 
-### Snow cover duration 
+
 
 ```{r}
 ## Summary statistics 
@@ -171,7 +171,6 @@ for (i in misvariables){
 }
 ```
 
-# Analyze differences in trends statistics between hydrological basins
 
 ### Snow cover duration
 
@@ -186,7 +185,7 @@ df <- fulldf1250
 variable <- 'tau_scd'
 my_ylab <- 'Tau Snow cover duration'
 mod <- aov(tau_scd ~ basin_name, data=df)
-tidy(mod)
+pander(tidy(mod))
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))

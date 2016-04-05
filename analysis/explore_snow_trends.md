@@ -106,15 +106,6 @@ Explore Snow-Cover trends by basin
 We explore the pattern of snow-cover indicators trends by hydrological basin.
 
 ``` r
-# Set theme ggplot options
-mythemeggplot <- theme_bw() + theme(panel.grid.major=element_blank(),
-                       panel.grid.minor=element_blank(),
-                       strip.background=element_rect(fill='white'))
-```
-
-### Snow cover duration
-
-``` r
 ## Summary statistics 
 misvariables<- c('tau_scd', 'sen_slope_scd', 'tau_scod', 'sen_slope_scod',
                  'tau_scmd', 'sen_slope_scmd', 'tau_scmc', 'sen_slope_scmc')
@@ -142,9 +133,6 @@ for (i in misvariables){
 }
 ```
 
-Analyze differences in trends statistics between hydrological basins
-====================================================================
-
 ### Snow cover duration
 
 ``` r
@@ -158,12 +146,47 @@ df <- fulldf1250
 variable <- 'tau_scd'
 my_ylab <- 'Tau Snow cover duration'
 mod <- aov(tau_scd ~ basin_name, data=df)
-tidy(mod)
+pander(tidy(mod))
 ```
 
-    ##         term   df      sumsq     meansq statistic      p.value
-    ## 1 basin_name    4   2.325569 0.58139218  25.07314 1.239364e-20
-    ## 2  Residuals 6385 148.054427 0.02318785        NA           NA
+<table style="width:75%;">
+<colgroup>
+<col width="15%" />
+<col width="6%" />
+<col width="11%" />
+<col width="12%" />
+<col width="16%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">term</th>
+<th align="center">df</th>
+<th align="center">sumsq</th>
+<th align="center">meansq</th>
+<th align="center">statistic</th>
+<th align="center">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">basin_name</td>
+<td align="center">4</td>
+<td align="center">2.326</td>
+<td align="center">0.5814</td>
+<td align="center">25.07</td>
+<td align="center">1.239e-20</td>
+</tr>
+<tr class="even">
+<td align="center">Residuals</td>
+<td align="center">6385</td>
+<td align="center">148.1</td>
+<td align="center">0.02319</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 ## Multiple comparisons 
