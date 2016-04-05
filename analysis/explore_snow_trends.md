@@ -216,12 +216,47 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scd'
 my_ylab <- 'Sen slope Snow cover duration'
 mod <- aov(sen_slope_scd ~ basin_name, data=df)
-tidy(mod)
+pander(tidy(mod))
 ```
 
-    ##         term   df      sumsq    meansq statistic      p.value
-    ## 1 basin_name    4   369.5038 92.375948  40.66789 1.055819e-33
-    ## 2  Residuals 6385 14503.3443  2.271471        NA           NA
+<table style="width:75%;">
+<colgroup>
+<col width="15%" />
+<col width="6%" />
+<col width="11%" />
+<col width="12%" />
+<col width="16%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">term</th>
+<th align="center">df</th>
+<th align="center">sumsq</th>
+<th align="center">meansq</th>
+<th align="center">statistic</th>
+<th align="center">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">basin_name</td>
+<td align="center">4</td>
+<td align="center">369.5</td>
+<td align="center">92.38</td>
+<td align="center">40.67</td>
+<td align="center">1.056e-33</td>
+</tr>
+<tr class="even">
+<td align="center">Residuals</td>
+<td align="center">6385</td>
+<td align="center">14503</td>
+<td align="center">2.271</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 ## Multiple comparisons 
@@ -254,12 +289,47 @@ Snow cover onset date
 variable <- 'tau_scod'
 my_ylab <- 'Tau Snow cover onset date'
 mod <- aov(tau_scod ~ basin_name, data=df)
-tidy(mod)
+pander(tidy(mod))
 ```
 
-    ##         term   df      sumsq     meansq statistic      p.value
-    ## 1 basin_name    4   6.290132 1.57253293  55.61619 3.550453e-46
-    ## 2  Residuals 6385 180.534182 0.02827473        NA           NA
+<table style="width:75%;">
+<colgroup>
+<col width="15%" />
+<col width="6%" />
+<col width="11%" />
+<col width="12%" />
+<col width="16%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">term</th>
+<th align="center">df</th>
+<th align="center">sumsq</th>
+<th align="center">meansq</th>
+<th align="center">statistic</th>
+<th align="center">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">basin_name</td>
+<td align="center">4</td>
+<td align="center">6.29</td>
+<td align="center">1.573</td>
+<td align="center">55.62</td>
+<td align="center">3.55e-46</td>
+</tr>
+<tr class="even">
+<td align="center">Residuals</td>
+<td align="center">6385</td>
+<td align="center">180.5</td>
+<td align="center">0.02827</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 ## Multiple comparisons 
@@ -289,12 +359,47 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scod'
 my_ylab <- 'Sen slope Snow cover onset date'
 mod <- aov(sen_slope_scod ~ basin_name, data=df)
-tidy(mod)
+pander(tidy(mod))
 ```
 
-    ##         term   df      sumsq    meansq statistic      p.value
-    ## 1 basin_name    4   333.9589 83.489735  26.76292 4.745272e-22
-    ## 2  Residuals 6385 19918.6788  3.119605        NA           NA
+<table style="width:75%;">
+<colgroup>
+<col width="15%" />
+<col width="6%" />
+<col width="11%" />
+<col width="12%" />
+<col width="16%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">term</th>
+<th align="center">df</th>
+<th align="center">sumsq</th>
+<th align="center">meansq</th>
+<th align="center">statistic</th>
+<th align="center">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">basin_name</td>
+<td align="center">4</td>
+<td align="center">334</td>
+<td align="center">83.49</td>
+<td align="center">26.76</td>
+<td align="center">4.745e-22</td>
+</tr>
+<tr class="even">
+<td align="center">Residuals</td>
+<td align="center">6385</td>
+<td align="center">19919</td>
+<td align="center">3.12</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 ## Multiple comparisons 
@@ -327,12 +432,47 @@ Snow cover melting date
 variable <- 'tau_scmd'
 my_ylab <- 'Tau Snow cover melting date'
 mod <- aov(tau_scmd ~ basin_name, data=df)
-tidy(mod)
+pander(tidy(mod))
 ```
 
-    ##         term   df      sumsq    meansq statistic      p.value
-    ## 1 basin_name    4   5.153013 1.2882532  47.14007 4.112493e-39
-    ## 2  Residuals 6385 174.490564 0.0273282        NA           NA
+<table style="width:75%;">
+<colgroup>
+<col width="15%" />
+<col width="6%" />
+<col width="11%" />
+<col width="12%" />
+<col width="16%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">term</th>
+<th align="center">df</th>
+<th align="center">sumsq</th>
+<th align="center">meansq</th>
+<th align="center">statistic</th>
+<th align="center">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">basin_name</td>
+<td align="center">4</td>
+<td align="center">5.153</td>
+<td align="center">1.288</td>
+<td align="center">47.14</td>
+<td align="center">4.112e-39</td>
+</tr>
+<tr class="even">
+<td align="center">Residuals</td>
+<td align="center">6385</td>
+<td align="center">174.5</td>
+<td align="center">0.02733</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 ## Multiple comparisons 
@@ -362,12 +502,47 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scmd'
 my_ylab <- 'Sen slope Snow cover melting date'
 mod <- aov(sen_slope_scmd ~ basin_name, data=df)
-tidy(mod)
+pander(tidy(mod))
 ```
 
-    ##         term   df      sumsq     meansq statistic      p.value
-    ## 1 basin_name    4   555.1691 138.792272  39.14631 1.981672e-32
-    ## 2  Residuals 6385 22637.8603   3.545475        NA           NA
+<table style="width:75%;">
+<colgroup>
+<col width="15%" />
+<col width="6%" />
+<col width="11%" />
+<col width="12%" />
+<col width="16%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">term</th>
+<th align="center">df</th>
+<th align="center">sumsq</th>
+<th align="center">meansq</th>
+<th align="center">statistic</th>
+<th align="center">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">basin_name</td>
+<td align="center">4</td>
+<td align="center">555.2</td>
+<td align="center">138.8</td>
+<td align="center">39.15</td>
+<td align="center">1.982e-32</td>
+</tr>
+<tr class="even">
+<td align="center">Residuals</td>
+<td align="center">6385</td>
+<td align="center">22638</td>
+<td align="center">3.545</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 ## Multiple comparisons 
@@ -400,12 +575,47 @@ Snow cover melting cycles
 variable <- 'tau_scmc'
 my_ylab <- 'Tau Snow cover melting cycles'
 mod <- aov(tau_scmc ~ basin_name, data=df)
-tidy(mod)
+pander(tidy(mod))
 ```
 
-    ##         term   df      sumsq     meansq statistic      p.value
-    ## 1 basin_name    4   4.829886 1.20747142  54.49315 3.053059e-45
-    ## 2  Residuals 6385 141.480261 0.02215822        NA           NA
+<table style="width:75%;">
+<colgroup>
+<col width="15%" />
+<col width="6%" />
+<col width="11%" />
+<col width="12%" />
+<col width="16%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">term</th>
+<th align="center">df</th>
+<th align="center">sumsq</th>
+<th align="center">meansq</th>
+<th align="center">statistic</th>
+<th align="center">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">basin_name</td>
+<td align="center">4</td>
+<td align="center">4.83</td>
+<td align="center">1.207</td>
+<td align="center">54.49</td>
+<td align="center">3.053e-45</td>
+</tr>
+<tr class="even">
+<td align="center">Residuals</td>
+<td align="center">6385</td>
+<td align="center">141.5</td>
+<td align="center">0.02216</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 ## Multiple comparisons 
@@ -435,12 +645,47 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scmc'
 my_ylab <- 'Sen slope Snow cover melting cycles'
 mod <- aov(sen_slope_scmc ~ basin_name, data=df)
-tidy(mod)
+pander(tidy(mod))
 ```
 
-    ##         term   df     sumsq      meansq statistic      p.value
-    ## 1 basin_name    4  2.330707 0.582676721    77.777 1.629835e-64
-    ## 2  Residuals 6385 47.834074 0.007491633        NA           NA
+<table style="width:75%;">
+<colgroup>
+<col width="15%" />
+<col width="6%" />
+<col width="11%" />
+<col width="12%" />
+<col width="16%" />
+<col width="12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">term</th>
+<th align="center">df</th>
+<th align="center">sumsq</th>
+<th align="center">meansq</th>
+<th align="center">statistic</th>
+<th align="center">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">basin_name</td>
+<td align="center">4</td>
+<td align="center">2.331</td>
+<td align="center">0.5827</td>
+<td align="center">77.78</td>
+<td align="center">1.63e-64</td>
+</tr>
+<tr class="even">
+<td align="center">Residuals</td>
+<td align="center">6385</td>
+<td align="center">47.83</td>
+<td align="center">0.007492</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 ## Multiple comparisons 
