@@ -1303,3 +1303,7 @@ pander(filter(df_basin_sen, variable=="sen_slope_scmc"))
 </tr>
 </tbody>
 </table>
+
+![Figure 1.](/images/snow_cover_trends_basin.png)
+
+![Figure 2.](/images/snow_cover_trends_basin_letters.png)
