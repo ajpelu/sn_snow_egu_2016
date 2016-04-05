@@ -172,27 +172,32 @@ Analyze differences in trends statistics between hydrological basins
 
 
 ```{r}
+df_letter_aux <- data.frame() 
 df <- fulldf1250
 
+# Tau scd 
 # ANOVA 
+variable <- 'tau_scd'
+my_ylab <- 'Tau Snow cover duration'
 mod <- aov(tau_scd ~ basin_name, data=df)
-
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
 # Convert comparisons into letters 
 df_letter <- fortify(cld(tuk)) %>%
   transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) 
+         tukey_basin_name = letters) %>%
+  mutate(variable = variable)
 
+df_letter_aux <- rbind(df_letter_aux, df_letter)
 
-ggplot(df, aes(x=basin_name, y=tau_scd)) + 
+## ANOVA plots
+ggplot(df, aes_string(x='basin_name', y=variable)) + 
   geom_boxplot() +
   geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.5),
            position = position_dodge(width=0.9)) +
   theme_bw() + mythemeggplot + 
-  ylab('Tau Snow cover duration') + xlab('')
-
+  ylab(my_ylab) + xlab('')
 
 ```
 
