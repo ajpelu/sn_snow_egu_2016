@@ -289,6 +289,114 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 
 # Snow cover melting date
 
+```{r}
+# Tau scmd 
+# ANOVA 
+variable <- 'tau_scmd'
+my_ylab <- 'Tau Snow cover melting date'
+mod <- aov(tau_scmd ~ basin_name, data=df)
+
+## Multiple comparisons 
+tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(basin_name = as.factor(lhs),
+         tukey_basin_name = letters) %>%
+  mutate(variable = variable)
+
+df_letter_aux <- rbind(df_letter_aux, df_letter)
+
+## ANOVA plots
+ggplot(df, aes_string(x='basin_name', y=variable)) + 
+  geom_boxplot() +
+  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.5),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + mythemeggplot + 
+  ylab(my_ylab) + xlab('')
+```
+
+
+```{r}
+# Sen scmd 
+# ANOVA 
+variable <- 'sen_slope_scmd'
+my_ylab <- 'Sen slope Snow cover melting date'
+mod <- aov(sen_slope_scmd ~ basin_name, data=df)
+
+## Multiple comparisons 
+tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(basin_name = as.factor(lhs),
+         tukey_basin_name = letters) %>%
+  mutate(variable = variable)
+
+df_letter_aux <- rbind(df_letter_aux, df_letter)
+
+## ANOVA plots
+ggplot(df, aes_string(x='basin_name', y=variable)) + 
+  geom_boxplot() +
+  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=10),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + mythemeggplot + 
+  ylab(my_ylab) + xlab('')
+```
+
+# Snow cover melting cycles
+
+```{r}
+# Tau scmc 
+# ANOVA 
+variable <- 'tau_scmc'
+my_ylab <- 'Tau Snow cover melting cycles'
+mod <- aov(tau_scmc ~ basin_name, data=df)
+
+## Multiple comparisons 
+tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(basin_name = as.factor(lhs),
+         tukey_basin_name = letters) %>%
+  mutate(variable = variable)
+
+df_letter_aux <- rbind(df_letter_aux, df_letter)
+
+## ANOVA plots
+ggplot(df, aes_string(x='basin_name', y=variable)) + 
+  geom_boxplot() +
+  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.5),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + mythemeggplot + 
+  ylab(my_ylab) + xlab('')
+```
+
+
+```{r}
+# Sen scmc 
+# ANOVA 
+variable <- 'sen_slope_scmc'
+my_ylab <- 'Sen slope Snow cover melting cycles'
+mod <- aov(sen_slope_scmc ~ basin_name, data=df)
+
+## Multiple comparisons 
+tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
+# Convert comparisons into letters 
+df_letter <- fortify(cld(tuk)) %>%
+  transmute(basin_name = as.factor(lhs),
+         tukey_basin_name = letters) %>%
+  mutate(variable = variable)
+
+df_letter_aux <- rbind(df_letter_aux, df_letter)
+
+## ANOVA plots
+ggplot(df, aes_string(x='basin_name', y=variable)) + 
+  geom_boxplot() +
+  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=.5),
+           position = position_dodge(width=0.9)) +
+  theme_bw() + mythemeggplot + 
+  ylab(my_ylab) + xlab('')
+```
+
 
 
 
