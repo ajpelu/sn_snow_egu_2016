@@ -42,6 +42,7 @@ library("reshape2")
 library("multcomp")
 library("pander")
 library("broom")
+library("mgcv")
 ```
 
 ```{r data}
@@ -497,3 +498,105 @@ pander(filter(df_basin_sen, variable=="sen_slope_scmc"))
 
 
 ![Figure 2.](/images/snow_cover_trends_basin_letters.png) 
+
+
+# Explore Snow-Cover trends by elevation 
+
+```{r}
+
+myformula <- formula(tau_scd ~ s(dem50mean, fx=FALSE, k=-1, bs="cr"))
+myylab <- 'Tau Snow Cover Duration'
+
+
+# GAM 
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+summary(modgam)
+
+## Predicted gam 
+newdf <- data.frame(dem50mean = seq(from = 1250, to = 3500, length = 225))
+
+p <- predict(modgam, newdata = newdf, se = TRUE)
+
+par(mar = c(5,5,3,3))
+plot(x = df$dem50mean, 
+     y = df$tau_scd, cex=.7, pch=19, col='grey',
+     xlab='Elevation', ylab=myylab, xaxis=c(1250,3500))
+lines(x = newdf$dem50mean, y = p$fit, lwd=3)
+lines(x = newdf$dem50mean, y = p$fit + 2 * p$se.fit, lwd =3, lty = 2)
+lines(x = newdf$dem50mean, y = p$fit - 2 * p$se.fit, lwd =3, lty = 2)
+
+
+ggplot(df, aes(x=dem50mean, y=tau_scd)) + geom_point() + 
+  geom_smooth(method=gam, formula = tau_scd ~ s(dem50mea))
+
+
+
+
+
+
+
+modgam1 <- gam(tau_scd ~ s(dem50mean, fx=FALSE, k=-1, bs= "cr"), data=df)
+
+modgam1 <- gam(sen_slope_scd ~ s(dem50mean, fx=FALSE, k=-1, bs= "cr"), data=df)
+
+
+
+summary(M4)
+anova(M4)
+plot(modgam1)
+
+
+#Figure 2.10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Get quantiles based on scd 
+x <- as.data.frame(round(quantile(scd$mean, probs = seq(0, 1, 0.1))))
+x$per <- rownames(x) 
+names(x)[1] <- 'q'
+
+# Get quantiles based on elevation
+xe <- as.data.frame(round(quantile(scd$dem50mean, probs = seq(0, 1, 0.1))))
+xe$per <- rownames(xe) 
+names(xe)[1] <- 'q'
+
+# pdf(file="elevation.pdf", height = 10, width = 10)
+ggplot(scd, aes(x=dem50mean, y=mean)) + 
+  geom_hline(yintercept=x$q, col='blue') +
+  geom_label(data=x, aes(x=3700, y=q), label=x$per, colour='blue') +
+  geom_label(data=x, aes(x=4000, y=q), label=x$q, colour='blue') +
+  geom_vline(xintercept = xe$q, col='red') + 
+  geom_label(data=xe, aes(x=q, y=210), label=xe$per, colour='red') +
+  geom_point() +  
+  mythemeggplot + 
+  xlab('Elevation') + ylab('Snow cover duration (days)') + 
+  ylim(0,225) + xlim(0,4000)
+# dev.off()
+
+ggplot(df, aes(x=dem50mean, y=tau_scmd)) + 
+  geom_point(col='grey', alpha=.3) + 
+  stat_smooth(method=lm, aes(group=dem50mean_group)) + 
+  geom_vline(xintercept = seq(1250,3500, by=250)) + 
+  mythemeggplot
+  
++
+  geom_point() 
++ facet_wrap(~dem50mean_group)
+
+
+
+
