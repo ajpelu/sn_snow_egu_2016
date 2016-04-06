@@ -2,7 +2,7 @@
 title: "Explore Trends of WiMMed Indicators (Season)"
 author: "AJ Perez-Luque (@ajpelu); FJ Bonet; J Herrero and R. Perez-Perez"
 date: "2016 March"
-output:  
+output:
     md_document:
       variant: markdown_github
       
@@ -163,7 +163,7 @@ mythemeggplot <- theme_bw() + theme(panel.grid.major=element_blank(),
 
 # Precipitation 
 
-```{r}
+```{r, echo=FALSE}
 ## Summary statistics 
 misvariables<- c('tau_preau', 'sen_slope_preau', 'tau_presp', 'sen_slope_presp',
                  'tau_presu', 'sen_slope_presu', 'tau_prewi', 'sen_slope_prewi')
@@ -195,12 +195,12 @@ for (i in misvariables){
 
 ## Autunm 
 
-```{r}
+```{r, echo=FALSE}
 df_letter_aux <- data.frame() 
 df <- fulldf
 ```
 
-```{r}
+```{r, echo=FALSE}
 # Tau preau 
 # ANOVA 
 variable <- 'tau_preau'
@@ -231,7 +231,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Sen Pre au
 # ANOVA 
 variable <- 'sen_slope_preau'
@@ -263,7 +263,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 
 # Pre Spring
 
-```{r}
+```{r, echo=FALSE}
 # Tau Pre Snow  
 # ANOVA 
 variable <- 'tau_presp'
@@ -293,7 +293,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Sen Pre Spring 
 # ANOVA 
 variable <- 'sen_slope_presp'
@@ -324,7 +324,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 
 # Pre Summer
 
-```{r}
+```{r, echo=FALSE}
 # Pre Summer
 # ANOVA 
 variable <- 'tau_presu'
@@ -354,7 +354,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Sen Pre Summer 
 # ANOVA 
 variable <- 'sen_slope_presu'
@@ -385,7 +385,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 
 # Pre Winter
 
-```{r}
+```{r, echo=FALSE}
 # Tau pre Winter 
 # ANOVA 
 variable <- 'tau_prewi'
@@ -415,7 +415,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Sen Pre winter 
 # ANOVA 
 variable <- 'sen_slope_prewi'
@@ -445,7 +445,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Create a df with letter and variables
 df_basin <- stats_basin %>%
   dplyr::inner_join(df_letter_aux, by=c('basin_name', 'variable'))
@@ -467,7 +467,7 @@ ggplot(df_basin_tau, aes(x=basin_name, y=mean)) +
 
 ```
 
-```{r}
+```{r, echo=FALSE}
 # Create a df with letter and variables
 df_basin_sen <- df_basin %>%
   dplyr::filter(grepl("sen", variable))
@@ -487,45 +487,45 @@ ggplot(df_basin_sen, aes(x=basin_name, y=mean)) +
 
 
 #### Tau Pre Au
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_tau, variable=="tau_preau")) 
 ```
 
 #### Sen Slope Pre Au
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_sen, variable=="sen_slope_preau")) 
 ```
 
 
 #### Tau Pre Sp
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_tau, variable=="tau_presp")) 
 ```
 
 #### Sen Slope Pre Sp
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_sen, variable=="sen_slope_presp")) 
 ```
 
 
 #### Tau Pre Su
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_tau, variable=="tau_presu")) 
 ```
 
 #### Sen Slope Pre Su
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_sen, variable=="sen_slope_presu")) 
 ```
 
 
 #### Tau Pre Wi
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_tau, variable=="tau_prewi")) 
 ```
 
 #### Sen Slope Pre Wi
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_sen, variable=="sen_slope_prewi")) 
 ```
 
@@ -535,7 +535,7 @@ pander(filter(df_basin_sen, variable=="sen_slope_prewi"))
 
 ## Taus 
 
-```{r, fig.height=13 , fig.width=13}
+```{r, echo=FALSE, fig.height=13 , fig.width=13}
 myvariable <- 'tau_preau'
 myylab <- 'Tau Pre Au'
 
@@ -622,7 +622,7 @@ grid.arrange(a, d, b, c, nrow=2)
 
 ## Sen 
 
-```{r, fig.height=13 , fig.width=13}
+```{r, echo=FALSE, fig.height=13 , fig.width=13}
 myvariable <- 'sen_slope_preau'
 myylab <- 'Sen Slope Pre Au'
 
@@ -711,7 +711,7 @@ grid.arrange(a, d, b, c, nrow=2)
 # Pre Snow 
 
 
-```{r}
+```{r, echo=FALSE}
 ## Summary statistics 
 misvariables<- c('tau_pnau', 'sen_slope_pnau', 'tau_pnsp', 'sen_slope_pnsp',
                  'tau_pnsu', 'sen_slope_pnsu', 'tau_pnwi', 'sen_slope_pnwi')
@@ -743,12 +743,12 @@ for (i in misvariables){
 
 ## Autunm 
 
-```{r}
+```{r, echo=FALSE}
 df_letter_aux <- data.frame() 
 df <- fulldf
 ```
 
-```{r}
+```{r, echo=FALSE}
 # Tau pnau 
 # ANOVA 
 variable <- 'tau_pnau'
@@ -779,7 +779,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Sen Pn au
 # ANOVA 
 variable <- 'sen_slope_pnau'
@@ -811,7 +811,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 
 # Pn Spring
 
-```{r}
+```{r, echo=FALSE}
 # Tau Pn Spring  
 # ANOVA 
 variable <- 'tau_pnsp'
@@ -841,7 +841,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Sen Pn Spring 
 # ANOVA 
 variable <- 'sen_slope_pnsp'
@@ -872,7 +872,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 
 # Pn Summer
 
-```{r}
+```{r, echo=FALSE}
 # Pn Summer
 # ANOVA 
 variable <- 'tau_pnsu'
@@ -902,7 +902,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Sen Pn Summer 
 # ANOVA 
 variable <- 'sen_slope_pnsu'
@@ -933,7 +933,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 
 # Pn Winter
 
-```{r}
+```{r, echo=FALSE}
 # Tau pn Winter 
 # ANOVA 
 variable <- 'tau_pnwi'
@@ -963,7 +963,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Sen Pn winter 
 # ANOVA 
 variable <- 'sen_slope_pnwi'
@@ -993,7 +993,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Create a df with letter and variables
 df_basin <- stats_basin %>%
   dplyr::inner_join(df_letter_aux, by=c('basin_name', 'variable'))
@@ -1015,7 +1015,7 @@ ggplot(df_basin_tau, aes(x=basin_name, y=mean)) +
 
 ```
 
-```{r}
+```{r, echo=FALSE}
 # Create a df with letter and variables
 df_basin_sen <- df_basin %>%
   dplyr::filter(grepl("sen", variable))
@@ -1035,45 +1035,45 @@ ggplot(df_basin_sen, aes(x=basin_name, y=mean)) +
 
 
 #### Tau Pn Au
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_tau, variable=="tau_pnau")) 
 ```
 
 #### Sen Slope Pn Au
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_sen, variable=="sen_slope_pnau")) 
 ```
 
 
 #### Tau Pn Sp
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_tau, variable=="tau_pnsp")) 
 ```
 
 #### Sen Slope Pn Sp
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_sen, variable=="sen_slope_pnsp")) 
 ```
 
 
 #### Tau Pn Su
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_tau, variable=="tau_pnsu")) 
 ```
 
 #### Sen Slope Pn Su
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_sen, variable=="sen_slope_pnsu")) 
 ```
 
 
 #### Tau Pn Wi
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_tau, variable=="tau_pnwi")) 
 ```
 
 #### Sen Slope Pn Wi
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_sen, variable=="sen_slope_pnwi")) 
 ```
 
@@ -1083,7 +1083,7 @@ pander(filter(df_basin_sen, variable=="sen_slope_pnwi"))
 
 ## Taus 
 
-```{r, fig.height=13 , fig.width=13}
+```{r, echo=FALSE, fig.height=13 , fig.width=13}
 myvariable <- 'tau_pnau'
 myylab <- 'Tau Pn Au'
 
@@ -1170,7 +1170,7 @@ grid.arrange(a, d, b, c, nrow=2)
 
 ## Sen 
 
-```{r, fig.height=13 , fig.width=13}
+```{r, echo=FALSE, fig.height=13 , fig.width=13}
 myvariable <- 'sen_slope_pnau'
 myylab <- 'Sen Slope Pn Au'
 
@@ -1259,7 +1259,7 @@ grid.arrange(a, d, b, c, nrow=2)
 # Temperatures
 
 
-```{r}
+```{r, echo=FALSE}
 ## Summary statistics 
 misvariables<- c('tau_tempau', 'sen_slope_tempau', 'tau_tempsp', 'sen_slope_tempsp',
                  'tau_tempsu', 'sen_slope_tempsu', 'tau_tempwi', 'sen_slope_tempwi')
@@ -1291,12 +1291,12 @@ for (i in misvariables){
 
 ## Autunm 
 
-```{r}
+```{r, echo=FALSE}
 df_letter_aux <- data.frame() 
 df <- fulldf
 ```
 
-```{r}
+```{r, echo=FALSE}
 # Tau tempau 
 # ANOVA 
 variable <- 'tau_tempau'
@@ -1327,7 +1327,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Sen Temp au
 # ANOVA 
 variable <- 'sen_slope_tempau'
@@ -1359,7 +1359,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 
 # Temp Spring
 
-```{r}
+```{r, echo=FALSE}
 # Tau Temp Spring  
 # ANOVA 
 variable <- 'tau_tempsp'
@@ -1389,7 +1389,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Sen Temp Spring 
 # ANOVA 
 variable <- 'sen_slope_tempsp'
@@ -1420,7 +1420,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 
 # Temp Summer
 
-```{r}
+```{r, echo=FALSE}
 # Temp Summer
 # ANOVA 
 variable <- 'tau_tempsu'
@@ -1450,7 +1450,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Sen Temp Summer 
 # ANOVA 
 variable <- 'sen_slope_tempsu'
@@ -1481,7 +1481,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 
 # Temp Winter
 
-```{r}
+```{r, echo=FALSE}
 # Tau Temp Winter 
 # ANOVA 
 variable <- 'tau_tempwi'
@@ -1511,7 +1511,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Sen Temp winter 
 # ANOVA 
 variable <- 'sen_slope_tempwi'
@@ -1541,7 +1541,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Create a df with letter and variables
 df_basin <- stats_basin %>%
   dplyr::inner_join(df_letter_aux, by=c('basin_name', 'variable'))
@@ -1563,7 +1563,7 @@ ggplot(df_basin_tau, aes(x=basin_name, y=mean)) +
 
 ```
 
-```{r}
+```{r, echo=FALSE}
 # Create a df with letter and variables
 df_basin_sen <- df_basin %>%
   dplyr::filter(grepl("sen", variable))
@@ -1583,45 +1583,45 @@ ggplot(df_basin_sen, aes(x=basin_name, y=mean)) +
 
 
 #### Tau Temp Au
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_tau, variable=="tau_tempau")) 
 ```
 
 #### Sen Slope Temp Au
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_sen, variable=="sen_slope_tempau")) 
 ```
 
 
 #### Tau Temp Sp
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_tau, variable=="tau_tempsp")) 
 ```
 
 #### Sen Slope Temp Sp
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_sen, variable=="sen_slope_tempsp")) 
 ```
 
 
 #### Tau Temp Su
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_tau, variable=="tau_tempsu")) 
 ```
 
 #### Sen Slope Temp Su
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_sen, variable=="sen_slope_tempsu")) 
 ```
 
 
 #### Tau Temp Wi
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_tau, variable=="tau_tempwi")) 
 ```
 
 #### Sen Slope Temp Wi
-```{r}
+```{r, echo=FALSE}
 pander(filter(df_basin_sen, variable=="sen_slope_tempwi")) 
 ```
 
@@ -1631,7 +1631,7 @@ pander(filter(df_basin_sen, variable=="sen_slope_tempwi"))
 
 ## Taus 
 
-```{r, fig.height=13 , fig.width=13}
+```{r, echo=FALSE, fig.height=13 , fig.width=13}
 myvariable <- 'tau_tempau'
 myylab <- 'Tau Temp Au'
 
@@ -1718,7 +1718,7 @@ grid.arrange(a, d, b, c, nrow=2)
 
 ## Sen 
 
-```{r, fig.height=13 , fig.width=13}
+```{r, echo=FALSE, fig.height=13 , fig.width=13}
 myvariable <- 'sen_slope_tempau'
 myylab <- 'Sen Slope Temp Au'
 

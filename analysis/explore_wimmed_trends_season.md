@@ -125,54 +125,8 @@ We explore the pattern of snow-cover indicators trends by hydrological basin.
 Precipitation
 =============
 
-``` r
-## Summary statistics 
-misvariables<- c('tau_preau', 'sen_slope_preau', 'tau_presp', 'sen_slope_presp',
-                 'tau_presu', 'sen_slope_presu', 'tau_prewi', 'sen_slope_prewi')
-
-variable_agrupa <- 'basin_name' 
-prefijo  <- 'basin_' 
-df <- fulldf
-
-stats_basin <- data.frame() 
-  
-for (i in misvariables){
-  vnames <- c(variable_agrupa, i)
-  aux <- df %>%
-    dplyr::select(one_of(vnames)) %>%
-    mutate_(vinterest = i) %>%
-    group_by_(.dots=variable_agrupa) %>%
-    summarise(mean=mean(vinterest),
-              sd = sd(vinterest),
-              se = sd / sqrt (length(vinterest)))
-  aux <- aux %>% 
-    mutate(variable = i)
-  
-  stats_basin <- rbind(stats_basin, aux)
-  # assign(paste0(prefijo,i), aux)
-   
-}
-```
-
 Autunm
 ------
-
-``` r
-df_letter_aux <- data.frame() 
-df <- fulldf
-```
-
-``` r
-# Tau preau 
-# ANOVA 
-variable <- 'tau_preau'
-my_ylab <- 'Tau Pre au'
-
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -213,38 +167,7 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.5),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-4-1.png)
-
-``` r
-# Sen Pre au
-# ANOVA 
-variable <- 'sen_slope_preau'
-my_ylab <- 'Sen slope Pre Autumn'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -285,41 +208,10 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=10),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
 Pre Spring
 ==========
-
-``` r
-# Tau Pre Snow  
-# ANOVA 
-variable <- 'tau_presp'
-my_ylab <- 'Tau Pre Spring'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -360,38 +252,7 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.25),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-6-1.png)
-
-``` r
-# Sen Pre Spring 
-# ANOVA 
-variable <- 'sen_slope_presp'
-my_ylab <- 'Sen slope Pre Spring'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -432,41 +293,10 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=3),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 Pre Summer
 ==========
-
-``` r
-# Pre Summer
-# ANOVA 
-variable <- 'tau_presu'
-my_ylab <- 'Tau Pre Summer'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:79%;">
 <colgroup>
@@ -507,38 +337,7 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.3),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-8-1.png)
-
-``` r
-# Sen Pre Summer 
-# ANOVA 
-variable <- 'sen_slope_presu'
-my_ylab <- 'Sen slope Pre Summer'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -579,41 +378,10 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=4.5),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 Pre Winter
 ==========
-
-``` r
-# Tau pre Winter 
-# ANOVA 
-variable <- 'tau_prewi'
-my_ylab <- 'Tau Pre Winter'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -654,38 +422,7 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.4),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-10-1.png)
-
-``` r
-# Sen Pre winter 
-# ANOVA 
-variable <- 'sen_slope_prewi'
-my_ylab <- 'Sen slope Pre winter'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:79%;">
 <colgroup>
@@ -726,76 +463,13 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=19),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
-``` r
-# Create a df with letter and variables
-df_basin <- stats_basin %>%
-  dplyr::inner_join(df_letter_aux, by=c('basin_name', 'variable'))
-
-df_basin_tau <- df_basin %>%
-  dplyr::filter(grepl("tau", variable))
-
-
-ggplot(df_basin_tau, aes(x=basin_name, y=mean)) + 
-  geom_point(stat='identity', size=3, fill='#222943') + 
-  geom_errorbar(aes(ymin=mean - sd, ymax= mean + sd), 
-                width=0.1,
-                colour='#222943',
-                position=position_dodge(.9)) +
-  facet_wrap(~variable) + 
-  geom_text(aes(label = tukey_basin_name, x=basin_name, y=mean),
-           hjust=0, nudge_x = 0.2) + mythemeggplot +
-  xlab('') + ylab('Taus')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-12-1.png)
-
-``` r
-# Create a df with letter and variables
-df_basin_sen <- df_basin %>%
-  dplyr::filter(grepl("sen", variable))
-
-
-ggplot(df_basin_sen, aes(x=basin_name, y=mean)) + 
-  geom_point(stat='identity', size=3, fill='#222943') + 
-  geom_errorbar(aes(ymin=mean - sd, ymax= mean + sd), 
-                width=0.1,
-                colour='#222943',
-                position=position_dodge(.9)) +
-  facet_wrap(~variable, scales="free") + 
-  geom_text(aes(label = tukey_basin_name, x=basin_name, y=mean),
-           hjust=0, nudge_x = 0.2) + mythemeggplot +
-  xlab('') + ylab('Sen Slopes')
-```
 
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
 #### Tau Pre Au
-
-``` r
-pander(filter(df_basin_tau, variable=="tau_preau")) 
-```
 
 <table style="width:100%;">
 <colgroup>
@@ -862,10 +536,6 @@ pander(filter(df_basin_tau, variable=="tau_preau"))
 
 #### Sen Slope Pre Au
 
-``` r
-pander(filter(df_basin_sen, variable=="sen_slope_preau")) 
-```
-
 <table>
 <colgroup>
 <col width="16%" />
@@ -930,10 +600,6 @@ pander(filter(df_basin_sen, variable=="sen_slope_preau"))
 </table>
 
 #### Tau Pre Sp
-
-``` r
-pander(filter(df_basin_tau, variable=="tau_presp")) 
-```
 
 <table style="width:100%;">
 <colgroup>
@@ -1000,10 +666,6 @@ pander(filter(df_basin_tau, variable=="tau_presp"))
 
 #### Sen Slope Pre Sp
 
-``` r
-pander(filter(df_basin_sen, variable=="sen_slope_presp")) 
-```
-
 <table style="width:100%;">
 <colgroup>
 <col width="16%" />
@@ -1068,10 +730,6 @@ pander(filter(df_basin_sen, variable=="sen_slope_presp"))
 </table>
 
 #### Tau Pre Su
-
-``` r
-pander(filter(df_basin_tau, variable=="tau_presu")) 
-```
 
 <table>
 <colgroup>
@@ -1138,10 +796,6 @@ pander(filter(df_basin_tau, variable=="tau_presu"))
 
 #### Sen Slope Pre Su
 
-``` r
-pander(filter(df_basin_sen, variable=="sen_slope_presu")) 
-```
-
 <table>
 <colgroup>
 <col width="16%" />
@@ -1207,10 +861,6 @@ pander(filter(df_basin_sen, variable=="sen_slope_presu"))
 
 #### Tau Pre Wi
 
-``` r
-pander(filter(df_basin_tau, variable=="tau_prewi")) 
-```
-
 <table style="width:100%;">
 <colgroup>
 <col width="16%" />
@@ -1275,10 +925,6 @@ pander(filter(df_basin_tau, variable=="tau_prewi"))
 </table>
 
 #### Sen Slope Pre Wi
-
-``` r
-pander(filter(df_basin_sen, variable=="sen_slope_prewi")) 
-```
 
 <table style="width:100%;">
 <colgroup>
@@ -1349,17 +995,6 @@ Explore trends by elevation
 Taus
 ----
 
-``` r
-myvariable <- 'tau_preau'
-myylab <- 'Tau Pre Au'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -1370,11 +1005,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 7.805  8.639 431.2  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -1398,27 +1028,6 @@ mygam_summ
     ## R-sq.(adj) =  0.318   Deviance explained = 31.9%
     ## GCV = 0.0031735  Scale est. = 0.00317   n = 7994
 
-``` r
-# Plot GAM
-a <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0.3, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-  
-
-
-myvariable <- 'tau_presp'
-myylab <- 'Tau Pre Spring'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -1429,11 +1038,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 7.574  8.501 155.2  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -1457,26 +1061,6 @@ mygam_summ
     ## R-sq.(adj) =  0.142   Deviance explained = 14.3%
     ## GCV = 0.0087889  Scale est. = 0.0087794  n = 7994
 
-``` r
-# Plot GAM
-b <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0.2, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-myvariable <- 'tau_presu'
-myylab <- 'Tau Pre Summer'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -1487,11 +1071,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 7.625  8.533 107.9  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -1515,26 +1094,6 @@ mygam_summ
     ## R-sq.(adj) =  0.103   Deviance explained = 10.4%
     ## GCV = 0.003742  Scale est. = 0.0037379  n = 7994
 
-``` r
-# Plot GAM
-c <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0.25, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-myvariable <- 'tau_prewi'
-myylab <- 'Tau Pre Winter'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -1545,11 +1104,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 7.246  8.276 90.46  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -1573,34 +1127,10 @@ mygam_summ
     ## R-sq.(adj) =  0.0856   Deviance explained = 8.64%
     ## GCV = 0.0029811  Scale est. = 0.002978  n = 7994
 
-``` r
-# Plot GAM
-d <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0.4, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-grid.arrange(a, d, b, c, nrow=2)
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-22-1.png)
 
 Sen
 ---
-
-``` r
-myvariable <- 'sen_slope_preau'
-myylab <- 'Sen Slope Pre Au'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
 
     ## 
     ## Family: gaussian 
@@ -1612,11 +1142,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 7.875  8.677 117.9  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -1640,27 +1165,6 @@ mygam_summ
     ## R-sq.(adj) =  0.113   Deviance explained = 11.4%
     ## GCV = 4.2472  Scale est. = 4.2425    n = 7994
 
-``` r
-# Plot GAM
-a <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=10, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-  
-
-
-myvariable <- 'sen_slope_presp'
-myylab <- 'Sen Slope Pre Spring'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -1671,11 +1175,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 7.502  8.454 191.5  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -1699,26 +1198,6 @@ mygam_summ
     ## R-sq.(adj) =  0.168   Deviance explained = 16.9%
     ## GCV = 2.2354  Scale est. = 2.233     n = 7994
 
-``` r
-# Plot GAM
-b <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-myvariable <- 'sen_slope_presu'
-myylab <- 'Sen slope Pre Summer'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -1729,11 +1208,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 8.141  8.805 222.7  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -1757,26 +1231,6 @@ mygam_summ
     ## R-sq.(adj) =  0.197   Deviance explained = 19.8%
     ## GCV = 0.53257  Scale est. = 0.53196   n = 7994
 
-``` r
-# Plot GAM
-c <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=5, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-myvariable <- 'sen_slope_prewi'
-myylab <- 'Sen Slope Pre Wi'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -1787,11 +1241,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df    F p-value
     ## s(dem50mean) 7.320  8.329 1305  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -1815,72 +1264,13 @@ mygam_summ
     ## R-sq.(adj) =  0.576   Deviance explained = 57.7%
     ## GCV = 4.4636  Scale est. = 4.4589    n = 7994
 
-``` r
-# Plot GAM
-d <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0.1, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-grid.arrange(a, d, b, c, nrow=2)
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-23-1.png)
 
 Pre Snow
 ========
 
-``` r
-## Summary statistics 
-misvariables<- c('tau_pnau', 'sen_slope_pnau', 'tau_pnsp', 'sen_slope_pnsp',
-                 'tau_pnsu', 'sen_slope_pnsu', 'tau_pnwi', 'sen_slope_pnwi')
-
-variable_agrupa <- 'basin_name' 
-prefijo  <- 'basin_' 
-df <- fulldf
-
-stats_basin <- data.frame() 
-  
-for (i in misvariables){
-  vnames <- c(variable_agrupa, i)
-  aux <- df %>%
-    dplyr::select(one_of(vnames)) %>%
-    mutate_(vinterest = i) %>%
-    group_by_(.dots=variable_agrupa) %>%
-    summarise(mean=mean(vinterest),
-              sd = sd(vinterest),
-              se = sd / sqrt (length(vinterest)))
-  aux <- aux %>% 
-    mutate(variable = i)
-  
-  stats_basin <- rbind(stats_basin, aux)
-  # assign(paste0(prefijo,i), aux)
-   
-}
-```
-
 Autunm
 ------
-
-``` r
-df_letter_aux <- data.frame() 
-df <- fulldf
-```
-
-``` r
-# Tau pnau 
-# ANOVA 
-variable <- 'tau_pnau'
-my_ylab <- 'Tau Pn au'
-
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -1921,38 +1311,7 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.5),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-26-1.png)
-
-``` r
-# Sen Pn au
-# ANOVA 
-variable <- 'sen_slope_pnau'
-my_ylab <- 'Sen slope Pn Autumn'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:79%;">
 <colgroup>
@@ -1993,41 +1352,10 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=12),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-27-1.png)
 
 Pn Spring
 =========
-
-``` r
-# Tau Pn Spring  
-# ANOVA 
-variable <- 'tau_pnsp'
-my_ylab <- 'Tau Pn Spring'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -2068,38 +1396,7 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.35),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-28-1.png)
-
-``` r
-# Sen Pn Spring 
-# ANOVA 
-variable <- 'sen_slope_pnsp'
-my_ylab <- 'Sen slope Pn Spring'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -2140,41 +1437,10 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=2),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-29-1.png)
 
 Pn Summer
 =========
-
-``` r
-# Pn Summer
-# ANOVA 
-variable <- 'tau_pnsu'
-my_ylab <- 'Tau Pn Summer'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:79%;">
 <colgroup>
@@ -2215,38 +1481,7 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.6),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-30-1.png)
-
-``` r
-# Sen Pn Summer 
-# ANOVA 
-variable <- 'sen_slope_pnsu'
-my_ylab <- 'Sen slope Pn Summer'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -2287,49 +1522,16 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-```
-
     ## Warning in RET$pfunction("adjusted", ...): lower == upper
 
     ## Warning in RET$pfunction("adjusted", ...): lower == upper
 
     ## Warning in RET$pfunction("adjusted", ...): lower == upper
-
-``` r
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=4.5),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
 
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-31-1.png)
 
 Pn Winter
 =========
-
-``` r
-# Tau pn Winter 
-# ANOVA 
-variable <- 'tau_pnwi'
-my_ylab <- 'Tau Pn Winter'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:79%;">
 <colgroup>
@@ -2370,38 +1572,7 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.7),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-32-1.png)
-
-``` r
-# Sen Pn winter 
-# ANOVA 
-variable <- 'sen_slope_pnwi'
-my_ylab <- 'Sen slope Pn winter'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -2442,76 +1613,13 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=19),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-33-1.png)
 
-``` r
-# Create a df with letter and variables
-df_basin <- stats_basin %>%
-  dplyr::inner_join(df_letter_aux, by=c('basin_name', 'variable'))
-
-df_basin_tau <- df_basin %>%
-  dplyr::filter(grepl("tau", variable))
-
-
-ggplot(df_basin_tau, aes(x=basin_name, y=mean)) + 
-  geom_point(stat='identity', size=3, fill='#222943') + 
-  geom_errorbar(aes(ymin=mean - sd, ymax= mean + sd), 
-                width=0.1,
-                colour='#222943',
-                position=position_dodge(.9)) +
-  facet_wrap(~variable) + 
-  geom_text(aes(label = tukey_basin_name, x=basin_name, y=mean),
-           hjust=0, nudge_x = 0.2) + mythemeggplot +
-  xlab('') + ylab('Taus')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-34-1.png)
-
-``` r
-# Create a df with letter and variables
-df_basin_sen <- df_basin %>%
-  dplyr::filter(grepl("sen", variable))
-
-
-ggplot(df_basin_sen, aes(x=basin_name, y=mean)) + 
-  geom_point(stat='identity', size=3, fill='#222943') + 
-  geom_errorbar(aes(ymin=mean - sd, ymax= mean + sd), 
-                width=0.1,
-                colour='#222943',
-                position=position_dodge(.9)) +
-  facet_wrap(~variable, scales="free") + 
-  geom_text(aes(label = tukey_basin_name, x=basin_name, y=mean),
-           hjust=0, nudge_x = 0.2) + mythemeggplot +
-  xlab('') + ylab('Sen Slopes')
-```
 
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-35-1.png)
 
 #### Tau Pn Au
-
-``` r
-pander(filter(df_basin_tau, variable=="tau_pnau")) 
-```
 
 <table>
 <colgroup>
@@ -2578,10 +1686,6 @@ pander(filter(df_basin_tau, variable=="tau_pnau"))
 
 #### Sen Slope Pn Au
 
-``` r
-pander(filter(df_basin_sen, variable=="sen_slope_pnau")) 
-```
-
 <table>
 <colgroup>
 <col width="16%" />
@@ -2646,10 +1750,6 @@ pander(filter(df_basin_sen, variable=="sen_slope_pnau"))
 </table>
 
 #### Tau Pn Sp
-
-``` r
-pander(filter(df_basin_tau, variable=="tau_pnsp")) 
-```
 
 <table style="width:100%;">
 <colgroup>
@@ -2716,10 +1816,6 @@ pander(filter(df_basin_tau, variable=="tau_pnsp"))
 
 #### Sen Slope Pn Sp
 
-``` r
-pander(filter(df_basin_sen, variable=="sen_slope_pnsp")) 
-```
-
 <table>
 <colgroup>
 <col width="16%" />
@@ -2784,10 +1880,6 @@ pander(filter(df_basin_sen, variable=="sen_slope_pnsp"))
 </table>
 
 #### Tau Pn Su
-
-``` r
-pander(filter(df_basin_tau, variable=="tau_pnsu")) 
-```
 
 <table style="width:100%;">
 <colgroup>
@@ -2854,10 +1946,6 @@ pander(filter(df_basin_tau, variable=="tau_pnsu"))
 
 #### Sen Slope Pn Su
 
-``` r
-pander(filter(df_basin_sen, variable=="sen_slope_pnsu")) 
-```
-
 <table>
 <colgroup>
 <col width="15%" />
@@ -2923,10 +2011,6 @@ pander(filter(df_basin_sen, variable=="sen_slope_pnsu"))
 
 #### Tau Pn Wi
 
-``` r
-pander(filter(df_basin_tau, variable=="tau_pnwi")) 
-```
-
 <table>
 <colgroup>
 <col width="17%" />
@@ -2991,10 +2075,6 @@ pander(filter(df_basin_tau, variable=="tau_pnwi"))
 </table>
 
 #### Sen Slope Pn Wi
-
-``` r
-pander(filter(df_basin_sen, variable=="sen_slope_pnwi")) 
-```
 
 <table>
 <colgroup>
@@ -3065,17 +2145,6 @@ Explore trends by elevation
 Taus
 ----
 
-``` r
-myvariable <- 'tau_pnau'
-myylab <- 'Tau Pn Au'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -3086,11 +2155,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 8.523  8.937 123.5  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -3114,27 +2178,6 @@ mygam_summ
     ## R-sq.(adj) =  0.121   Deviance explained = 12.2%
     ## GCV = 0.012608  Scale est. = 0.012593  n = 7994
 
-``` r
-# Plot GAM
-a <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0.3, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-  
-
-
-myvariable <- 'tau_pnsp'
-myylab <- 'Tau Pn Spring'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -3145,11 +2188,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 8.988  9.000 344.4  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -3173,26 +2211,6 @@ mygam_summ
     ## R-sq.(adj) =  0.279   Deviance explained =   28%
     ## GCV = 0.0055303  Scale est. = 0.0055234  n = 7994
 
-``` r
-# Plot GAM
-b <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0.2, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-myvariable <- 'tau_pnsu'
-myylab <- 'Tau Pn Summer'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -3203,11 +2221,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df    F p-value
     ## s(dem50mean) 8.971  9.000 2632  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -3231,26 +2244,6 @@ mygam_summ
     ## R-sq.(adj) =  0.748   Deviance explained = 74.8%
     ## GCV = 0.00067156  Scale est. = 0.00067072  n = 7994
 
-``` r
-# Plot GAM
-c <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-myvariable <- 'tau_pnwi'
-myylab <- 'Tau Pn Winter'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -3261,11 +2254,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 8.548  8.943 616.2  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -3289,34 +2277,10 @@ mygam_summ
     ## R-sq.(adj) =  0.408   Deviance explained = 40.9%
     ## GCV = 0.0060656  Scale est. = 0.0060583  n = 7994
 
-``` r
-# Plot GAM
-d <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0.4, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-grid.arrange(a, d, b, c, nrow=2)
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-44-1.png)
 
 Sen
 ---
-
-``` r
-myvariable <- 'sen_slope_pnau'
-myylab <- 'Sen Slope Pn Au'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
 
     ## 
     ## Family: gaussian 
@@ -3328,11 +2292,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df   F p-value
     ## s(dem50mean) 8.828  8.991 914  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -3356,27 +2315,6 @@ mygam_summ
     ## R-sq.(adj) =  0.507   Deviance explained = 50.7%
     ## GCV = 1.0748  Scale est. = 1.0735    n = 7994
 
-``` r
-# Plot GAM
-a <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=10, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-  
-
-
-myvariable <- 'sen_slope_pnsp'
-myylab <- 'Sen Slope Pn Spring'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -3387,11 +2325,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df    F p-value
     ## s(dem50mean) 8.936  8.999 1979  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -3415,26 +2348,6 @@ mygam_summ
     ## R-sq.(adj) =   0.69   Deviance explained = 69.1%
     ## GCV = 0.21686  Scale est. = 0.21659   n = 7994
 
-``` r
-# Plot GAM
-b <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=2, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-myvariable <- 'sen_slope_pnsu'
-myylab <- 'Sen slope Pn Summer'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -3445,11 +2358,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 8.995  9.000 220.1  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -3473,26 +2381,6 @@ mygam_summ
     ## R-sq.(adj) =  0.198   Deviance explained = 19.9%
     ## GCV = 0.00086504  Scale est. = 0.00086396  n = 7994
 
-``` r
-# Plot GAM
-c <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=3, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-myvariable <- 'sen_slope_pnwi'
-myylab <- 'Sen Slope Pn Wi'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -3503,11 +2391,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df    F p-value
     ## s(dem50mean) 8.585  8.952 4140  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -3531,72 +2414,13 @@ mygam_summ
     ## R-sq.(adj) =  0.823   Deviance explained = 82.3%
     ## GCV =  3.114  Scale est. = 3.1103    n = 7994
 
-``` r
-# Plot GAM
-d <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0.1, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-grid.arrange(a, d, b, c, nrow=2)
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-45-1.png)
 
 Temperatures
 ============
 
-``` r
-## Summary statistics 
-misvariables<- c('tau_tempau', 'sen_slope_tempau', 'tau_tempsp', 'sen_slope_tempsp',
-                 'tau_tempsu', 'sen_slope_tempsu', 'tau_tempwi', 'sen_slope_tempwi')
-
-variable_agrupa <- 'basin_name' 
-prefijo  <- 'basin_' 
-df <- fulldf
-
-stats_basin <- data.frame() 
-  
-for (i in misvariables){
-  vnames <- c(variable_agrupa, i)
-  aux <- df %>%
-    dplyr::select(one_of(vnames)) %>%
-    mutate_(vinterest = i) %>%
-    group_by_(.dots=variable_agrupa) %>%
-    summarise(mean=mean(vinterest),
-              sd = sd(vinterest),
-              se = sd / sqrt (length(vinterest)))
-  aux <- aux %>% 
-    mutate(variable = i)
-  
-  stats_basin <- rbind(stats_basin, aux)
-  # assign(paste0(prefijo,i), aux)
-   
-}
-```
-
 Autunm
 ------
-
-``` r
-df_letter_aux <- data.frame() 
-df <- fulldf
-```
-
-``` r
-# Tau tempau 
-# ANOVA 
-variable <- 'tau_tempau'
-my_ylab <- 'Tau Temp au'
-
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -3637,38 +2461,7 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.5),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-48-1.png)
-
-``` r
-# Sen Temp au
-# ANOVA 
-variable <- 'sen_slope_tempau'
-my_ylab <- 'Sen slope Temp Autumn'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:79%;">
 <colgroup>
@@ -3709,41 +2502,10 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=.3),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-49-1.png)
 
 Temp Spring
 ===========
-
-``` r
-# Tau Temp Spring  
-# ANOVA 
-variable <- 'tau_tempsp'
-my_ylab <- 'Tau Temp Spring'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -3784,38 +2546,7 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.5),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-50-1.png)
-
-``` r
-# Sen Temp Spring 
-# ANOVA 
-variable <- 'sen_slope_tempsp'
-my_ylab <- 'Sen slope Temp Spring'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -3856,41 +2587,10 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=.3),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-51-1.png)
 
 Temp Summer
 ===========
-
-``` r
-# Temp Summer
-# ANOVA 
-variable <- 'tau_tempsu'
-my_ylab <- 'Tau Temp Summer'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -3931,38 +2631,7 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.35),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-52-1.png)
-
-``` r
-# Sen Temp Summer 
-# ANOVA 
-variable <- 'sen_slope_tempsu'
-my_ylab <- 'Sen slope Temp Summer'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -4003,41 +2672,10 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.2),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-53-1.png)
 
 Temp Winter
 ===========
-
-``` r
-# Tau Temp Winter 
-# ANOVA 
-variable <- 'tau_tempwi'
-my_ylab <- 'Tau Temp Winter'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -4078,38 +2716,7 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=0.4),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-54-1.png)
-
-``` r
-# Sen Temp winter 
-# ANOVA 
-variable <- 'sen_slope_tempwi'
-my_ylab <- 'Sen slope Temp winter'
-
-myformula <- formula(paste(variable, '~ basin_name', sep=''))
-mod <- aov(myformula, data=df)
-pander(tidy(mod))
-```
 
 <table style="width:75%;">
 <colgroup>
@@ -4150,76 +2757,13 @@ pander(tidy(mod))
 </tbody>
 </table>
 
-``` r
-## Multiple comparisons 
-tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
-# Convert comparisons into letters 
-df_letter <- fortify(cld(tuk)) %>%
-  transmute(basin_name = as.factor(lhs),
-         tukey_basin_name = letters) %>%
-  mutate(variable = variable)
-
-df_letter_aux <- rbind(df_letter_aux, df_letter)
-
-## ANOVA plots
-ggplot(df, aes_string(x='basin_name', y=variable)) + 
-  geom_boxplot() +
-  geom_text(data=df_letter, aes(label = tukey_basin_name, x=basin_name, y=.3),
-           position = position_dodge(width=0.9)) +
-  theme_bw() + mythemeggplot + 
-  ylab(my_ylab) + xlab('')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-55-1.png)
 
-``` r
-# Create a df with letter and variables
-df_basin <- stats_basin %>%
-  dplyr::inner_join(df_letter_aux, by=c('basin_name', 'variable'))
-
-df_basin_tau <- df_basin %>%
-  dplyr::filter(grepl("tau", variable))
-
-
-ggplot(df_basin_tau, aes(x=basin_name, y=mean)) + 
-  geom_point(stat='identity', size=3, fill='#222943') + 
-  geom_errorbar(aes(ymin=mean - sd, ymax= mean + sd), 
-                width=0.1,
-                colour='#222943',
-                position=position_dodge(.9)) +
-  facet_wrap(~variable) + 
-  geom_text(aes(label = tukey_basin_name, x=basin_name, y=mean),
-           hjust=0, nudge_x = 0.2) + mythemeggplot +
-  xlab('') + ylab('Taus')
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-56-1.png)
-
-``` r
-# Create a df with letter and variables
-df_basin_sen <- df_basin %>%
-  dplyr::filter(grepl("sen", variable))
-
-
-ggplot(df_basin_sen, aes(x=basin_name, y=mean)) + 
-  geom_point(stat='identity', size=3, fill='#222943') + 
-  geom_errorbar(aes(ymin=mean - sd, ymax= mean + sd), 
-                width=0.1,
-                colour='#222943',
-                position=position_dodge(.9)) +
-  facet_wrap(~variable) + 
-  geom_text(aes(label = tukey_basin_name, x=basin_name, y=mean),
-           hjust=0, nudge_x = 0.2) + mythemeggplot +
-  xlab('') + ylab('Sen Slopes')
-```
 
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-57-1.png)
 
 #### Tau Temp Au
-
-``` r
-pander(filter(df_basin_tau, variable=="tau_tempau")) 
-```
 
 <table>
 <colgroup>
@@ -4286,10 +2830,6 @@ pander(filter(df_basin_tau, variable=="tau_tempau"))
 
 #### Sen Slope Temp Au
 
-``` r
-pander(filter(df_basin_sen, variable=="sen_slope_tempau")) 
-```
-
 <table>
 <colgroup>
 <col width="15%" />
@@ -4354,10 +2894,6 @@ pander(filter(df_basin_sen, variable=="sen_slope_tempau"))
 </table>
 
 #### Tau Temp Sp
-
-``` r
-pander(filter(df_basin_tau, variable=="tau_tempsp")) 
-```
 
 <table>
 <colgroup>
@@ -4424,10 +2960,6 @@ pander(filter(df_basin_tau, variable=="tau_tempsp"))
 
 #### Sen Slope Temp Sp
 
-``` r
-pander(filter(df_basin_sen, variable=="sen_slope_tempsp")) 
-```
-
 <table>
 <colgroup>
 <col width="15%" />
@@ -4493,10 +3025,6 @@ pander(filter(df_basin_sen, variable=="sen_slope_tempsp"))
 
 #### Tau Temp Su
 
-``` r
-pander(filter(df_basin_tau, variable=="tau_tempsu")) 
-```
-
 <table style="width:100%;">
 <colgroup>
 <col width="16%" />
@@ -4561,10 +3089,6 @@ pander(filter(df_basin_tau, variable=="tau_tempsu"))
 </table>
 
 #### Sen Slope Temp Su
-
-``` r
-pander(filter(df_basin_sen, variable=="sen_slope_tempsu")) 
-```
 
 <table style="width:92%;">
 <caption>Table continues below</caption>
@@ -4653,10 +3177,6 @@ pander(filter(df_basin_sen, variable=="sen_slope_tempsu"))
 
 #### Tau Temp Wi
 
-``` r
-pander(filter(df_basin_tau, variable=="tau_tempwi")) 
-```
-
 <table style="width:100%;">
 <colgroup>
 <col width="16%" />
@@ -4721,10 +3241,6 @@ pander(filter(df_basin_tau, variable=="tau_tempwi"))
 </table>
 
 #### Sen Slope Temp Wi
-
-``` r
-pander(filter(df_basin_sen, variable=="sen_slope_tempwi")) 
-```
 
 <table>
 <colgroup>
@@ -4795,17 +3311,6 @@ Explore trends by elevation
 Taus
 ----
 
-``` r
-myvariable <- 'tau_tempau'
-myylab <- 'Tau Temp Au'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -4816,11 +3321,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 8.627  8.961 13.98  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -4844,27 +3344,6 @@ mygam_summ
     ## R-sq.(adj) =  0.0151   Deviance explained = 1.62%
     ## GCV = 0.0036851  Scale est. = 0.0036807  n = 7994
 
-``` r
-# Plot GAM
-a <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0.4, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-  
-
-
-myvariable <- 'tau_tempsp'
-myylab <- 'Tau Temp Spring'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -4875,11 +3354,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 8.408  8.904 195.8  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -4903,26 +3377,6 @@ mygam_summ
     ## R-sq.(adj) =  0.179   Deviance explained =   18%
     ## GCV = 0.0044983  Scale est. = 0.004493  n = 7994
 
-``` r
-# Plot GAM
-b <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0.4, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-myvariable <- 'tau_tempsu'
-myylab <- 'Tau Temp Summer'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -4933,11 +3387,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 7.570  8.499 78.52  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -4961,26 +3410,6 @@ mygam_summ
     ## R-sq.(adj) =  0.0766   Deviance explained = 7.75%
     ## GCV = 0.0093527  Scale est. = 0.0093427  n = 7994
 
-``` r
-# Plot GAM
-c <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0.4, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-myvariable <- 'tau_tempwi'
-myylab <- 'Tau Temp Winter'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -4991,11 +3420,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 8.124  8.798 549.2  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -5019,34 +3443,10 @@ mygam_summ
     ## R-sq.(adj) =  0.377   Deviance explained = 37.7%
     ## GCV = 0.0067643  Scale est. = 0.0067566  n = 7994
 
-``` r
-# Plot GAM
-d <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0.4, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-grid.arrange(a, d, b, c, nrow=2)
-```
-
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-66-1.png)
 
 Sen
 ---
-
-``` r
-myvariable <- 'sen_slope_tempau'
-myylab <- 'Sen Slope Temp Au'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
 
     ## 
     ## Family: gaussian 
@@ -5058,11 +3458,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 8.211  8.834 38.52  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -5086,27 +3481,6 @@ mygam_summ
     ## R-sq.(adj) =  0.0405   Deviance explained = 4.15%
     ## GCV = 0.0016674  Scale est. = 0.0016655  n = 7994
 
-``` r
-# Plot GAM
-a <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=.5, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-  
-
-
-myvariable <- 'sen_slope_tempsp'
-myylab <- 'Sen Slope Temp Spring'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -5117,11 +3491,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 8.741  8.981 28.19  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -5145,26 +3514,6 @@ mygam_summ
     ## R-sq.(adj) =  0.0306   Deviance explained = 3.17%
     ## GCV = 0.001289  Scale est. = 0.0012874  n = 7994
 
-``` r
-# Plot GAM
-b <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0.2, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-myvariable <- 'sen_slope_tempsu'
-myylab <- 'Sen slope Temp Summer'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -5175,11 +3524,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 8.247  8.848 25.41  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -5203,26 +3547,6 @@ mygam_summ
     ## R-sq.(adj) =  0.0268   Deviance explained = 2.78%
     ## GCV = 0.0017154  Scale est. = 0.0017135  n = 7994
 
-``` r
-# Plot GAM
-c <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=.3, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-myvariable <- 'sen_slope_tempwi'
-myylab <- 'Sen Slope Temp Wi'
-
-# GAM 
-myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
-modgam <- mgcv::gam(formula = myformula, 
-                    data= df)
-anova(modgam)
-```
-
     ## 
     ## Family: gaussian 
     ## Link function: identity 
@@ -5233,11 +3557,6 @@ anova(modgam)
     ## Approximate significance of smooth terms:
     ##                edf Ref.df     F p-value
     ## s(dem50mean) 8.706  8.975 620.9  <2e-16
-
-``` r
-mygam_summ <- summary(modgam)
-mygam_summ
-```
 
     ## 
     ## Family: gaussian 
@@ -5260,18 +3579,5 @@ mygam_summ
     ## 
     ## R-sq.(adj) =  0.411   Deviance explained = 41.1%
     ## GCV = 0.0011576  Scale est. = 0.0011562  n = 7994
-
-``` r
-# Plot GAM
-d <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
-  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
-  annotate("text", x = 3000, y=0.1, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
-  mythemeggplot + 
-  xlab('Elevation') + ylab(myylab)
-
-
-grid.arrange(a, d, b, c, nrow=2)
-```
 
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-67-1.png)
