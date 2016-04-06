@@ -203,7 +203,17 @@ pander(aux1)
 | scmd |  |  |  |  |  | x | x |  |  | x | x |  |  | x | x |  |
 
 
+```{r}
 
+indicadores <- c("pre", "pre_snow", "pre_snow_per", "temp", 
+                 "pnau", "pnsp", "pnsu", "pnwi",
+                 "preau", "presp", "presu", "prewi",
+                 "tempau", "tempsp", "tempsu", "tempwi")
+
+d <- data.frame(variable = indicadores, 
+                scd = 0,
+                scod = 0, 
+                scmd = 0)
 
 
 
