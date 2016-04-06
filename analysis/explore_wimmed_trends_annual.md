@@ -167,10 +167,11 @@ my_ylab <- 'Tau Pre'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 ```
 
 <table style="width:75%;">
+<caption>Tau Pre</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -239,10 +240,11 @@ my_ylab <- 'Sen slope Pre'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 ```
 
 <table style="width:75%;">
+<caption>Sen slope Pre</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -314,10 +316,11 @@ my_ylab <- 'Tau Pre Snow'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 ```
 
 <table style="width:75%;">
+<caption>Tau Pre Snow</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -386,10 +389,11 @@ my_ylab <- 'Sen slope Pre Snow'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 ```
 
 <table style="width:75%;">
+<caption>Sen slope Pre Snow</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -461,10 +465,11 @@ my_ylab <- 'Tau Pre snow per'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 ```
 
 <table style="width:75%;">
+<caption>Tau Pre snow per</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -533,10 +538,11 @@ my_ylab <- 'Sen slope Pre snow Per'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 ```
 
 <table style="width:75%;">
+<caption>Sen slope Pre snow Per</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -608,10 +614,11 @@ my_ylab <- 'Tau Temp'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 ```
 
 <table style="width:75%;">
+<caption>Tau Temp</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -680,10 +687,11 @@ my_ylab <- 'Sen slope Temp'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 ```
 
 <table style="width:76%;">
+<caption>Sen slope Temp</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />

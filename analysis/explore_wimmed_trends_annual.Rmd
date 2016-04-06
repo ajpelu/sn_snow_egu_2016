@@ -2,7 +2,7 @@
 title: "Explore Trends of WiMMed Indicators"
 author: "AJ Perez-Luque (@ajpelu); FJ Bonet; J Herrero and R. Perez-Perez"
 date: "2016 March"
-output:  
+output: 
     md_document:
       variant: markdown_github
       
@@ -209,7 +209,7 @@ my_ylab <- 'Tau Pre'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -239,7 +239,7 @@ my_ylab <- 'Sen slope Pre'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -271,7 +271,7 @@ my_ylab <- 'Tau Pre Snow'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -301,7 +301,7 @@ my_ylab <- 'Sen slope Pre Snow'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -332,7 +332,7 @@ my_ylab <- 'Tau Pre snow per'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -362,7 +362,7 @@ my_ylab <- 'Sen slope Pre snow Per'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -393,7 +393,7 @@ my_ylab <- 'Tau Temp'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -423,7 +423,7 @@ my_ylab <- 'Sen slope Temp'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption=my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
