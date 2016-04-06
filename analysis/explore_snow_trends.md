@@ -146,10 +146,11 @@ df <- fulldf1250
 variable <- 'tau_scd'
 my_ylab <- 'Tau Snow cover duration'
 mod <- aov(tau_scd ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 ```
 
 <table style="width:75%;">
+<caption>Tau Snow cover duration</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -216,10 +217,11 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scd'
 my_ylab <- 'Sen slope Snow cover duration'
 mod <- aov(sen_slope_scd ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 ```
 
 <table style="width:75%;">
+<caption>Sen slope Snow cover duration</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -289,10 +291,11 @@ Snow cover onset date
 variable <- 'tau_scod'
 my_ylab <- 'Tau Snow cover onset date'
 mod <- aov(tau_scod ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 ```
 
 <table style="width:75%;">
+<caption>Tau Snow cover onset date</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -359,10 +362,11 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scod'
 my_ylab <- 'Sen slope Snow cover onset date'
 mod <- aov(sen_slope_scod ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 ```
 
 <table style="width:75%;">
+<caption>Sen slope Snow cover onset date</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -432,10 +436,11 @@ Snow cover melting date
 variable <- 'tau_scmd'
 my_ylab <- 'Tau Snow cover melting date'
 mod <- aov(tau_scmd ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 ```
 
 <table style="width:75%;">
+<caption>Tau Snow cover melting date</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -502,10 +507,11 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scmd'
 my_ylab <- 'Sen slope Snow cover melting date'
 mod <- aov(sen_slope_scmd ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 ```
 
 <table style="width:75%;">
+<caption>Sen slope Snow cover melting date</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -575,10 +581,11 @@ Snow cover melting cycles
 variable <- 'tau_scmc'
 my_ylab <- 'Tau Snow cover melting cycles'
 mod <- aov(tau_scmc ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 ```
 
 <table style="width:75%;">
+<caption>Tau Snow cover melting cycles</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -645,10 +652,11 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scmc'
 my_ylab <- 'Sen slope Snow cover melting cycles'
 mod <- aov(sen_slope_scmc ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 ```
 
 <table style="width:75%;">
+<caption>Sen slope Snow cover melting cycles</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -1304,9 +1312,9 @@ pander(filter(df_basin_sen, variable=="sen_slope_scmc"))
 </tbody>
 </table>
 
-![Figure 1.](/images/snow_cover_trends_basin.png)
+![Figure 1.](https://raw.githubusercontent.com/ajpelu/sn_snow_egu_2016/master/images/snow_cover_trends_basin.png)
 
-![Figure 2.](/images/snow_cover_trends_basin_letters.png)
+![Figure 2.](https://raw.githubusercontent.com/ajpelu/sn_snow_egu_2016/master/images/snow_cover_trends_basin_letters.png)
 
 Explore Snow-Cover trends by elevation
 ======================================

@@ -188,7 +188,7 @@ df <- fulldf1250
 variable <- 'tau_scd'
 my_ylab <- 'Tau Snow cover duration'
 mod <- aov(tau_scd ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -216,7 +216,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scd'
 my_ylab <- 'Sen slope Snow cover duration'
 mod <- aov(sen_slope_scd ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -246,7 +246,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'tau_scod'
 my_ylab <- 'Tau Snow cover onset date'
 mod <- aov(tau_scod ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -274,7 +274,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scod'
 my_ylab <- 'Sen slope Snow cover onset date'
 mod <- aov(sen_slope_scod ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -303,7 +303,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'tau_scmd'
 my_ylab <- 'Tau Snow cover melting date'
 mod <- aov(tau_scmd ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -331,7 +331,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scmd'
 my_ylab <- 'Sen slope Snow cover melting date'
 mod <- aov(sen_slope_scmd ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -360,7 +360,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'tau_scmc'
 my_ylab <- 'Tau Snow cover melting cycles'
 mod <- aov(tau_scmc ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -388,7 +388,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
 variable <- 'sen_slope_scmc'
 my_ylab <- 'Sen slope Snow cover melting cycles'
 mod <- aov(sen_slope_scmc ~ basin_name, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption= my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -494,13 +494,9 @@ pander(filter(df_basin_sen, variable=="sen_slope_scmc"))
 ```
 
 
+![Figure 1.](https://raw.githubusercontent.com/ajpelu/sn_snow_egu_2016/master/images/snow_cover_trends_basin.png) 
 
-![Figure 1.](/images/snow_cover_trends_basin.png) 
-
-
-
-![Figure 2.](/images/snow_cover_trends_basin_letters.png) 
-
+![Figure 2.](https://raw.githubusercontent.com/ajpelu/sn_snow_egu_2016/master/images/snow_cover_trends_basin_letters.png) 
 
 # Explore Snow-Cover trends by elevation 
 
