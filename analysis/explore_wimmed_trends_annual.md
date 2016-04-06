@@ -117,16 +117,10 @@ fulldf1250 <- fulldf %>%
   filter(dem50mean > 1250)  
 ```
 
-Annual indicators
-=================
-
-Explore Indicators trends by basin
-==================================
-
-We explore the pattern of snow-cover indicators trends by hydrological basin.
-
 Explore trends of annual variables by basin
 ===========================================
+
+We explore the pattern of snow-cover indicators trends by hydrological basin.
 
 ``` r
 ## Summary statistics 
