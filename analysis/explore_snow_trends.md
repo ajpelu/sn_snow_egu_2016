@@ -1307,3 +1307,490 @@ pander(filter(df_basin_sen, variable=="sen_slope_scmc"))
 ![Figure 1.](/images/snow_cover_trends_basin.png)
 
 ![Figure 2.](/images/snow_cover_trends_basin_letters.png)
+
+Explore Snow-Cover trends by elevation
+======================================
+
+Taus
+----
+
+``` r
+myvariable <- 'tau_scd'
+myylab <- 'Tau Snow Cover Duration'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## tau_scd ~ s(dem50mean)
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value
+    ## s(dem50mean) 8.263  8.854 410.4  <2e-16
+
+``` r
+mygam_summ <- summary(modgam)
+mygam_summ
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## tau_scd ~ s(dem50mean)
+    ## 
+    ## Parametric coefficients:
+    ##              Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -0.153844   0.001532  -100.4   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value    
+    ## s(dem50mean) 8.263  8.854 410.4  <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## R-sq.(adj) =  0.363   Deviance explained = 36.3%
+    ## GCV = 0.015024  Scale est. = 0.015002  n = 6390
+
+``` r
+# Plot GAM
+a <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=0.3, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab)
+  
+
+
+myvariable <- 'tau_scod'
+myylab <- 'Tau Snow Cover Onset Date'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## tau_scod ~ s(dem50mean)
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value
+    ## s(dem50mean) 8.282  8.861 52.02  <2e-16
+
+``` r
+mygam_summ <- summary(modgam)
+mygam_summ
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## tau_scod ~ s(dem50mean)
+    ## 
+    ## Parametric coefficients:
+    ##             Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) 0.132387   0.002066   64.07   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value    
+    ## s(dem50mean) 8.282  8.861 52.02  <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## R-sq.(adj) =  0.0671   Deviance explained = 6.83%
+    ## GCV = 0.02732  Scale est. = 0.027281  n = 6390
+
+``` r
+# Plot GAM
+b <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=0.6, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab)
+
+
+myvariable <- 'tau_scmd'
+myylab <- 'Tau Snow Cover Melting Date'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## tau_scmd ~ s(dem50mean)
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value
+    ## s(dem50mean) 8.597  8.954 193.7  <2e-16
+
+``` r
+mygam_summ <- summary(modgam)
+mygam_summ
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## tau_scmd ~ s(dem50mean)
+    ## 
+    ## Parametric coefficients:
+    ##             Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -0.17868    0.00186  -96.05   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value    
+    ## s(dem50mean) 8.597  8.954 193.7  <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## R-sq.(adj) =  0.213   Deviance explained = 21.4%
+    ## GCV = 0.02215  Scale est. = 0.022116  n = 6390
+
+``` r
+# Plot GAM
+c <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=0.4, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab)
+
+
+myvariable <- 'tau_scmc'
+myylab <- 'Tau Snow Cover Melting Cycles'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## tau_scmc ~ s(dem50mean)
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value
+    ## s(dem50mean) 8.211  8.834 104.2  <2e-16
+
+``` r
+mygam_summ <- summary(modgam)
+mygam_summ
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## tau_scmc ~ s(dem50mean)
+    ## 
+    ## Parametric coefficients:
+    ##             Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -0.19172    0.00177  -108.3   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value    
+    ## s(dem50mean) 8.211  8.834 104.2  <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## R-sq.(adj) =  0.126   Deviance explained = 12.7%
+    ## GCV = 0.020053  Scale est. = 0.020024  n = 6390
+
+``` r
+# Plot GAM
+d <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=0.4, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab)
+
+
+grid.arrange(a, d, b, c, nrow=2)
+```
+
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-23-1.png)
+
+Sen
+---
+
+``` r
+myvariable <- 'sen_slope_scd'
+myylab <- 'Sen Slope Snow Cover Duration'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## sen_slope_scd ~ s(dem50mean)
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df    F p-value
+    ## s(dem50mean) 8.592  8.953 1115  <2e-16
+
+``` r
+mygam_summ <- summary(modgam)
+mygam_summ
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## sen_slope_scd ~ s(dem50mean)
+    ## 
+    ## Parametric coefficients:
+    ##             Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -1.37941    0.01193  -115.7   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df    F p-value    
+    ## s(dem50mean) 8.592  8.953 1115  <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## R-sq.(adj) =   0.61   Deviance explained =   61%
+    ## GCV = 0.91018  Scale est. = 0.90881   n = 6390
+
+``` r
+# Plot GAM
+a <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=2, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab)
+  
+
+
+myvariable <- 'sen_slope_scod'
+myylab <- 'Sen Slope Snow Cover Onset Date'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## sen_slope_scod ~ s(dem50mean)
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value
+    ## s(dem50mean) 6.788  7.914 87.92  <2e-16
+
+``` r
+mygam_summ <- summary(modgam)
+mygam_summ
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## sen_slope_scod ~ s(dem50mean)
+    ## 
+    ## Parametric coefficients:
+    ##             Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)  1.12886    0.02114    53.4   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value    
+    ## s(dem50mean) 6.788  7.914 87.92  <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## R-sq.(adj) =  0.0993   Deviance explained =   10%
+    ## GCV = 2.8587  Scale est. = 2.8552    n = 6390
+
+``` r
+# Plot GAM
+b <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=5, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab)
+
+
+myvariable <- 'sen_slope_scmd'
+myylab <- 'Sen slope Snow Cover Melting Date'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## sen_slope_scmd ~ s(dem50mean)
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value
+    ## s(dem50mean) 8.444  8.915 125.8  <2e-16
+
+``` r
+mygam_summ <- summary(modgam)
+mygam_summ
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## sen_slope_scmd ~ s(dem50mean)
+    ## 
+    ## Parametric coefficients:
+    ##             Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -1.62150    0.02199  -73.75   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value    
+    ## s(dem50mean) 8.444  8.915 125.8  <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## R-sq.(adj) =  0.149   Deviance explained =   15%
+    ## GCV = 3.0936  Scale est. = 3.089     n = 6390
+
+``` r
+# Plot GAM
+c <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=5, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab)
+
+
+myvariable <- 'sen_slope_scmc'
+myylab <- 'Sen Slope Snow Cover Melting Cycles'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## sen_slope_scmc ~ s(dem50mean)
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value
+    ## s(dem50mean) 7.828  8.651 137.6  <2e-16
+
+``` r
+mygam_summ <- summary(modgam)
+mygam_summ
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## sen_slope_scmc ~ s(dem50mean)
+    ## 
+    ## Parametric coefficients:
+    ##              Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -0.074726   0.001018  -73.42   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value    
+    ## s(dem50mean) 7.828  8.651 137.6  <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## R-sq.(adj) =  0.157   Deviance explained = 15.8%
+    ## GCV = 0.0066283  Scale est. = 0.0066191  n = 6390
+
+``` r
+# Plot GAM
+d <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=0.1, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab)
+
+
+grid.arrange(a, d, b, c, nrow=2)
+```
+
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-24-1.png)

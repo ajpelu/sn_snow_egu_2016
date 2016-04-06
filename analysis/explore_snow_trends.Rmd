@@ -43,6 +43,8 @@ library("multcomp")
 library("pander")
 library("broom")
 library("mgcv")
+library("grid") # multiple plots
+library("gridExtra") # multiple plots
 ```
 
 ```{r data}
@@ -502,100 +504,205 @@ pander(filter(df_basin_sen, variable=="sen_slope_scmc"))
 
 # Explore Snow-Cover trends by elevation 
 
-```{r}
+## Taus 
 
-myformula <- formula(tau_scd ~ s(dem50mean, fx=FALSE, k=-1, bs="cr"))
+```{r, echo=FALSE, eval=FALSE}
+# some notes gam 
+# formula(tau_scd ~ s(dem50mean, fx=FALSE, k=-1, bs="cr"))
+## Predicted gam 
+# newdf <- data.frame(dem50mean = seq(from = 1250, to = 3500, length = 225))
+# p <- predict(modgam, newdata = newdf, se = TRUE)
+# par(mar = c(5,5,3,3))
+# plot(x = df$dem50mean, 
+#      y = df$tau_scd, cex=.7, pch=19, col='grey',
+#      xlab='Elevation', ylab=myylab, xaxis=c(1250,3500))
+# lines(x = newdf$dem50mean, y = p$fit, lwd=3)
+# lines(x = newdf$dem50mean, y = p$fit + 2 * p$se.fit, lwd =3, lty = 2)
+# lines(x = newdf$dem50mean, y = p$fit - 2 * p$se.fit, lwd =3, lty = 2)
+```
+
+```{r, fig.height=13 , fig.width=13}
+myvariable <- 'tau_scd'
 myylab <- 'Tau Snow Cover Duration'
 
-
 # GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
 modgam <- mgcv::gam(formula = myformula, 
                     data= df)
 anova(modgam)
-summary(modgam)
+mygam_summ <- summary(modgam)
+mygam_summ
 
-## Predicted gam 
-newdf <- data.frame(dem50mean = seq(from = 1250, to = 3500, length = 225))
-
-p <- predict(modgam, newdata = newdf, se = TRUE)
-
-par(mar = c(5,5,3,3))
-plot(x = df$dem50mean, 
-     y = df$tau_scd, cex=.7, pch=19, col='grey',
-     xlab='Elevation', ylab=myylab, xaxis=c(1250,3500))
-lines(x = newdf$dem50mean, y = p$fit, lwd=3)
-lines(x = newdf$dem50mean, y = p$fit + 2 * p$se.fit, lwd =3, lty = 2)
-lines(x = newdf$dem50mean, y = p$fit - 2 * p$se.fit, lwd =3, lty = 2)
-
-
-ggplot(df, aes(x=dem50mean, y=tau_scd)) + geom_point() + 
-  geom_smooth(method=gam, formula = tau_scd ~ s(dem50mea))
-
-
-
-
-
-
-
-modgam1 <- gam(tau_scd ~ s(dem50mean, fx=FALSE, k=-1, bs= "cr"), data=df)
-
-modgam1 <- gam(sen_slope_scd ~ s(dem50mean, fx=FALSE, k=-1, bs= "cr"), data=df)
-
-
-
-summary(M4)
-anova(M4)
-plot(modgam1)
-
-
-#Figure 2.10
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Get quantiles based on scd 
-x <- as.data.frame(round(quantile(scd$mean, probs = seq(0, 1, 0.1))))
-x$per <- rownames(x) 
-names(x)[1] <- 'q'
-
-# Get quantiles based on elevation
-xe <- as.data.frame(round(quantile(scd$dem50mean, probs = seq(0, 1, 0.1))))
-xe$per <- rownames(xe) 
-names(xe)[1] <- 'q'
-
-# pdf(file="elevation.pdf", height = 10, width = 10)
-ggplot(scd, aes(x=dem50mean, y=mean)) + 
-  geom_hline(yintercept=x$q, col='blue') +
-  geom_label(data=x, aes(x=3700, y=q), label=x$per, colour='blue') +
-  geom_label(data=x, aes(x=4000, y=q), label=x$q, colour='blue') +
-  geom_vline(xintercept = xe$q, col='red') + 
-  geom_label(data=xe, aes(x=q, y=210), label=xe$per, colour='red') +
-  geom_point() +  
+# Plot GAM
+a <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=0.3, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
   mythemeggplot + 
-  xlab('Elevation') + ylab('Snow cover duration (days)') + 
-  ylim(0,225) + xlim(0,4000)
-# dev.off()
-
-ggplot(df, aes(x=dem50mean, y=tau_scmd)) + 
-  geom_point(col='grey', alpha=.3) + 
-  stat_smooth(method=lm, aes(group=dem50mean_group)) + 
-  geom_vline(xintercept = seq(1250,3500, by=250)) + 
-  mythemeggplot
+  xlab('Elevation') + ylab(myylab)
   
-+
-  geom_point() 
-+ facet_wrap(~dem50mean_group)
+
+
+myvariable <- 'tau_scod'
+myylab <- 'Tau Snow Cover Onset Date'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+mygam_summ <- summary(modgam)
+mygam_summ
+
+# Plot GAM
+b <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=0.6, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab)
+
+
+myvariable <- 'tau_scmd'
+myylab <- 'Tau Snow Cover Melting Date'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+mygam_summ <- summary(modgam)
+mygam_summ
+
+# Plot GAM
+c <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=0.4, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab)
+
+
+myvariable <- 'tau_scmc'
+myylab <- 'Tau Snow Cover Melting Cycles'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+mygam_summ <- summary(modgam)
+mygam_summ
+
+# Plot GAM
+d <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=0.4, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab)
+
+
+grid.arrange(a, d, b, c, nrow=2)
+```
+
+## Sen 
+
+```{r, fig.height=13 , fig.width=13}
+myvariable <- 'sen_slope_scd'
+myylab <- 'Sen Slope Snow Cover Duration'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+mygam_summ <- summary(modgam)
+mygam_summ
+
+# Plot GAM
+a <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=2, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab)
+  
+
+
+myvariable <- 'sen_slope_scod'
+myylab <- 'Sen Slope Snow Cover Onset Date'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+mygam_summ <- summary(modgam)
+mygam_summ
+
+# Plot GAM
+b <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=5, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab)
+
+
+myvariable <- 'sen_slope_scmd'
+myylab <- 'Sen slope Snow Cover Melting Date'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+mygam_summ <- summary(modgam)
+mygam_summ
+
+# Plot GAM
+c <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=5, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab)
+
+
+myvariable <- 'sen_slope_scmc'
+myylab <- 'Sen Slope Snow Cover Melting Cycles'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+mygam_summ <- summary(modgam)
+mygam_summ
+
+# Plot GAM
+d <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 3000, y=0.1, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab)
+
+
+grid.arrange(a, d, b, c, nrow=2)
+```
+
+
+
+
+
+
+
+
+
+
+
 
 
 
