@@ -129,6 +129,7 @@ Autunm
 ------
 
 <table style="width:75%;">
+<caption>Tau Pre au</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -170,6 +171,7 @@ Autunm
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
 <table style="width:75%;">
+<caption>Sen slope Pre Autumn</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -214,6 +216,7 @@ Pre Spring
 ==========
 
 <table style="width:75%;">
+<caption>Tau Pre Spring</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -255,6 +258,7 @@ Pre Spring
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
 <table style="width:75%;">
+<caption>Sen slope Pre Spring</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -299,6 +303,7 @@ Pre Summer
 ==========
 
 <table style="width:79%;">
+<caption>Tau Pre Summer</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -340,6 +345,7 @@ Pre Summer
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
 <table style="width:75%;">
+<caption>Sen slope Pre Summer</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -384,6 +390,7 @@ Pre Winter
 ==========
 
 <table style="width:75%;">
+<caption>Tau Pre Winter</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -425,6 +432,7 @@ Pre Winter
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-10-1.png)
 
 <table style="width:79%;">
+<caption>Sen slope Pre winter</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -1273,6 +1281,7 @@ Autunm
 ------
 
 <table style="width:75%;">
+<caption>Tau Pn au</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -1314,6 +1323,7 @@ Autunm
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-26-1.png)
 
 <table style="width:79%;">
+<caption>Sen slope Pn Autumn</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -1358,6 +1368,7 @@ Pn Spring
 =========
 
 <table style="width:75%;">
+<caption>Tau Pn Spring</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -1399,6 +1410,7 @@ Pn Spring
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-28-1.png)
 
 <table style="width:75%;">
+<caption>Sen slope Pn Spring</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -1443,6 +1455,7 @@ Pn Summer
 =========
 
 <table style="width:79%;">
+<caption>Tau Pn Summer</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -1484,6 +1497,7 @@ Pn Summer
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-30-1.png)
 
 <table style="width:75%;">
+<caption>Sen slope Pn Summer</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -1534,6 +1548,7 @@ Pn Winter
 =========
 
 <table style="width:79%;">
+<caption>Tau Pn Winter</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -1575,6 +1590,7 @@ Pn Winter
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-32-1.png)
 
 <table style="width:75%;">
+<caption>Sen slope Pn winter</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -2423,6 +2439,7 @@ Autunm
 ------
 
 <table style="width:75%;">
+<caption>Tau Temp au</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -2464,6 +2481,7 @@ Autunm
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-48-1.png)
 
 <table style="width:79%;">
+<caption>Sen slope Temp Autumn</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -2508,6 +2526,7 @@ Temp Spring
 ===========
 
 <table style="width:75%;">
+<caption>Tau Temp Spring</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -2549,6 +2568,7 @@ Temp Spring
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-50-1.png)
 
 <table style="width:75%;">
+<caption>Sen slope Temp Spring</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -2593,6 +2613,7 @@ Temp Summer
 ===========
 
 <table style="width:75%;">
+<caption>Tau Temp Summer</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -2634,6 +2655,7 @@ Temp Summer
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-52-1.png)
 
 <table style="width:75%;">
+<caption>Sen slope Temp Summer</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -2678,6 +2700,7 @@ Temp Winter
 ===========
 
 <table style="width:75%;">
+<caption>Tau Temp Winter</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />
@@ -2719,6 +2742,7 @@ Temp Winter
 ![](explore_wimmed_trends_season_files/figure-markdown_github/unnamed-chunk-54-1.png)
 
 <table style="width:75%;">
+<caption>Sen slope Temp winter</caption>
 <colgroup>
 <col width="15%" />
 <col width="6%" />

@@ -209,7 +209,7 @@ my_ylab <- 'Tau Pre au'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -239,7 +239,7 @@ my_ylab <- 'Sen slope Pre Autumn'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -271,7 +271,7 @@ my_ylab <- 'Tau Pre Spring'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -301,7 +301,7 @@ my_ylab <- 'Sen slope Pre Spring'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -332,7 +332,7 @@ my_ylab <- 'Tau Pre Summer'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -362,7 +362,7 @@ my_ylab <- 'Sen slope Pre Summer'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -393,7 +393,7 @@ my_ylab <- 'Tau Pre Winter'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -423,7 +423,7 @@ my_ylab <- 'Sen slope Pre winter'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -757,7 +757,7 @@ my_ylab <- 'Tau Pn au'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -787,7 +787,7 @@ my_ylab <- 'Sen slope Pn Autumn'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -819,7 +819,7 @@ my_ylab <- 'Tau Pn Spring'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -849,7 +849,7 @@ my_ylab <- 'Sen slope Pn Spring'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -880,7 +880,7 @@ my_ylab <- 'Tau Pn Summer'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -910,7 +910,7 @@ my_ylab <- 'Sen slope Pn Summer'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -941,7 +941,7 @@ my_ylab <- 'Tau Pn Winter'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -971,7 +971,7 @@ my_ylab <- 'Sen slope Pn winter'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -1305,7 +1305,7 @@ my_ylab <- 'Tau Temp au'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -1335,7 +1335,7 @@ my_ylab <- 'Sen slope Temp Autumn'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -1367,7 +1367,7 @@ my_ylab <- 'Tau Temp Spring'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -1397,7 +1397,7 @@ my_ylab <- 'Sen slope Temp Spring'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -1428,7 +1428,7 @@ my_ylab <- 'Tau Temp Summer'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -1458,7 +1458,7 @@ my_ylab <- 'Sen slope Temp Summer'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -1489,7 +1489,7 @@ my_ylab <- 'Tau Temp Winter'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
@@ -1519,7 +1519,7 @@ my_ylab <- 'Sen slope Temp winter'
 
 myformula <- formula(paste(variable, '~ basin_name', sep=''))
 mod <- aov(myformula, data=df)
-pander(tidy(mod))
+pander(tidy(mod), caption = my_ylab)
 
 ## Multiple comparisons 
 tuk <- glht(mod, linfct = mcp(basin_name = "Tukey"))
