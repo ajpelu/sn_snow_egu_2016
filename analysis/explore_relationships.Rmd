@@ -191,6 +191,22 @@ aux1 <- fulldf1900 %>% group_by(dem50mean_group) %>%
 pander(aux1)
 ```
 
+
+
+# Table of relationships 
+
+|  |  |  |  |  | pre |  |  |  | pn |  |  |  | temp |  |  |  |
+|------|-----|----------|--------------|------|-----|----|----|----|----|----|----|----|------|----|----|----|
+|  | pre | pre_snow | pre_snow_per | temp | au | wi | sp | su | au | wi | sp | su | au | wi | sp | su |
+| scd | x | x | x | x |  |  |  |  |  |  |  |  |  |  |  |  |
+| scod |  |  |  |  | x | x |  |  | x | x |  |  | x | x |  |  |
+| scmd |  |  |  |  |  | x | x |  |  | x | x |  |  | x | x |  |
+
+
+
+
+
+
 First we explore the relationship between topographic variables and snow-cover related variables. 
 
 ## Notas
