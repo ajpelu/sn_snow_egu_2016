@@ -211,6 +211,10 @@ dfaux <- df %>%
   filter(tau_scod > 0.25) %>%  
   filter(tau_scmd < -0.25)
 
+mytitle <- 'scod vs. scmd (>1250 masl)'
+myxlab <- 'trend (tau) of Snow cover onset date'
+myylab <- 'trend (tau) of Snow cover melting date'
+
 # Exploratory by elevatin groups 
 ggplot(df, aes(x=tau_scod, y=tau_scmd)) + 
   geom_point(col='gray') + 
@@ -218,10 +222,7 @@ ggplot(df, aes(x=tau_scod, y=tau_scmd)) +
   geom_vline(xintercept=0) +
   geom_hline(yintercept=0) + 
   facet_wrap(~dem50mean_group) + 
-  theme_bw() + 
-  labs(title= 'scod vs. scmd (>1250 masl)',
-       x= 'trend (tau) of Snow cover onset date',
-       y='trend (tau) of Snow cover melting date') +
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
   theme(strip.background = element_rect(fill = "white")) +
   geom_point(data=dfaux, aes(x=tau_scod, y=tau_scmd), col='blue', alpha=.5) 
 ```
@@ -268,49 +269,453 @@ pander(d, caption = 'Potential relationships')
 
 # Snow cover duration relationships 
 
+## SCD and PRE
 ```{r}
-my_titulo<- "scd vs. pre (>1250)"
-my_xlab <- "trend (tau) of Snow cover duration"
-my_ylab <- "trend (tau) of Precipitation"
+mytitle<- "scd vs. pre (>1250)"
+myxlab <- "trend (tau) of Snow cover duration"
+myylab <- "trend (tau) of Precipitation"
 
+xvar <- 'tau_scd'
+yvar <- 'tau_pre'
 
-# Exploratory by elevatin groups 
-ggplot(df, aes(x=tau_scd, y=tau_pre)) + 
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
   geom_point(col='gray') + 
   xlim(-1,1) + ylim(-1,1) + 
   geom_vline(xintercept=0) +
   geom_hline(yintercept=0) + 
-  # facet_wrap(~dem50mean_group) + 
-  theme_bw() + 
-  labs(title= my_titulo, x = my_xlab, y= my_ylab) +
-  theme(strip.background = element_rect(fill = "white")) 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
 
+gt + facet_wrap(~dem50mean_group)
 
+# Sen 
 mytitle <- 'scd vs. pre (>1250) (Sen slopes)' 
 myxlab <- 'trend (sen) of Snow cover duration'
 myylab <- 'trend (sen) of Precipitation'
 
-ggplot(df, aes(x=sen_slope_scd, y=sen_slope_pre)) + 
-  geom_point(col='gray') +
-  theme_bw() + 
-  labs(title= mytitle, x = myxlab, y= myylab) +
-  theme(strip.background = element_rect(fill = "white")) + 
-  stat_smooth(method = lm)
 
+xvar <- 'sen_slope_scd'
+yvar <- 'sen_slope_pre'
 
-
-ggplot(df, aes(x=sen_slope_scd, y=sen_slope_pre)) + 
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
   geom_point(col='gray') + 
-  facet_wrap(~dem50mean_group) + 
-  theme_bw() + 
-  labs(title= mytitle, x = myxlab, y= myylab) +
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
   theme(strip.background = element_rect(fill = "white")) + 
-  stat_smooth(method = lm)
+  geom_smooth(method='lm')
+gs
+
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+## SCD and PRE_SNOW
+```{r}
+mytitle<- "scd vs. pre_snow (>1250)"
+myxlab <- "trend (tau) of Snow cover duration"
+myylab <- "trend (tau) of Snow Precipitation"
+
+xvar <- 'tau_scd'
+yvar <- 'tau_pre_snow'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+
+gt + facet_wrap(~dem50mean_group)
+
+# Sen 
+mytitle <- 'scd vs. pre_snow (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover duration (days)'
+myylab <- 'trend (sen) of Snow Precipitation (mm) '
+
+
+xvar <- 'sen_slope_scd'
+yvar <- 'sen_slope_pre_snow'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+
+## SCD and PRE_SNOW_PER
+```{r}
+mytitle<- "scd vs. pre_snow_per (>1250)"
+myxlab <- "trend (tau) of Snow cover duration"
+myylab <- "trend (tau) of Snow Precipitation (%)"
+
+xvar <- 'tau_scd'
+yvar <- 'tau_pre_snow_per'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+
+gt + facet_wrap(~dem50mean_group)
+
+# Sen 
+mytitle <- 'scd vs. pre_snow_per (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover duration (days)'
+myylab <- 'trend (sen) of % of Snow Precipitation (%) '
+
+
+xvar <- 'sen_slope_scd'
+yvar <- 'sen_slope_pre_snow_per'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+
+## SCD and TEMP
+```{r}
+mytitle<- "scd vs. temp (>1250)"
+myxlab <- "trend (tau) of Snow cover duration"
+myylab <- "trend (tau) of Temperature"
+
+xvar <- 'tau_scd'
+yvar <- 'tau_temp'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+
+gt + facet_wrap(~dem50mean_group)
+
+# Sen 
+mytitle <- 'scd vs. temp (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover duration (days)'
+myylab <- 'trend (sen) of Temp (º)'
+
+
+xvar <- 'sen_slope_scd'
+yvar <- 'sen_slope_temp'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+
+# Snow cover onset dates relationships 
+
+## SCOD and PRE AUTUMN
+```{r}
+mytitle<- "scod vs. preau (>1250)"
+myxlab <- "trend (tau) of Snow cover onset date"
+myylab <- "trend (tau) of Autumn Precipitation"
+
+xvar <- 'tau_scod'
+yvar <- 'tau_preau'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+
+gt + facet_wrap(~dem50mean_group)
+
+# Sen 
+mytitle <- 'scod vs. preau (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover onset date (days)'
+myylab <- 'trend (sen) of Autumn Precipitation (mm)'
+
+
+xvar <- 'sen_slope_scod'
+yvar <- 'sen_slope_preau'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+## SCOD and PRE WINTER
+```{r}
+mytitle<- "scod vs. prewi (>1250)"
+myxlab <- "trend (tau) of Snow cover onset date"
+myylab <- "trend (tau) of Winter Precipitation"
+
+xvar <- 'tau_scod'
+yvar <- 'tau_prewi'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+
+gt + facet_wrap(~dem50mean_group)
+
+# Sen 
+mytitle <- 'scod vs. prewi (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover onset date (days)'
+myylab <- 'trend (sen) of Winter Precipitation (mm)'
+
+
+xvar <- 'sen_slope_scod'
+yvar <- 'sen_slope_prewi'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+
+## SCOD and PN AUTUMN
+```{r}
+mytitle<- "scod vs. pnau (>1250)"
+myxlab <- "trend (tau) of Snow cover onset date"
+myylab <- "trend (tau) of Autumn Precipitation (snow)"
+
+xvar <- 'tau_scod'
+yvar <- 'tau_pnau'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+
+gt + facet_wrap(~dem50mean_group)
+
+# Sen 
+mytitle <- 'scod vs. pnau (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover onset date (days)'
+myylab <- 'trend (sen) of Autumn Precipitation (snow) (mm)'
+
+
+xvar <- 'sen_slope_scod'
+yvar <- 'sen_slope_pnau'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+## SCOD and PN WINTER
+```{r}
+mytitle<- "scod vs. pnwi (>1250)"
+myxlab <- "trend (tau) of Snow cover onset date"
+myylab <- "trend (tau) of Winter Precipitation (snow)"
+
+xvar <- 'tau_scod'
+yvar <- 'tau_pnwi'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+
+gt + facet_wrap(~dem50mean_group)
+
+# Sen 
+mytitle <- 'scod vs. pnwi (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover onset date (days)'
+myylab <- 'trend (sen) of Winter Precipitation (snow) (mm)'
+
+
+xvar <- 'sen_slope_scod'
+yvar <- 'sen_slope_pnwi'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+
+
+## SCOD and TEMP AUTUMN
+```{r}
+mytitle<- "scod vs. tempau (>1250)"
+myxlab <- "trend (tau) of Snow cover onset date"
+myylab <- "trend (tau) of Autumn Temp"
+
+xvar <- 'tau_scod'
+yvar <- 'tau_tempau'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+
+gt + facet_wrap(~dem50mean_group)
+
+# Sen 
+mytitle <- 'scod vs. tempau (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover onset date (days)'
+myylab <- 'trend (sen) of Autumn Temp (º)'
+
+
+xvar <- 'sen_slope_scod'
+yvar <- 'sen_slope_tempau'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+## SCOD and TEMP WINTER
+```{r}
+mytitle<- "scod vs. tempwi (>1250)"
+myxlab <- "trend (tau) of Snow cover onset date"
+myylab <- "trend (tau) of Winter Temp"
+
+xvar <- 'tau_scod'
+yvar <- 'tau_tempwi'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+
+gt + facet_wrap(~dem50mean_group)
+
+# Sen 
+mytitle <- 'scod vs. tempwi (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover onset date (days)'
+myylab <- 'trend (sen) of Winter Temp (º)'
+
+
+xvar <- 'sen_slope_scod'
+yvar <- 'sen_slope_tempwi'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
 
 
 
 
 
+
+
+
+
+```{r, eval=FALSE}
 
 First we explore the relationship between topographic variables and snow-cover related variables. 
 
@@ -325,6 +730,55 @@ Analysis of the spatio-temporal pattern of this variables
 ### Elevation pattern
 
 ```{r, eval= FALSE}
+
+lm_eqn <- function(df){
+    m <- lm(y ~ x, df);
+    eq <- substitute(italic(y) == a + b %.% italic(x)*","~~italic(r)^2~"="~r2, 
+         list(a = format(coef(m)[1], digits = 2), 
+              b = format(coef(m)[2], digits = 2), 
+             r2 = format(summary(m)$r.squared, digits = 3)))
+    as.character(as.expression(eq));                 
+}
+
+
+mylmeq <- function(midata){
+  mod <- lm(y ~ x, midata);
+  sumod <- summary(mod);
+  eq <- substitute(~~italic(r)^2~"="~r2, " p="~pvalue, 
+                 list(r2 = format(summary(mod)$r.squared, digits = 3),
+                      pvalue = coef(sumod)[2,4])))
+  as.character(as.expression(eq));
+} 
+
+
+                      
+
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+
+gs + geom_text(x = 2, y = 10, label = mylmeq(lm(sen_slope_scd ~sen_slope_pre_snow, df)), parse = TRUE)                 
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Compute mean, sd, se of tau variables by elevation interval and plot them 
 taus <- fulldf1900 %>% 
   select(contains("tau"), dem50mean_group) 

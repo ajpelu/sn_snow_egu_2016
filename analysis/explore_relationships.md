@@ -437,18 +437,664 @@ pander(d, caption = 'Potential relationships')
 </tbody>
 </table>
 
-First we explore the relationship between topographic variables and snow-cover related variables.
+Snow cover duration relationships
+=================================
 
-Notas
------
-
-(see Chen et al. 2015) \* Dd &lt;- duration of snow cover \* Do &lt;- day of onset \* De &lt;- day of end
-
-Analysis of the spatio-temporal pattern of this variables
-
-### Elevation pattern
+SCD and PRE
+-----------
 
 ``` r
+mytitle<- "scd vs. pre (>1250)"
+myxlab <- "trend (tau) of Snow cover duration"
+myylab <- "trend (tau) of Precipitation"
+
+xvar <- 'tau_scd'
+yvar <- 'tau_pre'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-8-1.png)
+
+``` r
+gt + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-8-2.png)
+
+``` r
+# Sen 
+mytitle <- 'scd vs. pre (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover duration'
+myylab <- 'trend (sen) of Precipitation'
+
+
+xvar <- 'sen_slope_scd'
+yvar <- 'sen_slope_pre'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-8-3.png)
+
+``` r
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-8-4.png)
+
+SCD and PRE\_SNOW
+-----------------
+
+``` r
+mytitle<- "scd vs. pre_snow (>1250)"
+myxlab <- "trend (tau) of Snow cover duration"
+myylab <- "trend (tau) of Snow Precipitation"
+
+xvar <- 'tau_scd'
+yvar <- 'tau_pre_snow'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-9-1.png)
+
+``` r
+gt + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-9-2.png)
+
+``` r
+# Sen 
+mytitle <- 'scd vs. pre_snow (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover duration (days)'
+myylab <- 'trend (sen) of Snow Precipitation (mm) '
+
+
+xvar <- 'sen_slope_scd'
+yvar <- 'sen_slope_pre_snow'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-9-3.png)
+
+``` r
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-9-4.png)
+
+SCD and PRE\_SNOW\_PER
+----------------------
+
+``` r
+mytitle<- "scd vs. pre_snow_per (>1250)"
+myxlab <- "trend (tau) of Snow cover duration"
+myylab <- "trend (tau) of Snow Precipitation (%)"
+
+xvar <- 'tau_scd'
+yvar <- 'tau_pre_snow_per'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-10-1.png)
+
+``` r
+gt + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-10-2.png)
+
+``` r
+# Sen 
+mytitle <- 'scd vs. pre_snow_per (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover duration (days)'
+myylab <- 'trend (sen) of % of Snow Precipitation (%) '
+
+
+xvar <- 'sen_slope_scd'
+yvar <- 'sen_slope_pre_snow_per'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-10-3.png)
+
+``` r
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-10-4.png)
+
+SCD and TEMP
+------------
+
+``` r
+mytitle<- "scd vs. temp (>1250)"
+myxlab <- "trend (tau) of Snow cover duration"
+myylab <- "trend (tau) of Temperature"
+
+xvar <- 'tau_scd'
+yvar <- 'tau_temp'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-11-1.png)
+
+``` r
+gt + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-11-2.png)
+
+``` r
+# Sen 
+mytitle <- 'scd vs. temp (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover duration (days)'
+myylab <- 'trend (sen) of Temp (º)'
+
+
+xvar <- 'sen_slope_scd'
+yvar <- 'sen_slope_temp'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-11-3.png)
+
+``` r
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-11-4.png)
+
+Snow cover onset dates relationships
+====================================
+
+SCOD and PRE AUTUMN
+-------------------
+
+``` r
+mytitle<- "scod vs. preau (>1250)"
+myxlab <- "trend (tau) of Snow cover onset date"
+myylab <- "trend (tau) of Autumn Precipitation"
+
+xvar <- 'tau_scod'
+yvar <- 'tau_preau'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-12-1.png)
+
+``` r
+gt + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-12-2.png)
+
+``` r
+# Sen 
+mytitle <- 'scod vs. preau (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover onset date (days)'
+myylab <- 'trend (sen) of Autumn Precipitation (mm)'
+
+
+xvar <- 'sen_slope_scod'
+yvar <- 'sen_slope_preau'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-12-3.png)
+
+``` r
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-12-4.png)
+
+SCOD and PRE WINTER
+-------------------
+
+``` r
+mytitle<- "scod vs. prewi (>1250)"
+myxlab <- "trend (tau) of Snow cover onset date"
+myylab <- "trend (tau) of Winter Precipitation"
+
+xvar <- 'tau_scod'
+yvar <- 'tau_prewi'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-13-1.png)
+
+``` r
+gt + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-13-2.png)
+
+``` r
+# Sen 
+mytitle <- 'scod vs. prewi (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover onset date (days)'
+myylab <- 'trend (sen) of Winter Precipitation (mm)'
+
+
+xvar <- 'sen_slope_scod'
+yvar <- 'sen_slope_prewi'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-13-3.png)
+
+``` r
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-13-4.png)
+
+SCOD and PN AUTUMN
+------------------
+
+``` r
+mytitle<- "scod vs. pnau (>1250)"
+myxlab <- "trend (tau) of Snow cover onset date"
+myylab <- "trend (tau) of Autumn Precipitation (snow)"
+
+xvar <- 'tau_scod'
+yvar <- 'tau_pnau'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-14-1.png)
+
+``` r
+gt + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-14-2.png)
+
+``` r
+# Sen 
+mytitle <- 'scod vs. pnau (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover onset date (days)'
+myylab <- 'trend (sen) of Autumn Precipitation (snow) (mm)'
+
+
+xvar <- 'sen_slope_scod'
+yvar <- 'sen_slope_pnau'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-14-3.png)
+
+``` r
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-14-4.png)
+
+SCOD and PN WINTER
+------------------
+
+``` r
+mytitle<- "scod vs. pnwi (>1250)"
+myxlab <- "trend (tau) of Snow cover onset date"
+myylab <- "trend (tau) of Winter Precipitation (snow)"
+
+xvar <- 'tau_scod'
+yvar <- 'tau_pnwi'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-15-1.png)
+
+``` r
+gt + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-15-2.png)
+
+``` r
+# Sen 
+mytitle <- 'scod vs. pnwi (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover onset date (days)'
+myylab <- 'trend (sen) of Winter Precipitation (snow) (mm)'
+
+
+xvar <- 'sen_slope_scod'
+yvar <- 'sen_slope_pnwi'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-15-3.png)
+
+``` r
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-15-4.png)
+
+SCOD and TEMP AUTUMN
+--------------------
+
+``` r
+mytitle<- "scod vs. tempau (>1250)"
+myxlab <- "trend (tau) of Snow cover onset date"
+myylab <- "trend (tau) of Autumn Temp"
+
+xvar <- 'tau_scod'
+yvar <- 'tau_tempau'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-16-1.png)
+
+``` r
+gt + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-16-2.png)
+
+``` r
+# Sen 
+mytitle <- 'scod vs. tempau (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover onset date (days)'
+myylab <- 'trend (sen) of Autumn Temp (º)'
+
+
+xvar <- 'sen_slope_scod'
+yvar <- 'sen_slope_tempau'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-16-3.png)
+
+``` r
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-16-4.png)
+
+SCOD and TEMP WINTER
+--------------------
+
+``` r
+mytitle<- "scod vs. tempwi (>1250)"
+myxlab <- "trend (tau) of Snow cover onset date"
+myylab <- "trend (tau) of Winter Temp"
+
+xvar <- 'tau_scod'
+yvar <- 'tau_tempwi'
+
+# Taus  
+gt <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white"))
+gt
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-17-1.png)
+
+``` r
+gt + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-17-2.png)
+
+``` r
+# Sen 
+mytitle <- 'scod vs. tempwi (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover onset date (days)'
+myylab <- 'trend (sen) of Winter Temp (º)'
+
+
+xvar <- 'sen_slope_scod'
+yvar <- 'sen_slope_tempwi'
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+gs
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-17-3.png)
+
+``` r
+## by elevation
+gs + facet_wrap(~dem50mean_group)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-17-4.png)
+
+``` r
+First we explore the relationship between topographic variables and snow-cover related variables. 
+
+## Notas
+(see Chen et al. 2015)
+* Dd <- duration of snow cover 
+* Do <- day of onset 
+* De <- day of end 
+
+Analysis of the spatio-temporal pattern of this variables 
+
+### Elevation pattern
+```
+
+``` r
+lm_eqn <- function(df){
+    m <- lm(y ~ x, df);
+    eq <- substitute(italic(y) == a + b %.% italic(x)*","~~italic(r)^2~"="~r2, 
+         list(a = format(coef(m)[1], digits = 2), 
+              b = format(coef(m)[2], digits = 2), 
+             r2 = format(summary(m)$r.squared, digits = 3)))
+    as.character(as.expression(eq));                 
+}
+
+
+mylmeq <- function(midata){
+  mod <- lm(y ~ x, midata);
+  sumod <- summary(mod);
+  eq <- substitute(~~italic(r)^2~"="~r2, " p="~pvalue, 
+                 list(r2 = format(summary(mod)$r.squared, digits = 3),
+                      pvalue = coef(sumod)[2,4])))
+  as.character(as.expression(eq));
+} 
+
+                      
+
+
+gs <- ggplot(df, aes_string(x=xvar, y=yvar)) + 
+  geom_point(col='gray') + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  geom_smooth(method='lm')
+
+gs + geom_text(x = 2, y = 10, label = mylmeq(lm(sen_slope_scd ~sen_slope_pre_snow, df)), parse = TRUE)                 
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Compute mean, sd, se of tau variables by elevation interval and plot them 
 taus <- fulldf1900 %>% 
   select(contains("tau"), dem50mean_group) 
