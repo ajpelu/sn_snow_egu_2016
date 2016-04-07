@@ -9,11 +9,11 @@ output:
 ---
 ## Prepare Data
 
-* Read data of Mann-Kendal Sen-Slope for each pixels and each indicator: snow-cover related (scd, scod, scmd, scmc) and hydrological model (pre, pre_snow, pre_snow_per, temp). See :red_circle: (`$TODO`: include link to analysis)
+* Read data of Mann-Kendal Sen-Slope for each pixels and each indicator: snow-cover related (scd, scod, scmd, scmc) and hydrological model (annual pre, pre_snow, pre_snow_per, temp; and seasonal pre, pn and temp).
 * Read data of topographic variable :red_circle: (`$TODO`: Document script) 
 * Create two dataframes: 
  * Full Dataframe with all variables and all pixels 
- * Dataframe with all variables and filter by pixels above 1900 *m.a.s.l.*
+ * Dataframe with all variables and filter by pixels above 1250 *m.a.s.l.*
 
 ```{r metadata, echo=FALSE}
 # Set working directory 
@@ -26,6 +26,9 @@ di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016',
 
 ```{r packages, warning=FALSE, echo=FALSE, message=FALSE}
 # Load packages 
+library("raster")
+library("rgdal")
+library("sp")
 library("dplyr")
 library("ggplot2")
 library("reshape2")
@@ -33,10 +36,14 @@ library("pander")
 ```
 
 ```{r data}
-# Read data
-
+# Read Trend analysis data
 # Define name of indicators (see variables names)
-indicadores <- c("scd", "scod", "scmd", "scmc", "pre", "pre_snow", "pre_snow_per", "temp")
+
+indicadores <- c("scd", "scod", "scmd", "scmc",
+                 "pre", "pre_snow", "pre_snow_per", "temp", 
+                 "pnau", "pnsp", "pnsu", "pnwi",
+                 "preau", "presp", "presu", "prewi",
+                 "tempau", "tempsp", "tempsu", "tempwi")
 
 # Loop to read files 
 for (j in indicadores){ 
@@ -45,40 +52,33 @@ for (j in indicadores){
               sep = ',')
   assign(j, aux)
 }
+# --
 
+# Define pixels of interes 
+pixels_interes <- pre$nie_malla_modi_id
 
 # Read Topographic data 
 rawtopo <- read.csv(file=paste(di, "/data/topo_nie_malla_modis.csv", sep=""),
-                 header=TRUE,
-                 sep = ",") 
-```
+                    header=TRUE,
+                    sep = ",") 
 
-
-```{r prepareData, echo=FALSE}
 # function to convert radian to degree 
 rad2deg <- function(rad) {(rad * 180) / (pi)} 
 
 
-# Select only pixels of interest and convert radians to degree
 topo <- rawtopo %>% 
-  filter(id %in% scd$nie_malla_modi_id) %>% 
+  filter(id %in% pixels_interes) %>% 
   mutate(nie_malla_modi_id = id, 
          slope50mean_deg = rad2deg(slope50mean),
          slope50median_deg = rad2deg(slope50median),
          aspect50mean_deg = rad2deg(aspect50mean),
          aspect50median_deg = rad2deg(aspect50median)) %>%
-  select(nie_malla_modi_id, dem50mean, dem50median, slope50mean_deg, 
-         slope50median_deg, aspect50mean_deg, aspect50median_deg) 
+  dplyr::select(nie_malla_modi_id, dem50mean, dem50median, slope50mean_deg, 
+                slope50median_deg, aspect50mean_deg, aspect50median_deg) 
 
 ## Create interval variables (250 m) for dem; and classify aspect into 8 categories 
 topo <- topo %>% 
   mutate(dem50mean_group = cut(dem50mean, 
-                         breaks = seq(from=0, to=3500, by=250),
-                         labels = c("0-250", "251-500","501-750","751-1000",
-                                    "1001-1250","1251-1500","1501-1750","1751-2000",
-                                    "2001-2250","2251-2500","2501-2750", "2751-3000",
-                                    "3001-3250", "3251-3500")),
-         dem50median_group = cut(dem50median, 
                          breaks = seq(from=0, to=3500, by=250),
                          labels = c("0-250", "251-500","501-750","751-1000",
                                     "1001-1250","1251-1500","1501-1750","1751-2000",
@@ -89,20 +89,57 @@ topo <- topo %>%
                                       labels = c("N", "NE", "E", "SE", "S", "SW", "W", "NW")))
 
 
+# --
+
+# Read spatial data and Get lat/long
+centroides <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
+                             layer = "centroides_selected", verbose = FALSE)
+# Select only attributes of interest and rename them
+centroides <- centroides[c("id")]
+
+# Create lat/lng by id 
+xycentroides <- cbind(centroides@data, coordinates(centroides))
+names(xycentroides) <- c("nie_malla_modi_id", "lon","lat")
+
+xycentroides <- filter(xycentroides, nie_malla_modi_id %in% pixels_interes)
+# -- 
+
+# Hydrological basin 
+basin <- read.csv(file=paste(di, "/data/derived/pixel_region.csv", sep=""),
+                    header=TRUE,
+                    sep = ",") 
+# --
+
+
 # Create un dataframe con todos los datos
 fulldf <- topo %>% 
-  inner_join(scod,  by=c("nie_malla_modi_id")) %>% 
   inner_join(scd,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(scod,  by=c("nie_malla_modi_id")) %>% 
   inner_join(scmd,  by=c("nie_malla_modi_id")) %>% 
-  inner_join(scmc,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(scmc,  by=c("nie_malla_modi_id")) %>%
   inner_join(pre,  by=c("nie_malla_modi_id")) %>% 
   inner_join(pre_snow,  by=c("nie_malla_modi_id")) %>% 
   inner_join(pre_snow_per,  by=c("nie_malla_modi_id")) %>% 
-  inner_join(temp,  by=c("nie_malla_modi_id")) 
+  inner_join(temp,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(pnau,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(pnsp,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(pnsu,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(pnwi,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(preau,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(presp,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(presu,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(prewi,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(tempau,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(tempsp,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(tempsu,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(tempwi,  by=c("nie_malla_modi_id")) %>% 
+  inner_join(xycentroides, by="nie_malla_modi_id") %>%
+  inner_join(basin, by="nie_malla_modi_id")
 
-# Create subset of pixels above 1900 
-fulldf1900 <- fulldf %>% 
-  filter(dem50mean > 1900)  
+
+# Create subset of pixels above 1250 
+fulldf1250 <- fulldf %>% 
+  filter(dem50mean > 1250)  
 ```
 
 ## Explore Snow-cover related indicators
@@ -138,8 +175,8 @@ ggplot(fulldf, aes(x=tau_scod, y=tau_scmd)) +
 ```
   
 ```{r fig.cap='Figure 3', echo=FALSE}  
-# Exploratory for pixels >1900
-ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) + 
+# Exploratory for pixels >1250
+ggplot(fulldf1250, aes(x=tau_scod, y=tau_scmd)) + 
   geom_point(alpha=0.5) + 
   xlim(-1,1) + ylim(-1,1) + 
   geom_vline(xintercept=0) +
@@ -155,54 +192,65 @@ ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) +
 ```
 
 ```{r, echo=FALSE}
-aux <- round(((fulldf1900 %>% filter(tau_scod > 0) %>% filter(tau_scmd < 0) %>% count()) / fulldf1900 %>% count())*100, 2)
+df <- fulldf1250
 ```
 
-A total of `r aux` % of pixels (of all above 1900) showed a positive trend in snow cover onset date (late onset) and a negative trend in snow cover melting date (earlier melting date). It means that of `r aux` % of the pixels above 1900 m, have suffered a trend to rectraction of the snow cover period in the last years (Figure 3). 
+```{r}
+aux <- round(((df %>% filter(tau_scod > 0) %>% filter(tau_scmd < 0) %>% count()) / df %>% count())*100, 2)
+```
+
+A total of `r aux` % of pixels (of all above 1250) showed a positive trend in snow cover onset date (late onset) and a negative trend in snow cover melting date (earlier melting date). It means that of `r aux` % of the pixels above 1250 m, have suffered a trend to rectraction of the snow cover period in the last years (Figure 3). 
+
+:red_circle: `TODO$:` Hacer mapa de esto 
 
 We also can explore this relationship by elevation (Figure 4), and we obtanied that the *retraction pattern* is more evident at low elevations 
 
-```{r, fig.cap='Figure 4', fig.height=10, fig.width=8, echo=FALSE}
+```{r, fig.height=10, fig.width=8, echo=FALSE}
+
+dfaux <- df %>% 
+  filter(tau_scod > 0.25) %>%  
+  filter(tau_scmd < -0.25)
+
 # Exploratory by elevatin groups 
-ggplot(fulldf1900, aes(x=tau_scod, y=tau_scmd)) + 
-  geom_point(alpha=0.5) + 
+ggplot(df, aes(x=tau_scod, y=tau_scmd)) + 
+  geom_point(col='gray') + 
   xlim(-1,1) + ylim(-1,1) + 
   geom_vline(xintercept=0) +
   geom_hline(yintercept=0) + 
   facet_wrap(~dem50mean_group) + 
   theme_bw() + 
-  labs(title= 'scod vs. scmd (>1900 masl)',
+  labs(title= 'scod vs. scmd (>1250 masl)',
        x= 'trend (tau) of Snow cover onset date',
        y='trend (tau) of Snow cover melting date') +
-  theme(strip.background = element_rect(fill = "white"))
+  theme(strip.background = element_rect(fill = "white")) +
+  geom_point(data=dfaux, aes(x=tau_scod, y=tau_scmd), col='blue', alpha=.5) 
 ```
 
 ```{r, results='asis'}
 # Compute percentage of pixels (tau scod > 0, tau_scmd < 0)   
-aux <- fulldf1900 %>% group_by(dem50mean_group) %>% 
+aux <- df %>% group_by(dem50mean_group) %>% 
   summarise(total=n())
 
-aux1 <- fulldf1900 %>% group_by(dem50mean_group) %>% 
+aux1 <- df %>% group_by(dem50mean_group) %>% 
   filter(tau_scod > 0) %>% 
   filter(tau_scmd < 0) %>% 
   summarise(n=n()) %>%
   inner_join(aux, by="dem50mean_group") %>%
-  mutate(freq = round((n / total)*100),2)
-pander(aux1)
+  mutate(freq = round((n / total)*100,2))
+pander(aux1, caption = '% pixels scod tau_scod > 0 & tau_scmd < 0')
+
+aux2 <- df %>% group_by(dem50mean_group) %>% 
+  filter(tau_scod > 0.25) %>% 
+  filter(tau_scmd < -0.25) %>% 
+  summarise(n=n()) %>%
+  inner_join(aux, by="dem50mean_group") %>%
+  mutate(freq = round((n / total)*100,2))
+pander(aux2, caption = '% pixels scod tau_scod > 0.25 & tau_scmd < -0.25')
 ```
 
 
 
 # Table of relationships 
-
-|  |  |  |  |  | pre |  |  |  | pn |  |  |  | temp |  |  |  |
-|------|-----|----------|--------------|------|-----|----|----|----|----|----|----|----|------|----|----|----|
-|  | pre | pre_snow | pre_snow_per | temp | au | wi | sp | su | au | wi | sp | su | au | wi | sp | su |
-| scd | x | x | x | x |  |  |  |  |  |  |  |  |  |  |  |  |
-| scod |  |  |  |  | x | x |  |  | x | x |  |  | x | x |  |  |
-| scmd |  |  |  |  |  | x | x |  |  | x | x |  |  | x | x |  |
-
-
 ```{r}
 
 indicadores <- c("pre", "pre_snow", "pre_snow_per", "temp", 
@@ -211,9 +259,13 @@ indicadores <- c("pre", "pre_snow", "pre_snow_per", "temp",
                  "tempau", "tempsp", "tempsu", "tempwi")
 
 d <- data.frame(variable = indicadores, 
-                scd = 0,
-                scod = 0, 
-                scmd = 0)
+                scd = c(1,1,1,1, rep(0,12)),
+                scod = c(rep(0,4),1,1,0,0,1,1,0,0,1,1,0,0),
+                scmd = c(rep(0,5),1,1,0,0,1,1,0,0,1,1,0))
+pander(d, caption = 'Potential relationships')
+```
+
+
 
 
 
@@ -229,7 +281,7 @@ Analysis of the spatio-temporal pattern of this variables
 
 ### Elevation pattern
 
-```{r}
+```{r, eval= FALSE}
 # Compute mean, sd, se of tau variables by elevation interval and plot them 
 taus <- fulldf1900 %>% 
   select(contains("tau"), dem50mean_group) 
@@ -328,8 +380,9 @@ ggplot(sen, aes(x=dem50mean_group, y=mean, group=variable)) +
 
 
 ## Explore Slopes 
+```
 
-```{r, fig.height=10, fig.width=8}
+```{r, eval=FALSE, fig.height=10, fig.width=8}
 # Exploratory for pixels >1900
 ggplot(fulldf1900, aes(x=sen_slope_scod, y=sen_slope_scmd)) +
   geom_point(alpha=0.5) + 
