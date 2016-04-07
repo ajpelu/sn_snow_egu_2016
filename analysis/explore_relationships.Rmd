@@ -186,7 +186,7 @@ ggplot(fulldf1250, aes(x=tau_scod, y=tau_scmd)) +
   annotate('text', label='retraction', x=.9, y=-.9)+
   annotate('text', label='expansion', x=-.9, y=.9) + 
   theme_bw() + 
-  labs(title= 'scod vs. scmd (>1900 masl)',
+  labs(title= 'scod vs. scmd (>1250 masl)',
     x= 'trend (tau) of Snow cover onset date',
     y='trend (tau) of Snow cover melting date') 
 ```
@@ -264,6 +264,49 @@ d <- data.frame(variable = indicadores,
                 scmd = c(rep(0,5),1,1,0,0,1,1,0,0,1,1,0))
 pander(d, caption = 'Potential relationships')
 ```
+
+
+# Snow cover duration relationships 
+
+```{r}
+my_titulo<- "scd vs. pre (>1250)"
+my_xlab <- "trend (tau) of Snow cover duration"
+my_ylab <- "trend (tau) of Precipitation"
+
+
+# Exploratory by elevatin groups 
+ggplot(df, aes(x=tau_scd, y=tau_pre)) + 
+  geom_point(col='gray') + 
+  xlim(-1,1) + ylim(-1,1) + 
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) + 
+  # facet_wrap(~dem50mean_group) + 
+  theme_bw() + 
+  labs(title= my_titulo, x = my_xlab, y= my_ylab) +
+  theme(strip.background = element_rect(fill = "white")) 
+
+
+mytitle <- 'scd vs. pre (>1250) (Sen slopes)' 
+myxlab <- 'trend (sen) of Snow cover duration'
+myylab <- 'trend (sen) of Precipitation'
+
+ggplot(df, aes(x=sen_slope_scd, y=sen_slope_pre)) + 
+  geom_point(col='gray') +
+  theme_bw() + 
+  labs(title= mytitle, x = myxlab, y= myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  stat_smooth(method = lm)
+
+
+
+ggplot(df, aes(x=sen_slope_scd, y=sen_slope_pre)) + 
+  geom_point(col='gray') + 
+  facet_wrap(~dem50mean_group) + 
+  theme_bw() + 
+  labs(title= mytitle, x = myxlab, y= myylab) +
+  theme(strip.background = element_rect(fill = "white")) + 
+  stat_smooth(method = lm)
+
 
 
 
