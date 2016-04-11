@@ -100,6 +100,325 @@ fulldf1250 <- fulldf %>%
   filter(dem50mean > 1250)  
 ```
 
+Explor general pattern of snow-cover
+====================================
+
+``` r
+exp_scd <- exploreMKTS(scd, alpha=0.05)
+exp_scod <- exploreMKTS(scod, alpha=0.05)
+exp_scmd <- exploreMKTS(scmd, alpha=0.05)
+exp_scmc <- exploreMKTS(scmc, alpha=0.05)
+
+# Create table with all resuls 
+# tau_pos
+tau_pos <- rbind(
+cbind(exp_scd$summary[1,c(2,3)],variable='scd'),
+cbind(exp_scod$summary[1,c(2,3)],variable='scod'),
+cbind(exp_scmd$summary[1,c(2,3)],variable='scmd'),
+cbind(exp_scmc$summary[1,c(2,3)],variable='scmc'))
+names(tau_pos) <- c('tau_pos_n','tau_pos_%','variable')
+
+# tau_pos_sig
+tau_pos_sig <- rbind(
+  cbind(exp_scd$summary[2,c(2,3)],variable='scd'),
+  cbind(exp_scod$summary[2,c(2,3)],variable='scod'),
+  cbind(exp_scmd$summary[2,c(2,3)],variable='scmd'),
+  cbind(exp_scmc$summary[2,c(2,3)],variable='scmc'))
+names(tau_pos_sig) <- c('tau_pos_sig_n','tau_pos_sig_%','variable')
+
+# tau_neg
+tau_neg <- rbind(
+  cbind(exp_scd$summary[3,c(2,3)],variable='scd'),
+  cbind(exp_scod$summary[3,c(2,3)],variable='scod'),
+  cbind(exp_scmd$summary[3,c(2,3)],variable='scmd'),
+  cbind(exp_scmc$summary[3,c(2,3)],variable='scmc'))
+names(tau_neg) <- c('tau_neg_n','tau_neg_%','variable')
+
+# tau_pos_sig
+tau_neg_sig <- rbind(
+  cbind(exp_scd$summary[4,c(2,3)],variable='scd'),
+  cbind(exp_scod$summary[4,c(2,3)],variable='scod'),
+  cbind(exp_scmd$summary[4,c(2,3)],variable='scmd'),
+  cbind(exp_scmc$summary[4,c(2,3)],variable='scmc'))
+names(tau_neg_sig) <- c('tau_neg_sig_n','tau_neg_sig_%','variable')
+
+# Table with all the results 
+summ_explore <- join(join(tau_pos, tau_pos_sig, by='variable'),
+     join(tau_neg, tau_neg_sig, by='variable'), by='variable')
+# Reorder variables
+summ_explore <- summ_explore[,c(3,1:2,4:9)]
+summ_explore
+```
+
+    ##   variable tau_pos_n tau_pos_% tau_pos_sig_n tau_pos_sig_% tau_neg_n
+    ## 1      scd      1455      18.2             6          0.41      6319
+    ## 2     scod      5438     68.03           332          6.11      2380
+    ## 3     scmd      1326     16.59             5          0.38      6453
+    ## 4     scmc      1055      13.2             0             0      6750
+    ##   tau_neg_% tau_neg_sig_n tau_neg_sig_%
+    ## 1     79.05           372          5.89
+    ## 2     29.77            59          2.48
+    ## 3     80.72           717         11.11
+    ## 4     84.44           677         10.03
+
+``` r
+pander(summ_explore, caption= 'Summary trends all Sierra Nevada')
+```
+
+<table>
+<caption>Summary trends all Sierra Nevada (continued below)</caption>
+<colgroup>
+<col width="14%" />
+<col width="15%" />
+<col width="15%" />
+<col width="20%" />
+<col width="20%" />
+<col width="14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">variable</th>
+<th align="center">tau_pos_n</th>
+<th align="center">tau_pos_%</th>
+<th align="center">tau_pos_sig_n</th>
+<th align="center">tau_pos_sig_%</th>
+<th align="center">tau_neg_n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">scd</td>
+<td align="center">1455</td>
+<td align="center">18.2</td>
+<td align="center">6</td>
+<td align="center">0.41</td>
+<td align="center">6319</td>
+</tr>
+<tr class="even">
+<td align="center">scod</td>
+<td align="center">5438</td>
+<td align="center">68.03</td>
+<td align="center">332</td>
+<td align="center">6.11</td>
+<td align="center">2380</td>
+</tr>
+<tr class="odd">
+<td align="center">scmd</td>
+<td align="center">1326</td>
+<td align="center">16.59</td>
+<td align="center">5</td>
+<td align="center">0.38</td>
+<td align="center">6453</td>
+</tr>
+<tr class="even">
+<td align="center">scmc</td>
+<td align="center">1055</td>
+<td align="center">13.2</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">6750</td>
+</tr>
+</tbody>
+</table>
+
+<table style="width:61%;">
+<colgroup>
+<col width="16%" />
+<col width="22%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">tau_neg_%</th>
+<th align="center">tau_neg_sig_n</th>
+<th align="center">tau_neg_sig_%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">79.05</td>
+<td align="center">372</td>
+<td align="center">5.89</td>
+</tr>
+<tr class="even">
+<td align="center">29.77</td>
+<td align="center">59</td>
+<td align="center">2.48</td>
+</tr>
+<tr class="odd">
+<td align="center">80.72</td>
+<td align="center">717</td>
+<td align="center">11.11</td>
+</tr>
+<tr class="even">
+<td align="center">84.44</td>
+<td align="center">677</td>
+<td align="center">10.03</td>
+</tr>
+</tbody>
+</table>
+
+``` r
+# Get nie_malla_modi_id + elev
+topo_elev <- topo %>% 
+  select(nie_malla_modi_id, dem50mean)
+
+scd1250 <- scd %>% 
+  inner_join(topo_elev, by = 'nie_malla_modi_id') %>% 
+  filter(dem50mean > 1250)
+
+scod1250 <- scod %>% 
+  inner_join(topo_elev, by = 'nie_malla_modi_id') %>% 
+  filter(dem50mean > 1250)
+
+scmd1250 <- scmd %>% 
+  inner_join(topo_elev, by = 'nie_malla_modi_id') %>% 
+  filter(dem50mean > 1250)
+
+scmc1250 <- scmc %>% 
+  inner_join(topo_elev, by = 'nie_malla_modi_id') %>% 
+  filter(dem50mean > 1250)
+
+# summary trends 
+exp_scd1250 <- exploreMKTS(scd1250, alpha=0.05)
+exp_scod1250 <- exploreMKTS(scod1250, alpha=0.05)
+exp_scmd1250 <- exploreMKTS(scmd1250, alpha=0.05)
+exp_scmc1250 <- exploreMKTS(scmc1250, alpha=0.05)
+
+# Create table with all resuls 
+# tau_pos
+tau_pos1250 <- rbind(
+cbind(exp_scd1250$summary[1,c(2,3)],variable='scd'),
+cbind(exp_scod1250$summary[1,c(2,3)],variable='scod'),
+cbind(exp_scmd1250$summary[1,c(2,3)],variable='scmd'),
+cbind(exp_scmc1250$summary[1,c(2,3)],variable='scmc'))
+names(tau_pos1250) <- c('tau_pos_n','tau_pos_%','variable')
+
+# tau_pos_sig
+tau_pos_sig1250 <- rbind(
+  cbind(exp_scd1250$summary[2,c(2,3)],variable='scd'),
+  cbind(exp_scod1250$summary[2,c(2,3)],variable='scod'),
+  cbind(exp_scmd1250$summary[2,c(2,3)],variable='scmd'),
+  cbind(exp_scmc1250$summary[2,c(2,3)],variable='scmc'))
+names(tau_pos_sig1250) <- c('tau_pos_sig_n','tau_pos_sig_%','variable')
+
+# tau_neg
+tau_neg1250 <- rbind(
+  cbind(exp_scd1250$summary[3,c(2,3)],variable='scd'),
+  cbind(exp_scod1250$summary[3,c(2,3)],variable='scod'),
+  cbind(exp_scmd1250$summary[3,c(2,3)],variable='scmd'),
+  cbind(exp_scmc1250$summary[3,c(2,3)],variable='scmc'))
+names(tau_neg1250) <- c('tau_neg_n','tau_neg_%','variable')
+
+# tau_pos_sig
+tau_neg_sig1250 <- rbind(
+  cbind(exp_scd1250$summary[4,c(2,3)],variable='scd'),
+  cbind(exp_scod1250$summary[4,c(2,3)],variable='scod'),
+  cbind(exp_scmd1250$summary[4,c(2,3)],variable='scmd'),
+  cbind(exp_scmc1250$summary[4,c(2,3)],variable='scmc'))
+names(tau_neg_sig1250) <- c('tau_neg_sig_n','tau_neg_sig_%','variable')
+
+# Table with all the results 
+summ_explore1250 <- join(join(tau_pos1250, tau_pos_sig1250, by='variable'),
+     join(tau_neg1250, tau_neg_sig1250, by='variable'), by='variable')
+# Reorder variables
+summ_explore1250 <- summ_explore1250[,c(3,1:2,4:9)]
+pander(summ_explore1250, caption= 'Summary trends all Sierra Nevada')
+```
+
+<table>
+<caption>Summary trends all Sierra Nevada (continued below)</caption>
+<colgroup>
+<col width="14%" />
+<col width="15%" />
+<col width="15%" />
+<col width="20%" />
+<col width="20%" />
+<col width="14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">variable</th>
+<th align="center">tau_pos_n</th>
+<th align="center">tau_pos_%</th>
+<th align="center">tau_pos_sig_n</th>
+<th align="center">tau_pos_sig_%</th>
+<th align="center">tau_neg_n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">scd</td>
+<td align="center">970</td>
+<td align="center">15.18</td>
+<td align="center">3</td>
+<td align="center">0.31</td>
+<td align="center">5297</td>
+</tr>
+<tr class="even">
+<td align="center">scod</td>
+<td align="center">4913</td>
+<td align="center">76.89</td>
+<td align="center">325</td>
+<td align="center">6.62</td>
+<td align="center">1400</td>
+</tr>
+<tr class="odd">
+<td align="center">scmd</td>
+<td align="center">862</td>
+<td align="center">13.49</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">5424</td>
+</tr>
+<tr class="even">
+<td align="center">scmc</td>
+<td align="center">635</td>
+<td align="center">9.94</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">5655</td>
+</tr>
+</tbody>
+</table>
+
+<table style="width:61%;">
+<colgroup>
+<col width="16%" />
+<col width="22%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">tau_neg_%</th>
+<th align="center">tau_neg_sig_n</th>
+<th align="center">tau_neg_sig_%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">82.9</td>
+<td align="center">337</td>
+<td align="center">6.36</td>
+</tr>
+<tr class="even">
+<td align="center">21.91</td>
+<td align="center">8</td>
+<td align="center">0.57</td>
+</tr>
+<tr class="odd">
+<td align="center">84.88</td>
+<td align="center">658</td>
+<td align="center">12.13</td>
+</tr>
+<tr class="even">
+<td align="center">88.5</td>
+<td align="center">632</td>
+<td align="center">11.18</td>
+</tr>
+</tbody>
+</table>
+
 Explore Snow-Cover trends by basin
 ==================================
 
@@ -209,7 +528,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-4-1.png)
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
 ``` r
 # Sen scd 
@@ -280,7 +599,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-5-1.png)
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 Snow cover onset date
 =====================
@@ -354,7 +673,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
 ``` r
 # Sen scod 
@@ -425,7 +744,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-7-1.png)
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 Snow cover melting date
 =======================
@@ -499,7 +818,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-10-1.png)
 
 ``` r
 # Sen scmd 
@@ -570,7 +889,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-9-1.png)
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
 Snow cover melting cycles
 =========================
@@ -644,7 +963,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-10-1.png)
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-12-1.png)
 
 ``` r
 # Sen scmc 
@@ -715,7 +1034,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-11-1.png)
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
 ``` r
 # Create a df with letter and variables
@@ -738,7 +1057,7 @@ ggplot(df_basin_tau, aes(x=basin_name, y=mean)) +
   xlab('') + ylab('Taus')
 ```
 
-![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-12-1.png)
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-14-1.png)
 
 ``` r
 # Create a df with letter and variables
@@ -758,7 +1077,7 @@ ggplot(df_basin_sen, aes(x=basin_name, y=mean)) +
   xlab('') + ylab('Sen Slopes')
 ```
 
-![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-13-1.png)
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-15-1.png)
 
 #### Tau Snow cover duration
 
@@ -1559,7 +1878,7 @@ d <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey'
 grid.arrange(a, d, b, c, nrow=2)
 ```
 
-![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-23-1.png)
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-25-1.png)
 
 Sen
 ---
@@ -1801,4 +2120,4 @@ d <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey'
 grid.arrange(a, d, b, c, nrow=2)
 ```
 
-![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-24-1.png)
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-26-1.png)

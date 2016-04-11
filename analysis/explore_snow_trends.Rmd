@@ -36,6 +36,7 @@ di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016',
 library("raster")
 library("rgdal")
 library("sp")
+library("plyr")
 library("dplyr")
 library("ggplot2")
 library("reshape2")
@@ -45,6 +46,7 @@ library("broom")
 library("mgcv")
 library("grid") # multiple plots
 library("gridExtra") # multiple plots
+source('https://raw.githubusercontent.com/ajpelu/ajpeluR/master/R/exploreMKTS.R')
 ```
 
 ```{r data}
@@ -130,6 +132,123 @@ fulldf <- topo %>%
 # Create subset of pixels above 1250 
 fulldf1250 <- fulldf %>% 
   filter(dem50mean > 1250)  
+```
+
+# Explor general pattern of snow-cover 
+```{r}
+exp_scd <- exploreMKTS(scd, alpha=0.05)
+exp_scod <- exploreMKTS(scod, alpha=0.05)
+exp_scmd <- exploreMKTS(scmd, alpha=0.05)
+exp_scmc <- exploreMKTS(scmc, alpha=0.05)
+
+# Create table with all resuls 
+# tau_pos
+tau_pos <- rbind(
+cbind(exp_scd$summary[1,c(2,3)],variable='scd'),
+cbind(exp_scod$summary[1,c(2,3)],variable='scod'),
+cbind(exp_scmd$summary[1,c(2,3)],variable='scmd'),
+cbind(exp_scmc$summary[1,c(2,3)],variable='scmc'))
+names(tau_pos) <- c('tau_pos_n','tau_pos_%','variable')
+
+# tau_pos_sig
+tau_pos_sig <- rbind(
+  cbind(exp_scd$summary[2,c(2,3)],variable='scd'),
+  cbind(exp_scod$summary[2,c(2,3)],variable='scod'),
+  cbind(exp_scmd$summary[2,c(2,3)],variable='scmd'),
+  cbind(exp_scmc$summary[2,c(2,3)],variable='scmc'))
+names(tau_pos_sig) <- c('tau_pos_sig_n','tau_pos_sig_%','variable')
+
+# tau_neg
+tau_neg <- rbind(
+  cbind(exp_scd$summary[3,c(2,3)],variable='scd'),
+  cbind(exp_scod$summary[3,c(2,3)],variable='scod'),
+  cbind(exp_scmd$summary[3,c(2,3)],variable='scmd'),
+  cbind(exp_scmc$summary[3,c(2,3)],variable='scmc'))
+names(tau_neg) <- c('tau_neg_n','tau_neg_%','variable')
+
+# tau_pos_sig
+tau_neg_sig <- rbind(
+  cbind(exp_scd$summary[4,c(2,3)],variable='scd'),
+  cbind(exp_scod$summary[4,c(2,3)],variable='scod'),
+  cbind(exp_scmd$summary[4,c(2,3)],variable='scmd'),
+  cbind(exp_scmc$summary[4,c(2,3)],variable='scmc'))
+names(tau_neg_sig) <- c('tau_neg_sig_n','tau_neg_sig_%','variable')
+
+# Table with all the results 
+summ_explore <- join(join(tau_pos, tau_pos_sig, by='variable'),
+     join(tau_neg, tau_neg_sig, by='variable'), by='variable')
+# Reorder variables
+summ_explore <- summ_explore[,c(3,1:2,4:9)]
+summ_explore
+pander(summ_explore, caption= 'Summary trends all Sierra Nevada')
+```
+
+```{r}
+# Get nie_malla_modi_id + elev
+topo_elev <- topo %>% 
+  select(nie_malla_modi_id, dem50mean)
+
+scd1250 <- scd %>% 
+  inner_join(topo_elev, by = 'nie_malla_modi_id') %>% 
+  filter(dem50mean > 1250)
+
+scod1250 <- scod %>% 
+  inner_join(topo_elev, by = 'nie_malla_modi_id') %>% 
+  filter(dem50mean > 1250)
+
+scmd1250 <- scmd %>% 
+  inner_join(topo_elev, by = 'nie_malla_modi_id') %>% 
+  filter(dem50mean > 1250)
+
+scmc1250 <- scmc %>% 
+  inner_join(topo_elev, by = 'nie_malla_modi_id') %>% 
+  filter(dem50mean > 1250)
+
+# summary trends 
+exp_scd1250 <- exploreMKTS(scd1250, alpha=0.05)
+exp_scod1250 <- exploreMKTS(scod1250, alpha=0.05)
+exp_scmd1250 <- exploreMKTS(scmd1250, alpha=0.05)
+exp_scmc1250 <- exploreMKTS(scmc1250, alpha=0.05)
+
+# Create table with all resuls 
+# tau_pos
+tau_pos1250 <- rbind(
+cbind(exp_scd1250$summary[1,c(2,3)],variable='scd'),
+cbind(exp_scod1250$summary[1,c(2,3)],variable='scod'),
+cbind(exp_scmd1250$summary[1,c(2,3)],variable='scmd'),
+cbind(exp_scmc1250$summary[1,c(2,3)],variable='scmc'))
+names(tau_pos1250) <- c('tau_pos_n','tau_pos_%','variable')
+
+# tau_pos_sig
+tau_pos_sig1250 <- rbind(
+  cbind(exp_scd1250$summary[2,c(2,3)],variable='scd'),
+  cbind(exp_scod1250$summary[2,c(2,3)],variable='scod'),
+  cbind(exp_scmd1250$summary[2,c(2,3)],variable='scmd'),
+  cbind(exp_scmc1250$summary[2,c(2,3)],variable='scmc'))
+names(tau_pos_sig1250) <- c('tau_pos_sig_n','tau_pos_sig_%','variable')
+
+# tau_neg
+tau_neg1250 <- rbind(
+  cbind(exp_scd1250$summary[3,c(2,3)],variable='scd'),
+  cbind(exp_scod1250$summary[3,c(2,3)],variable='scod'),
+  cbind(exp_scmd1250$summary[3,c(2,3)],variable='scmd'),
+  cbind(exp_scmc1250$summary[3,c(2,3)],variable='scmc'))
+names(tau_neg1250) <- c('tau_neg_n','tau_neg_%','variable')
+
+# tau_pos_sig
+tau_neg_sig1250 <- rbind(
+  cbind(exp_scd1250$summary[4,c(2,3)],variable='scd'),
+  cbind(exp_scod1250$summary[4,c(2,3)],variable='scod'),
+  cbind(exp_scmd1250$summary[4,c(2,3)],variable='scmd'),
+  cbind(exp_scmc1250$summary[4,c(2,3)],variable='scmc'))
+names(tau_neg_sig1250) <- c('tau_neg_sig_n','tau_neg_sig_%','variable')
+
+# Table with all the results 
+summ_explore1250 <- join(join(tau_pos1250, tau_pos_sig1250, by='variable'),
+     join(tau_neg1250, tau_neg_sig1250, by='variable'), by='variable')
+# Reorder variables
+summ_explore1250 <- summ_explore1250[,c(3,1:2,4:9)]
+pander(summ_explore1250, caption= 'Summary trends all Sierra Nevada')
 ```
 
 
