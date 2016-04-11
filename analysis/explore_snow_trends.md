@@ -323,11 +323,11 @@ summ_explore1250 <- join(join(tau_pos1250, tau_pos_sig1250, by='variable'),
      join(tau_neg1250, tau_neg_sig1250, by='variable'), by='variable')
 # Reorder variables
 summ_explore1250 <- summ_explore1250[,c(3,1:2,4:9)]
-pander(summ_explore1250, caption= 'Summary trends all Sierra Nevada')
+pander(summ_explore1250, caption= 'Summary trends (1250) Sierra Nevada')
 ```
 
 <table>
-<caption>Summary trends all Sierra Nevada (continued below)</caption>
+<caption>Summary trends (1250) Sierra Nevada (continued below)</caption>
 <colgroup>
 <col width="14%" />
 <col width="15%" />
