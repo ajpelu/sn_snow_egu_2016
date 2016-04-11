@@ -700,11 +700,75 @@ gs <- ggplot(df, aes_string(x=xvar, y=yvar)) +
   geom_hline(yintercept=0) + 
   theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
   theme(strip.background = element_rect(fill = "white")) + 
-  geom_smooth(method='lm')
+  geom_smooth(method='lm') + 
+  annotate('text', label='early',  x=-.9, y=-.9) + 
 gs
 
 ## by elevation
 gs + facet_wrap(~dem50mean_group)
+
+
+### It's work
+source("https://gist.githubusercontent.com/kdauria/524eade46135f6348140/raw/b4103972a4ba3ddb3141830f57c3e6ac98fa273c/ggplot_smooth_func.R")
+# http://stackoverflow.com/questions/7549694/ggplot2-adding-regression-line-equation-and-r2-on-graph
+
+
+
+mylm <- lm(formula(paste(yvar, '~ ', xvar, sep='')), data=df)
+mylabel_lm <- paste("italic(R)^2",  
+                    format(summary(mylm)$r.squared, digits = 2), 
+                    sep = "~`=`~")
+label_posy <- max(df[yvar])
+label_posx <- max(df[xvar])
+
+gs +  stat_smooth_func(geom="text",method="lm",hjust=0,parse=TRUE)
+
+
+  annotate(geom = "text", 
+              x = 0.1,
+              y = 0.1,
+              label = mylabel_lm, 
+              family = "serif", hjust = 0, parse = TRUE, size = 4)
+
+
+
+
+
+
+
+
+
+
+
+
+
+lm_eqn <- function(df){
+  mylm <- lm(formula(paste(yvar, '~ ', xvar, sep='')), data=df)
+  r2 <- signif(summary(mylm)$adj.r.squared, 5)
+  pv <- signif(summary(mylm)$coef[2,4], 5)
+  eq <- paste0('r2 = ', r2, '; p = ',p)
+  eq
+  }
+
+
+
+lm_eqn = function(df){
+    m = lm(formula, df);
+    eq <- substitute(~~R^2~"="~r2, 
+                     list(r2 = format(summary(m)$r.squared, digits = 3)))
+    as.character(as.expression(eq));                 
+}
+
+
+eqns <- by(df, df$dem50mean_group, lm_eqn)
+df2 <- data.frame(eq = unclass(eqns), roi_size = as.numeric(names(eqns)))
+
+df2 <- data.frame(eq = unclass(eqns), roi_size = as.numeric(names(eqns)))
+
+
+gs + geom_text(x = 2, y = 10, label = lm_eqn, parse = TRUE)                 
+  
+
 ```
 
 
