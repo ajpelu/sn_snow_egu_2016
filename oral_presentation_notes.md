@@ -5,26 +5,23 @@
 * Location: Room: L2 
 * When: Wednesday 20, 11.30
 * Oral sesion [programme](http://meetingorganizer.copernicus.org/EGU2016/orals/21476) 
-
-# Oral guidelines
-http://egu2016.eu/guidelines/presenter_guidelines_oral.html
-
-* Time: 12+3 
-* Aspect: 4:3 ratio
+* Oral [guidelines](http://egu2016.eu/guidelines/presenter_guidelines_oral.html) 
+* Presentation time: 12 + 3 
+* Slides: 4:3 aspect ratio 
 * Upload the presentation 30 min prior to time block of the session. 
  * Time Block: 10.30 - 12.00 
  * Presentation upload: 10.00 - 10.30 
 
+# Slides 
 
+## slide 0. title 
 
-# Title 
-Temporal trend of the snow-related variables in Sierra Nevada in the last years: An analysis combining Earth Observation and hydrological modelling 
+> Temporal trend of the snow-related variables in Sierra Nevada in the last years: An analysis combining Earth Observation and hydrological modelling 
 
-# Slide 1
+## slide 1. 
 Climate change impacts on snow cover specially in Mediterranean mountain 
 
-
-# Slide 2 
+## slide 2. 
 In this work we aim
 * to analyze the the temporal trends of 
  * snow-related variables obtanied from satellite. 
