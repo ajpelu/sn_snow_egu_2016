@@ -13,13 +13,12 @@ library("gridExtra") # multiple plots
 library("ggplot2")
 library("GGally")
 library("pander")
+library("mclust")
 source("http://www.highstat.com/BGS/GAM/RCode/HighstatLibV8.R")
 source(paste0(di,"/R/exportpdf.R")) # function to export raster levelplots maps as pdf
 ```
 
     ## Loading required package: knitr
-
-    ## Warning: package 'knitr' was built under R version 3.2.3
 
 Prepare Data
 ------------
@@ -359,23 +358,29 @@ Snow Cover Onset Dates
 
 -   Analyze the effect of aspect, slope and longtitude on snow cover onset date
 
-<table style="width:92%;">
+<!-- -->
+
+    ## Warning in tidy.anova(drop1(m_scod, test = "Chi")): The following column
+    ## names in ANOVA output were not recognized or transformed: Deviance, AIC,
+    ## scaled.dev., Pr..Chi.
+
+<table style="width:96%;">
 <colgroup>
 <col width="31%" />
 <col width="6%" />
-<col width="11%" />
-<col width="12%" />
-<col width="16%" />
-<col width="12%" />
+<col width="15%" />
+<col width="8%" />
+<col width="19%" />
+<col width="13%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th align="center">term</th>
 <th align="center">df</th>
-<th align="center">sumsq</th>
-<th align="center">meansq</th>
-<th align="center">statistic</th>
-<th align="center">p.value</th>
+<th align="center">Deviance</th>
+<th align="center">AIC</th>
+<th align="center">scaled.dev.</th>
+<th align="center">Pr..Chi.</th>
 </tr>
 </thead>
 <tbody>
@@ -471,6 +476,8 @@ lon 1.109721 1 1.053433 aspect50mean\_deg\_group 1.091876 7 1.006298 slope50mean
 <span style="color:black; ">Figure 13: Snow cover onset dates by aspect</span>
 </figcaption>
 </figure>
+    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
+
 <figure>
 <a name="scod_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-21-1.png">
 <figcaption>
@@ -488,28 +495,32 @@ Snow Cover Melting Dates
 
     ## 
     ## Attaching package: 'pander'
-
+    ## 
     ## The following object is masked from 'package:GGally':
     ## 
     ##     wrap
 
-<table style="width:92%;">
+    ## Warning in tidy.anova(drop1(m_scmd, test = "Chi")): The following column
+    ## names in ANOVA output were not recognized or transformed: Deviance, AIC,
+    ## scaled.dev., Pr..Chi.
+
+<table style="width:96%;">
 <colgroup>
 <col width="31%" />
 <col width="6%" />
-<col width="11%" />
-<col width="12%" />
-<col width="16%" />
-<col width="12%" />
+<col width="15%" />
+<col width="8%" />
+<col width="19%" />
+<col width="13%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th align="center">term</th>
 <th align="center">df</th>
-<th align="center">sumsq</th>
-<th align="center">meansq</th>
-<th align="center">statistic</th>
-<th align="center">p.value</th>
+<th align="center">Deviance</th>
+<th align="center">AIC</th>
+<th align="center">scaled.dev.</th>
+<th align="center">Pr..Chi.</th>
 </tr>
 </thead>
 <tbody>
@@ -638,28 +649,32 @@ Snow Cover Melting Cycles
 
     ## 
     ## Attaching package: 'pander'
-
+    ## 
     ## The following object is masked from 'package:GGally':
     ## 
     ##     wrap
 
-<table style="width:92%;">
+    ## Warning in tidy.anova(drop1(m_scmc, test = "Chi")): The following column
+    ## names in ANOVA output were not recognized or transformed: Deviance, AIC,
+    ## scaled.dev., Pr..Chi.
+
+<table style="width:96%;">
 <colgroup>
 <col width="31%" />
 <col width="6%" />
-<col width="11%" />
-<col width="12%" />
-<col width="16%" />
-<col width="12%" />
+<col width="15%" />
+<col width="8%" />
+<col width="19%" />
+<col width="13%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th align="center">term</th>
 <th align="center">df</th>
-<th align="center">sumsq</th>
-<th align="center">meansq</th>
-<th align="center">statistic</th>
-<th align="center">p.value</th>
+<th align="center">Deviance</th>
+<th align="center">AIC</th>
+<th align="center">scaled.dev.</th>
+<th align="center">Pr..Chi.</th>
 </tr>
 </thead>
 <tbody>
@@ -784,3 +799,118 @@ dem50mean 1.104429 1 1.050918 lon 1.217001 1 1.103178 aspect50mean\_deg\_group 1
 </figcaption>
 </figure>
 :red\_circle: por aqui vas carpinto
+
+Cluster
+=======
+
+``` r
+# Cluster
+## Full 
+### Model based
+clu_full <- Mclust(df_snow_full[,-1])
+clu_full
+```
+
+    ## 'Mclust' model object:
+    ##  best model: ellipsoidal, varying volume, shape, and orientation (VVV) with 5 components
+
+``` r
+summary(clu_full)
+```
+
+    ## ----------------------------------------------------
+    ## Gaussian finite mixture model fitted by EM algorithm 
+    ## ----------------------------------------------------
+    ## 
+    ## Mclust VVV (ellipsoidal, varying volume, shape, and orientation) model with 5 components:
+    ## 
+    ##  log.likelihood    n df       BIC       ICL
+    ##       -92572.23 7994 49 -185584.8 -187528.9
+    ## 
+    ## Clustering table:
+    ##    1    2    3    4    5 
+    ## 1331  809 1665 2448 1741
+
+<figure>
+<a name="full_model_cluster"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-38-1.png">
+<figcaption>
+</figcaption>
+</figure>
+<figure>
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-38-2.png">
+<figcaption>
+<span style="color:black; ">Figure 24: Cluster Full Model</span>
+</figcaption>
+</figure>
+    ## 'Mclust' model object:
+    ##  best model: ellipsoidal, varying volume, shape, and orientation (VVV) with 9 components
+
+    ## ----------------------------------------------------
+    ## Gaussian finite mixture model fitted by EM algorithm 
+    ## ----------------------------------------------------
+    ## 
+    ## Mclust VVV (ellipsoidal, varying volume, shape, and orientation) model with 9 components:
+    ## 
+    ##  log.likelihood    n df     BIC       ICL
+    ##       -75218.09 6390 89 -151216 -155461.2
+    ## 
+    ## Clustering table:
+    ##    1    2    3    4    5    6    7    8    9 
+    ##  506  601  440  946  720  756 1340  281  800
+
+<figure>
+<a name="1250_model_cluster"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-39-1.png">
+<figcaption>
+</figcaption>
+</figure>
+<figure>
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-39-2.png">
+<figcaption>
+<span style="color:black; ">Figure 25: Cluster 1250 Model</span>
+</figcaption>
+</figure>
+``` r
+## Join all data
+df_cluster <- df_snow_full %>% 
+  left_join(aux, by = 'nie_malla_modi_id') 
+
+df_cluster[is.na(df_cluster)]<- 0 
+
+
+# spatial auxiliar
+aux_spatial <- sp::merge(x=centroides_sn, y=df_cluster, by="nie_malla_modi_id")
+
+# raster auxiliar 
+aux_rast <- raster(aux_spatial, resolution=500)
+
+# raster of cluster full 
+clufull_raster <- rasterize(aux_spatial, aux_rast, "clufull")
+names(clufull_raster) <- 'cluster'  
+
+
+# raster of cluster 1250
+clu1250_raster <- rasterize(aux_spatial, aux_rast, "clu1250")
+names(clu1250_raster) <- 'cluster'  
+
+# save 
+writeRaster(clufull_raster, file=paste(di, "/data/derived/r_cluster_full.asc", sep=""), overwrite=TRUE)
+writeRaster(clu1250_raster, file=paste(di, "/data/derived/r_cluster_1250.asc", sep=""), overwrite=TRUE)
+```
+
+<figure>
+<a name="raster_cluster_full"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-41-1.png">
+<figcaption>
+<span style="color:black; ">Figure 26: Map of cluster (full)</span>
+</figcaption>
+</figure>
+    ## quartz_off_screen 
+    ##                 2
+
+<figure>
+<a name="raster_cluster_1250"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-42-1.png">
+<figcaption>
+<span style="color:black; ">Figure 27: Map of cluster (1250)</span>
+</figcaption>
+</figure>
+    ## quartz_off_screen 
+    ##                 2

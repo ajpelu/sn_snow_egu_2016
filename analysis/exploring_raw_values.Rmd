@@ -10,8 +10,8 @@ output:
 ```{r metadata, echo=FALSE}
 # Set working directory 
 
-machine <- 'ajpelu'
-# machine <- 'ajpeluLap'
+# machine <- 'ajpelu'
+machine <- 'ajpeluLap'
 di <- paste('/Users/', machine, '/Dropbox/MS/CONGRESO_EGU2016/sn_snow_egu_2016', sep='')
 ```
 
@@ -30,6 +30,7 @@ library("gridExtra") # multiple plots
 library("ggplot2")
 library("GGally")
 library("pander")
+library("mclust")
 source("http://www.highstat.com/BGS/GAM/RCode/HighstatLibV8.R")
 source(paste0(di,"/R/exportpdf.R")) # function to export raster levelplots maps as pdf
 ```
@@ -897,6 +898,176 @@ ggplot(df, aes(x=aspect, y=mean)) +
         panel.grid.minor=element_blank(),
         strip.background=element_rect(fill='white')) 
 ```
+
+
+
+# Cluster 
+```{r, echo=FALSE}
+# Prepare data 
+df_scod <- scod %>% 
+  select(nie_malla_modi_id, mean) %>% 
+  mutate(scod = mean) %>% 
+  select(-mean) 
+
+df_scmd <- scmd %>% 
+  select(nie_malla_modi_id, mean) %>% 
+  mutate(scmd = mean) %>% 
+  select(-mean) 
+
+df <- scd %>% 
+  select(nie_malla_modi_id, mean, dem50mean, basin_code, basin_name) %>% 
+  mutate(scd = mean) %>% 
+  select(-mean) %>%
+  inner_join(df_scod, by='nie_malla_modi_id') %>%
+  inner_join(df_scmd, by='nie_malla_modi_id')
+
+rm(df_scmd, df_scod)
+
+df_snow <- df %>% select(nie_malla_modi_id, dem50mean, scd, scod, scmd)
+
+# All pixels
+df_snow_full <- df_snow %>% select(-dem50mean)
+
+# Only 1250 pixels 
+df_snow_1250 <- df_snow %>% 
+  dplyr::filter(dem50mean > 1250) %>% 
+  dplyr::select(-dem50mean)
+```
+
+
+```{r}
+# Cluster
+## Full 
+### Model based
+clu_full <- Mclust(df_snow_full[,-1])
+clu_full
+summary(clu_full)
+```
+
+```{r, echo=FALSE, fig.cap=fig$cap("full_model_cluster", "Cluster Full Model"), fig.height=8 , fig.width=11}
+
+### Plot 
+#### BIC selection (n of clusters)
+plot(clu_full, what= "BIC")
+
+#### Classification (n of clusters)
+plot(clu_full, what= "classification")
+
+### Uncertainty
+# plot(clu_full, what= "uncertainty")
+
+# Save cluster into dataframe 
+df_snow_full$clufull <- clu_full$classification
+```
+
+
+```{r, echo=FALSE, fig.cap=fig$cap("1250_model_cluster", "Cluster 1250 Model"), fig.height=8 , fig.width=11}
+## 1250 
+### Model based
+clu_1250 <- Mclust(df_snow_1250[,-1])
+
+clu_1250
+summary(clu_1250)
+
+### Plot 
+#### BIC selection (n of clusters)
+plot(clu_1250, what= "BIC")
+
+#### Classification (n of clusters)
+plot(clu_1250, what= "classification")
+
+### Uncertainty
+# plot(clu_1250, what= "uncertainty")
+
+# Save cluster into dataframe 
+df_snow_1250$clu1250 <- clu_1250$classification
+aux <- df_snow_1250 %>% 
+  select(nie_malla_modi_id, clu1250) 
+```
+
+
+```{r}
+## Join all data
+df_cluster <- df_snow_full %>% 
+  left_join(aux, by = 'nie_malla_modi_id') 
+
+df_cluster[is.na(df_cluster)]<- 0 
+
+
+# spatial auxiliar
+aux_spatial <- sp::merge(x=centroides_sn, y=df_cluster, by="nie_malla_modi_id")
+
+# raster auxiliar 
+aux_rast <- raster(aux_spatial, resolution=500)
+
+# raster of cluster full 
+clufull_raster <- rasterize(aux_spatial, aux_rast, "clufull")
+names(clufull_raster) <- 'cluster'  
+
+
+# raster of cluster 1250
+clu1250_raster <- rasterize(aux_spatial, aux_rast, "clu1250")
+names(clu1250_raster) <- 'cluster'  
+
+# save 
+writeRaster(clufull_raster, file=paste(di, "/data/derived/r_cluster_full.asc", sep=""), overwrite=TRUE)
+writeRaster(clu1250_raster, file=paste(di, "/data/derived/r_cluster_1250.asc", sep=""), overwrite=TRUE)
+```
+
+
+```{r, echo=FALSE, fig.cap=fig$cap("raster_cluster_full", "Map of cluster (full)"), fig.height=8 , fig.width=11}
+
+## Plot full 
+# http://stackoverflow.com/questions/19136330/legend-of-a-raster-map-with-categorical-data
+clufull_raster <- as.factor(clufull_raster)
+
+rat <- levels(clufull_raster)[[1]]
+rat[['cluster']] <- c('clu1','clu2', 'clu3', 'clu4', 'clu5')
+levels(clufull_raster) <- rat 
+
+
+mypal <- c('#7fc97f', '#beaed4', '#fdc086', '#ffff99', '#386cb0')
+
+lp <- levelplot(clufull_raster, 
+          margin=FALSE,
+          col.regions=mypal,
+          main="Cluster")
+
+print(lp)
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cluster_1250.pdf'), lp) 
+```
+
+
+```{r, echo=FALSE, fig.cap=fig$cap("raster_cluster_1250", "Map of cluster (1250)"), fig.height=8 , fig.width=11}
+
+
+  
+## Plot 1250  
+clu1250_raster <- as.factor(clu1250_raster)
+
+rat <- levels(clu1250_raster)[[1]]
+rat[['cluster']] <- c('nd','clu1','clu2', 'clu3', 'clu4', 
+                      'clu5','clu6','clu7', 'clu8', 'clu9')
+levels(clu1250_raster) <- rat 
+
+mypal <- c('#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#d3d3d3')
+
+lp <- levelplot(clu1250_raster, 
+          margin=FALSE,
+          col.regions=mypal,
+          main="Cluster")
+
+
+print(lp)
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cluster_1250.pdf'), lp) 
+```
+
+
+
+
+
+
+
 
 
 
