@@ -11,6 +11,9 @@ source(paste0(di,"/R/exportpdf.R")) # function to export raster levelplots maps 
 
     ## Loading required package: knitr
 
+    ## Warning in readLines(rmdCon): incomplete final line found on
+    ## 'plot_basin_snow_trends_raws.Rmd'
+
 Prepare Data
 ------------
 

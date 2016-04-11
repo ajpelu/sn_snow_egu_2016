@@ -213,4 +213,3 @@ ggplot(df_aux_scmd, aes(x=mean, y=basin_name)) +
                      legend.position = "none")
 
 ```
-
