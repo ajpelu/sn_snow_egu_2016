@@ -161,9 +161,9 @@ df_aux_scmd$letter <- c('b', 'c', 'a', 'd', 'ab')
 df <- rbind(df_aux_scod, df_aux_scmd)
 ```
  
-```{r, echo=FALSE, fig.cap=fig$cap("trend_raw_all", "Mean values and trend for Snow cover indicators"), fig.height=8 , fig.width=8}
+```{r, echo=FALSE, fig.cap=fig$cap("trend_raw_all", "Mean values and trend for Snow cover indicators"), fig.height=6, fig.width=8}
 
-ggplot(df, aes(x=mean, y=basin_name)) + 
+g <- ggplot(df, aes(x=mean, y=basin_name)) + 
   geom_point(colour='black', size=4, fill='white', aes(shape=variable)) + 
   xlab('Day (hydrological year)') + ylab('') + 
   geom_segment(aes(x=mean, xend=mean+(10*myxend), y=basin_name, yend=basin_name, group=variable),
@@ -173,12 +173,16 @@ ggplot(df, aes(x=mean, y=basin_name)) +
   theme_bw() + theme(panel.grid.major=element_blank(),
                        panel.grid.minor=element_blank(),
                        strip.background=element_rect(fill='white'))
+print(g)
+
+ggsave(filename=paste0(di, '/images/trend_raw_all.pdf'), plot=g, height = 6, width = 8) 
+dev.off()
 ```
 
 
 
-```{r, echo=FALSE, fig.cap=fig$cap("trend_raw_scod", "Mean values and trend for Snow cover Onset date"), fig.height=8 , fig.width=8}
-ggplot(df_aux_scod, aes(x=mean, y=basin_name)) + 
+```{r, echo=FALSE, fig.cap=fig$cap("trend_raw_scod", "Mean values and trend for Snow cover Onset date"), fig.height=6, fig.width=8}
+g <- ggplot(df_aux_scod, aes(x=mean, y=basin_name)) + 
   ggtitle('Snow-cover onset date') +
   xlab('Day (hydrological year)') + ylab('') +  
   geom_segment(aes(x=mean, xend=mean+(2*myxend), y=basin_name, yend=basin_name, group=variable),
@@ -193,10 +197,19 @@ ggplot(df_aux_scod, aes(x=mean, y=basin_name)) +
                      panel.grid.minor=element_blank(),
                      strip.background=element_rect(fill='white'),
                      legend.position = "none")
+
+print(g)
+
+ggsave(filename=paste0(di, '/images/trend_raw_scod.pdf'), plot=g, height = 6, width = 8) 
+dev.off()
+
 ```
 
-```{r, echo=FALSE, fig.cap=fig$cap("trend_raw_scmd", "Mean values and trend for Snow cover melting  date"), fig.height=8 , fig.width=8}
-ggplot(df_aux_scmd, aes(x=mean, y=basin_name)) + 
+
+
+
+```{r, echo=FALSE, fig.cap=fig$cap("trend_raw_scmd", "Mean values and trend for Snow cover melting  date"), fig.height=6, fig.width=8}
+g <- ggplot(df_aux_scmd, aes(x=mean, y=basin_name)) + 
   ggtitle('Snow-cover melting date') +
   xlab('Day (hydrological year)') + ylab('') +  
   geom_segment(aes(x=mean, xend=mean+(2*myxend), y=basin_name, yend=basin_name, group=variable),
@@ -211,5 +224,9 @@ ggplot(df_aux_scmd, aes(x=mean, y=basin_name)) +
                      panel.grid.minor=element_blank(),
                      strip.background=element_rect(fill='white'),
                      legend.position = "none")
+print(g)
+
+ggsave(filename=paste0(di, '/images/trend_raw_scmd.pdf'), plot=g, height = 6, width = 8) 
+dev.off()
 
 ```

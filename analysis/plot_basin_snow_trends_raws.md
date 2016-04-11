@@ -151,15 +151,23 @@ df <- rbind(df_aux_scod, df_aux_scmd)
 <span style="color:black; ">Figure 1: Mean values and trend for Snow cover indicators</span>
 </figcaption>
 </figure>
+    ## null device 
+    ##           1
+
 <figure>
 <a name="trend_raw_scod"></a><img src="plot_basin_snow_trends_raws_files/figure-markdown_github/unnamed-chunk-7-1.png">
 <figcaption>
 <span style="color:black; ">Figure 2: Mean values and trend for Snow cover Onset date</span>
 </figcaption>
 </figure>
+    ## null device 
+    ##           1
+
 <figure>
 <a name="trend_raw_scmd"></a><img src="plot_basin_snow_trends_raws_files/figure-markdown_github/unnamed-chunk-8-1.png">
 <figcaption>
 <span style="color:black; ">Figure 3: Mean values and trend for Snow cover melting date</span>
 </figcaption>
 </figure>
+    ## null device 
+    ##           1
