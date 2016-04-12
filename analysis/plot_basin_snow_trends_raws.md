@@ -5,14 +5,9 @@ library("rgdal")
 library("sp")
 library("dplyr")
 library("ggplot2")
-library("GGally")
-source(paste0(di,"/R/exportpdf.R")) # function to export raster levelplots maps as pdf
 ```
 
     ## Loading required package: knitr
-
-    ## Warning in readLines(rmdCon): incomplete final line found on
-    ## 'plot_basin_snow_trends_raws.Rmd'
 
 Prepare Data
 ------------
@@ -143,6 +138,14 @@ df_aux_scmd <- stats_basin %>%
 df_aux_scmd$letter <- c('b', 'c', 'a', 'd', 'ab') 
 
 df <- rbind(df_aux_scod, df_aux_scmd)
+
+
+df_aux_scd <- stats_basin %>% 
+  filter(variable == 'sen_slope_scd') %>%
+  mutate(myxend = mean) %>% 
+  select(basin_name, myxend) %>%
+  inner_join(scd_basin, by='basin_name')
+df_aux_scd$letter <- c('b','b','b','b','a')
 ```
 
 <figure>
@@ -167,6 +170,15 @@ df <- rbind(df_aux_scod, df_aux_scmd)
 <a name="trend_raw_scmd"></a><img src="plot_basin_snow_trends_raws_files/figure-markdown_github/unnamed-chunk-8-1.png">
 <figcaption>
 <span style="color:black; ">Figure 3: Mean values and trend for Snow cover melting date</span>
+</figcaption>
+</figure>
+    ## null device 
+    ##           1
+
+<figure>
+<a name="trend_scd"></a><img src="plot_basin_snow_trends_raws_files/figure-markdown_github/unnamed-chunk-9-1.png">
+<figcaption>
+<span style="color:black; ">Figure 4: Mean values and trend for SCD</span>
 </figcaption>
 </figure>
     ## null device 

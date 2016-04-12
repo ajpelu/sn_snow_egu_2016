@@ -22,8 +22,6 @@ library("rgdal")
 library("sp")
 library("dplyr")
 library("ggplot2")
-library("GGally")
-source(paste0(di,"/R/exportpdf.R")) # function to export raster levelplots maps as pdf
 ```
 
 ```{r, code=readLines(paste(di,'/R/autocaption.R', sep='')), echo=FALSE}
@@ -159,6 +157,15 @@ df_aux_scmd <- stats_basin %>%
 df_aux_scmd$letter <- c('b', 'c', 'a', 'd', 'ab') 
 
 df <- rbind(df_aux_scod, df_aux_scmd)
+
+
+df_aux_scd <- stats_basin %>% 
+  filter(variable == 'sen_slope_scd') %>%
+  mutate(myxend = mean) %>% 
+  select(basin_name, myxend) %>%
+  inner_join(scd_basin, by='basin_name')
+df_aux_scd$letter <- c('b','b','b','b','a')
+
 ```
  
 ```{r, echo=FALSE, fig.cap=fig$cap("trend_raw_all", "Mean values and trend for Snow cover indicators"), fig.height=6, fig.width=8}
@@ -170,14 +177,19 @@ g <- ggplot(df, aes(x=mean, y=basin_name)) +
                arrow= arrow(length = unit(0.2, "cm"))) + 
   geom_text(aes(label=letter, x=mean, y=basin_name),
             hjust=0, nudge_y=0.3) + 
+  geom_text(aes(label=round(myxend,2), x=mean+(5*myxend), y=basin_name),
+            nudge_y=0.1) +
   theme_bw() + theme(panel.grid.major=element_blank(),
                        panel.grid.minor=element_blank(),
-                       strip.background=element_rect(fill='white'))
+                       strip.background=element_rect(fill='white')) 
+  
+
 print(g)
 
 ggsave(filename=paste0(di, '/images/trend_raw_all.pdf'), plot=g, height = 6, width = 8) 
 dev.off()
 ```
+
 
 
 
@@ -230,3 +242,31 @@ ggsave(filename=paste0(di, '/images/trend_raw_scmd.pdf'), plot=g, height = 6, wi
 dev.off()
 
 ```
+
+
+
+```{r, echo=FALSE, fig.cap=fig$cap("trend_scd", "Mean values and trend for SCD"), fig.height=6, fig.width=8}
+
+g <- ggplot(df_aux_scd, aes(y=mean, x=basin_name)) + 
+  geom_bar(stat='identity', colour="black", fill="white", width = 0.8) + 
+  coord_flip() + 
+  geom_segment(aes(y=mean, yend=mean+(10*myxend), x=basin_name, xend=basin_name, colour=letter),
+               arrow= arrow(length = unit(0.4, "cm"), type="closed"), size=1.7) + 
+  geom_text(aes(label=letter, y=mean+(5*myxend), x=basin_name),
+            hjust=0, nudge_x=-0.2) + 
+  geom_text(aes(label=round(myxend,2), y=mean+(5*myxend), x=basin_name),
+            nudge_x=0.2) +
+  xlab('') + ylab('Snow cover duration (average, days)') +
+  theme_bw() + theme(panel.grid.major=element_blank(),
+                     panel.grid.minor=element_blank(),
+                     strip.background=element_rect(fill='white'),
+                     legend.position = "none") +
+  scale_color_manual(values=c("#1F497D","#808080"))
+  
+  
+print(g)
+
+ggsave(filename=paste0(di, '/images/trend_raw_scd.pdf'), plot=g, height = 6, width = 8) 
+dev.off()
+```
+
