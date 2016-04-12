@@ -46,8 +46,7 @@ In this work we aim
 * Mann-Kendall test and Theil-Sen slope estimation 
 
 # Slide 5: results 
-* scd average and trend (map of both)
-* scod + scmd --> table with % of total 
+> General trend results for snow-cover indicators (scd, scod, scmd) 
 
 * 80 % of the pixels covering Sierra Nevada showed a negative trend in snow cover duration 
 * We also observed a positive trend in the snow-cover onset date for 68 % of the pixles. It means a delay in the snow-cover onset date. 
