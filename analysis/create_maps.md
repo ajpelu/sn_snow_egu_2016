@@ -24,32 +24,86 @@ library("rasterVis")
     ## Loading required package: RColorBrewer
 
 ``` r
+library("dplyr")
+```
+
+    ## 
+    ## Attaching package: 'dplyr'
+    ## 
+    ## The following objects are masked from 'package:raster':
+    ## 
+    ##     intersect, select, union
+    ## 
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+    ## 
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+``` r
+source(paste0(di,"/R/exportpdf.R")) # function to export raster levelplots maps as pdf
+
 # Tool https://geoscripting-wur.github.io/ 
 ################################################################
 ```
 
-En primer lugar leemos los datos
+Prepare data
+------------
+
+-   Read topographic data and position (spatial) data
+-   Read snow cover trend data
+-   
 
 ``` r
 ################################################################
 # Read data
 
+## Topographic data --- 
+rawtopo <- read.csv(file=paste(di, "/data/topo_nie_malla_modis.csv", sep=""),
+                    header=TRUE,
+                    sep = ",") 
+
+scd <- read.csv(file=paste(di, "/data/derived/scd.csv", sep= ""),
+              header = TRUE,
+              sep = ',')
+
+topo <- rawtopo %>% 
+  filter(id %in% scd$nie_malla_modi_id) %>% 
+  mutate(nie_malla_modi_id = id) %>% 
+  dplyr::select(nie_malla_modi_id, dem50mean) 
+## ---  
+
+## Trends data --- 
 # Define name of indicators (see variables names)
-indicadores <- c("scd", "scod", "scmd", "scmc", "pre", "pre_snow", "pre_snow_per", "temp")
+indicadores <- c("scd", "scod", "scmd", "scmc", 
+                 "pre", "pre_snow", "pre_snow_per", "temp",
+                 "preau", "presp", "presu", "prewi",
+                 "pnau", "pnsp", "pnsu", "pnwi",
+                 "tempau", "tempsp", "tempsu", "tempwi")
 
 # Loop to read files 
 for (j in indicadores){ 
   aux <- read.csv(file=paste(di, "/data/derived/", j, ".csv", sep= ""),
               header = TRUE,
               sep = ',')
+  aux <- aux %>%
+    inner_join(topo, by='nie_malla_modi_id') 
+  
   assign(j, aux)
 }
+## --- 
 
-### Spatial Data
-# Read spatial data
-# centroides
+
+
+## Spatial Data --- 
+# Read spatial data and Get lat/long
 centroides <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
                              layer = "centroides_selected", verbose = FALSE)
+# Select only attributes of interest and rename them
+centroides <- centroides[c("id")]
+names(centroides) <-"nie_malla_modi_id"
 
 # Reproject to utm and m
 centroides <- spTransform(centroides, CRS("+init=epsg:23030"))
@@ -61,18 +115,16 @@ projection(centroides)
     ## [1] "+init=epsg:23030 +proj=utm +zone=30 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs"
 
 ``` r
-# Select only attributes of interest and rename them
-centroides <- centroides[c("id")]
-names(centroides) <-"nie_malla_modi_id"
-
 # Which pixels are in the MKTrends objet
 pix_comunes <- match(scd$nie_malla_modi_id, centroides$nie_malla_modi_id)
 
 # Create spatial objetc with centroid of Sierra Nevada
 centroides_sn <- centroides[pix_comunes,]
+```
 
+### Compute raster maps (all elevation)
 
-
+``` r
 # Loop to create raster map 
 for (i in indicadores) { 
   trend <- get(i)
@@ -105,32 +157,58 @@ for (i in indicadores) {
   writeRaster(sen_raster, file=paste(di, "/data/derived/r_sen_", i, ".asc", sep=""), overwrite=TRUE)
   }
 
+
 # Create stack of raster and save them 
 # Tau stack 
 stack_tau <- stack(r_tau_pre, r_tau_pre_snow, r_tau_pre_snow_per, r_tau_temp, 
-                   r_tau_scd, r_tau_scod, r_tau_scmd, r_tau_scmc)
+                   r_tau_scd, r_tau_scod, r_tau_scmd, r_tau_scmc,
+                   r_tau_preau, r_tau_presp, r_tau_presu, r_tau_prewi,
+                   r_tau_pnau, r_tau_pnsp, r_tau_pnsu, r_tau_pnwi,
+                   r_tau_tempau, r_tau_tempsp, r_tau_tempsu, r_tau_tempwi) 
+                   
 
 # Sen stack
 stack_sen <- stack(r_sen_pre, r_sen_pre_snow, r_sen_pre_snow_per, r_sen_temp, 
-                   r_sen_scd, r_sen_scod, r_sen_scmd, r_sen_scmc)
+                   r_sen_scd, r_sen_scod, r_sen_scmd, r_sen_scmc,
+                   r_sen_preau, r_sen_presp, r_sen_presu, r_sen_prewi,
+                   r_sen_pnau, r_sen_pnsp, r_sen_pnsu, r_sen_pnwi,
+                   r_sen_tempau, r_sen_tempsp, r_sen_tempsu, r_sen_tempwi) 
+
+# Export stacks
+temp <- getwd()
+setwd(paste(di, "/data/derived/", sep=""))
+writeRaster(stack_tau, filename = 'r_tau_stack', overwrite =TRUE) 
+writeRaster(stack_sen, filename = 'r_sen_stack', overwrite =TRUE) 
+setwd(temp)
+```
+
+### Mask the stacks by elevation
+
+``` r
+# Create a raster of elevation mask 
+aux_spatial_elev <- aux_spatial[c("nie_malla_modi_id", "dem50mean")]
+elev_raster <- rasterize(aux_spatial_elev, aux_rast, "dem50mean", fun=mean)
+elev_raster[elev_raster < 1250 ] <- NA
+
+# Mask the stack 
+
+stack_tau_1250 <- mask(stack_tau, elev_raster, updatevalue=NA)
+stack_sen_1250 <- mask(stack_sen, elev_raster, updatevalue=NA)
+
+# Save stacks 
+temp <- getwd()
+setwd(paste(di, "/data/derived/", sep=""))
+writeRaster(stack_tau_1250, filename = 'r_tau_stack_1250', overwrite =TRUE) 
+writeRaster(stack_sen_1250, filename = 'r_sen_stack_1250', overwrite =TRUE) 
+setwd(temp)
 ```
 
 ``` r
-# Map raster
-# See https://github.com/oscarperpinan/spacetime-vis/blob/master/raster.R 
+# Auxiliar layer for Reproject the maps 
+aux_project <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
+                             layer = "centroides_selected", verbose = FALSE)
 
-## Hillshade 
-# Read HillShade Andalusia 
-hs <- raster(paste('/Users/', machine, '/Dropbox/carto_public/sombra/sombra_Andalusia.tif', sep=''))
-projection(hs) <- "+proj=utm +ellps=WGS84"
-
-# Crop hillshade 
-# as.vector(extent(r_sen_pre))
-# create an extent object 
-my_extent <- c(442000, 542000, 4070000, 4130000)
-
-# Crop hillshade 
-hs_sn <- crop(hs, my_extent)
+crs_aux_project <- projection(aux_project)
 
 ## Boundaries SN 
 enp <- rgdal::readOGR(dsn=paste("/Users/", machine, "/Dropbox/carto_public/EENNPP/InfGeografica/InfVectorial/Shapes/ED50_30", sep=""),
@@ -138,147 +216,174 @@ enp <- rgdal::readOGR(dsn=paste("/Users/", machine, "/Dropbox/carto_public/EENNP
 # Subset limits of SN                      
 sn <- subset(enp, NOMBRE == 'SIERRA NEVADA' & FIGURA == 'Espacio Natural')
 
+# Reproject limits
+sn_re <- spTransform(sn, CRS(crs_aux_project))
 
 
-levelplot(r_sen_pre, 
-          par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Sen slope Pre")
+
+# Reproject Raster stack
+stack_tau_1250_re <- projectRaster(stack_tau_1250, crs=crs(aux_project))
+stack_sen_1250_re <- projectRaster(stack_sen_1250, crs=crs(aux_project))
 ```
 
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-1.png)
+Snow cover trends indicators
+----------------------------
 
 ``` r
-levelplot(r_sen_temp, 
-          par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Sen slope Temp")
+lp <- levelplot(stack_tau_1250_re, 
+          layer=c("scd","scod","scmd"), 
+          par.settings=RdBuTheme,
+          pretty=TRUE,
+          #contour=TRUE,  
+          #at=seq(-1,1, by=.1),
+          layout=c(1,3)) + layer(sp.polygons(sn_re))
+
+
+print(lp)
 ```
 
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-2.png)
+![](create_maps_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
 ``` r
-levelplot(r_sen_pre_snow, 
-          par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Sen slope Pre snow")
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_taus_snow.pdf'), lp) 
 ```
 
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-3.png)
+    ## quartz_off_screen 
+    ##                 2
+
+Snow cover duration
+-------------------
 
 ``` r
-levelplot(r_sen_pre_snow_per, 
-          par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Sen slope Pre snow")
+lp <- levelplot(stack_sen_1250_re, 
+          layer="scd", 
+          par.settings=RdBuTheme, 
+          margin=FALSE,
+          contour=TRUE, at=seq(-6,3, by=1),
+          pretty=TRUE) + layer(sp.polygons(sn_re))
+
+
+print(lp)
 ```
 
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-4.png)
+![](create_maps_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
 ``` r
-levelplot(r_sen_scd, 
-          par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Sen slope Scd")
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_sen_scd_latlong_contour.pdf'), lp) 
 ```
 
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-5.png)
+    ## quartz_off_screen 
+    ##                 2
 
 ``` r
-levelplot(r_sen_scod, 
-          par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Sen slope Scod")
+lp <- levelplot(stack_sen_1250_re, 
+          layer="scd", 
+          par.settings=RdBuTheme, 
+          margin=FALSE,
+          pretty=TRUE) + layer(sp.polygons(sn_re))
+
+
+print(lp)
 ```
 
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-6.png)
+![](create_maps_files/figure-markdown_github/unnamed-chunk-6-2.png)
 
 ``` r
-levelplot(r_sen_scmd, 
-          par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Sen slope Scmd")
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_sen_scd_latlong.pdf'), lp) 
 ```
 
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-7.png)
+    ## quartz_off_screen 
+    ##                 2
+
+Annual precipitation and snow precipitation
+-------------------------------------------
 
 ``` r
-levelplot(r_sen_scmc, 
-          par.settings=RdBuTheme, margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Sen slope Scmc")
+lp <- levelplot(stack_tau_1250_re, 
+          layer=c("pre","pre_snow", "pre_snow_per"), 
+          par.settings=RdBuTheme, 
+          margin=FALSE,
+          pretty=TRUE,
+          layout=c(1,3)) + layer(sp.polygons(sn_re))
+
+
+print(lp)
 ```
 
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-8.png)
+![](create_maps_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 ``` r
-levelplot(r_tau_pre, 
-          margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Tau  Pre")
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_tau_precipitations_latlong.pdf'), lp) 
 ```
 
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-9.png)
+    ## quartz_off_screen 
+    ##                 2
+
+Seasonal precipitation
+----------------------
 
 ``` r
-levelplot(r_tau_temp, 
-          margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Tau  Temp")
+lp <- levelplot(stack_tau_1250_re, 
+          layer=c("preau",  "prewi", "presp", "presu"), 
+          par.settings=RdBuTheme, 
+          margin=FALSE,
+          pretty=TRUE,
+          layout=c(2,2)) + layer(sp.polygons(sn_re))
+
+print(lp)
 ```
 
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-10.png)
+![](create_maps_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
 ``` r
-levelplot(r_tau_pre_snow, 
-          margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Tau  Pre snow")
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_tau_pre_season_latlong.pdf'), lp) 
 ```
 
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-11.png)
+    ## quartz_off_screen 
+    ##                 2
+
+Seasonal snow precipitation
+---------------------------
 
 ``` r
-levelplot(r_tau_pre_snow_per, 
-          margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Tau  Pre snow")
+lp <- levelplot(stack_tau_1250_re, 
+          layer=c("pnau",  "pnwi", "pnsp", "pnsu"), 
+          par.settings=RdBuTheme, 
+          margin=FALSE,
+          pretty=TRUE,
+          layout=c(2,2)) + layer(sp.polygons(sn_re))
+
+print(lp)
 ```
 
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-12.png)
+![](create_maps_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 ``` r
-levelplot(r_tau_scd, 
-          margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Tau  Scd")
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_tau_pn_season_latlong.pdf'), lp) 
 ```
 
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-13.png)
+    ## quartz_off_screen 
+    ##                 2
+
+Seasonal temperature
+--------------------
 
 ``` r
-levelplot(r_tau_scod, 
-          margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Tau  Scod")
+lp <- levelplot(stack_tau_1250_re, 
+          layer=c("tempau",  "tempwi", "tempsp", "tempsu"), 
+          par.settings=RdBuTheme, 
+          margin=FALSE,
+          pretty=TRUE,
+          layout=c(2,2)) + layer(sp.polygons(sn_re))
+
+print(lp)
 ```
 
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-14.png)
+![](create_maps_files/figure-markdown_github/unnamed-chunk-10-1.png)
 
 ``` r
-levelplot(r_tau_scmd, 
-          margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Tau  Scmd")
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_tau_temp_season_latlong.pdf'), lp) 
 ```
 
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-15.png)
-
-``` r
-levelplot(r_tau_scmc, 
-          margin=FALSE, colorkey=TRUE, 
-          contour=TRUE, 
-          main="Tau  Scmc")
-```
-
-![](create_maps_files/figure-markdown_github/unnamed-chunk-2-16.png)
+    ## quartz_off_screen 
+    ##                 2

@@ -1,0 +1,25 @@
+[general]
+creator=R package 'raster'
+created=2016-04-12 12:27:56
+[georeference]
+nrows=74
+ncols=186
+xmin=443300.206538099
+ymin=4085841.77455235
+xmax=536300.206538099
+ymax=4122841.77455235
+projection=+init=epsg:23030 +proj=utm +zone=30 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs
+[data]
+datatype=FLT8S
+byteorder=little
+nbands=20
+bandorder=BIL
+minvalue=-8.104:-7.981:-0.695:-0.054:-6:-14.4:-16.5:-0.4:-6.592:-6.83:-0.8:-1.248:-4.967:-3.905:0:-0.017:-0.047:-0.032:-0.19:-0.156
+maxvalue=13.573:18.591:2.063:0.194666666666667:4:9.75:10.417:0.167:5.868:2.095:3.977:17.18:9.813:1.365:2.304:17.156:0.266333333333333:0.254:0.0803333333333333:0.113333333333333
+nodatavalue=-1.7e+308
+[legend]
+legendtype=
+values=
+color=
+[description]
+layername=pre:pre_snow:pre_snow_per:temp:scd:scod:scmd:scmc:preau:presp:presu:prewi:pnau:pnsp:pnsu:pnwi:tempau:tempsp:tempsu:tempwi
