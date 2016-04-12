@@ -134,7 +134,7 @@ fulldf1250 <- fulldf %>%
   filter(dem50mean > 1250)  
 ```
 
-# Explor general pattern of snow-cover 
+# Explore general pattern of snow-cover 
 ```{r}
 exp_scd <- exploreMKTS(scd, alpha=0.05)
 exp_scod <- exploreMKTS(scod, alpha=0.05)
@@ -291,6 +291,9 @@ for (i in misvariables){
   # assign(paste0(prefijo,i), aux)
    
 }
+
+# Export stats_basin dataframe 
+write.csv(stats_basin, file=paste(di, '/data/stats_basin.csv', sep=''), row.names = FALSE)
 ```
 
 

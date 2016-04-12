@@ -114,6 +114,8 @@ for (i in indicadores) {
 ```
 
 
+
+
 ```{r echo=FALSE}
 # Set theme ggplot options
 mythemeggplot <- theme_bw() + theme(panel.grid.major=element_blank(),
