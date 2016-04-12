@@ -236,6 +236,7 @@ lp <- levelplot(stack_tau_1250_re,
           pretty=TRUE,
           #contour=TRUE,  
           #at=seq(-1,1, by=.1),
+          main= 'Taus of Snow-cover indicators', 
           layout=c(1,3)) + layer(sp.polygons(sn_re))
 
 
@@ -260,6 +261,7 @@ lp <- levelplot(stack_sen_1250_re,
           par.settings=RdBuTheme, 
           margin=FALSE,
           contour=TRUE, at=seq(-6,3, by=1),
+          main='Sen Slope of the trend for Snow cover duration',
           pretty=TRUE) + layer(sp.polygons(sn_re))
 
 
@@ -280,6 +282,7 @@ lp <- levelplot(stack_sen_1250_re,
           layer="scd", 
           par.settings=RdBuTheme, 
           margin=FALSE,
+          main='Sen Slope of the trend for Snow cover duration',
           pretty=TRUE) + layer(sp.polygons(sn_re))
 
 
@@ -304,6 +307,7 @@ lp <- levelplot(stack_tau_1250_re,
           par.settings=RdBuTheme, 
           margin=FALSE,
           pretty=TRUE,
+          main='Tau for precipitation and snow precipitation',
           layout=c(1,3)) + layer(sp.polygons(sn_re))
 
 
@@ -328,6 +332,7 @@ lp <- levelplot(stack_tau_1250_re,
           par.settings=RdBuTheme, 
           margin=FALSE,
           pretty=TRUE,
+          main='Tau for seasonal precipitation',
           layout=c(2,2)) + layer(sp.polygons(sn_re))
 
 print(lp)
@@ -351,6 +356,7 @@ lp <- levelplot(stack_tau_1250_re,
           par.settings=RdBuTheme, 
           margin=FALSE,
           pretty=TRUE,
+          main='Tau for seasonal Snow precipitation',
           layout=c(2,2)) + layer(sp.polygons(sn_re))
 
 print(lp)
@@ -374,6 +380,7 @@ lp <- levelplot(stack_tau_1250_re,
           par.settings=RdBuTheme, 
           margin=FALSE,
           pretty=TRUE,
+          main='Tau for seasonal temperature',
           layout=c(2,2)) + layer(sp.polygons(sn_re))
 
 print(lp)
