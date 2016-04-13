@@ -216,7 +216,10 @@ rate <- data.frame(
                  coef(lm2000)[2] * 100,
                  coef(lm3000)[2] * 100,
                  coef(lm4000)[2] * 100,
-                 coef(lmxx)[2] * 100))  
+                 coef(lmxx)[2] * 100)) 
+```
+
+```{r}
 pander(rate)
 ```
 

@@ -110,6 +110,45 @@ See changes of SCD by elevation
 ===============================
 
 ``` r
+pander(rate)
+```
+
+<table style="width:33%;">
+<colgroup>
+<col width="16%" />
+<col width="16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">elev</th>
+<th align="center">scd_change</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">&lt;1000</td>
+<td align="center">0.536</td>
+</tr>
+<tr class="even">
+<td align="center">1000 - 2000</td>
+<td align="center">7.491</td>
+</tr>
+<tr class="odd">
+<td align="center">2000-3000</td>
+<td align="center">11.79</td>
+</tr>
+<tr class="even">
+<td align="center">&gt;3000</td>
+<td align="center">4.157</td>
+</tr>
+<tr class="odd">
+<td align="center">&gt;1000</td>
+<td align="center">9.895</td>
+</tr>
+</tbody>
+</table>
+
+``` r
 ggplot(scd, aes(x=dem50mean, y=mean)) + 
   geom_point() +  
   mythemeggplot + 
@@ -118,7 +157,7 @@ ggplot(scd, aes(x=dem50mean, y=mean)) +
 ```
 
 <figure>
-<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-6-1.png">
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-7-1.png">
 <figcaption>
 </figcaption>
 </figure>
@@ -134,7 +173,7 @@ ggplot(scd, aes(x=dem50mean, y=mean)) +
 ```
 
 <figure>
-<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-7-1.png">
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-8-1.png">
 <figcaption>
 </figcaption>
 </figure>
@@ -146,13 +185,13 @@ ggplot(scd, aes(x=dem50mean, y=mean)) +
     ## [1] 99.37075
 
 <figure>
-<a name="elev_filter_basin"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-8-1.png">
+<a name="elev_filter_basin"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-9-1.png">
 <figcaption>
 <span style="color:black; ">Figure 2: Profile of elevation by basin</span>
 </figcaption>
 </figure>
 <figure>
-<a name="elev_filter_basin_col"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-9-1.png">
+<a name="elev_filter_basin_col"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-10-1.png">
 <figcaption>
 <span style="color:black; ">Figure 3: Profile of elevation by basin</span>
 </figcaption>
@@ -262,7 +301,7 @@ For each indicator we plot several maps. See `/images/raster_maps/`
 ### Snow Cover Duration
 
 <figure>
-<a name="scd_mean"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-11-1.png">
+<a name="scd_mean"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-12-1.png">
 <figcaption>
 </figcaption>
 </figure>
@@ -270,7 +309,7 @@ For each indicator we plot several maps. See `/images/raster_maps/`
     ##                 2
 
 <figure>
-<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-11-2.png">
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-12-2.png">
 <figcaption>
 <span style="color:black; ">Figure 4: Mean values of Snow cover duration</span>
 </figcaption>
@@ -279,7 +318,7 @@ For each indicator we plot several maps. See `/images/raster_maps/`
     ##                 2
 
 <figure>
-<a name="scd_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-12-1.png">
+<a name="scd_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-13-1.png">
 <figcaption>
 <span style="color:black; ">Figure 5: Coefficient of Variation of values of Snow cover duration</span>
 </figcaption>
@@ -290,7 +329,7 @@ For each indicator we plot several maps. See `/images/raster_maps/`
 ### Snow Cover Onset Date
 
 <figure>
-<a name="scod_mean"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-13-1.png">
+<a name="scod_mean"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-14-1.png">
 <figcaption>
 </figcaption>
 </figure>
@@ -298,7 +337,7 @@ For each indicator we plot several maps. See `/images/raster_maps/`
     ##                 2
 
 <figure>
-<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-13-2.png">
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-14-2.png">
 <figcaption>
 <span style="color:black; ">Figure 6: Mean values of Snow cover Onset Date</span>
 </figcaption>
@@ -307,7 +346,7 @@ For each indicator we plot several maps. See `/images/raster_maps/`
     ##                 2
 
 <figure>
-<a name="scod_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-14-1.png">
+<a name="scod_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-15-1.png">
 <figcaption>
 <span style="color:black; ">Figure 7: Coefficient of Variation of values of Snow cover Onset date</span>
 </figcaption>
@@ -318,7 +357,7 @@ For each indicator we plot several maps. See `/images/raster_maps/`
 ### Snow Cover Melting Date
 
 <figure>
-<a name="scmd_mean"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-15-1.png">
+<a name="scmd_mean"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-16-1.png">
 <figcaption>
 </figcaption>
 </figure>
@@ -326,7 +365,7 @@ For each indicator we plot several maps. See `/images/raster_maps/`
     ##                 2
 
 <figure>
-<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-15-2.png">
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-16-2.png">
 <figcaption>
 <span style="color:black; ">Figure 8: Mean values of Snow cover Melting Date</span>
 </figcaption>
@@ -335,7 +374,7 @@ For each indicator we plot several maps. See `/images/raster_maps/`
     ##                 2
 
 <figure>
-<a name="scmd_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-16-1.png">
+<a name="scmd_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-17-1.png">
 <figcaption>
 <span style="color:black; ">Figure 9: Coefficient of Variation of values of Snow cover Melting date</span>
 </figcaption>
@@ -346,7 +385,7 @@ For each indicator we plot several maps. See `/images/raster_maps/`
 ### Snow Cover Melting Cycles
 
 <figure>
-<a name="scmc_mean"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-17-1.png">
+<a name="scmc_mean"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-18-1.png">
 <figcaption>
 </figcaption>
 </figure>
@@ -354,7 +393,7 @@ For each indicator we plot several maps. See `/images/raster_maps/`
     ##                 2
 
 <figure>
-<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-17-2.png">
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-18-2.png">
 <figcaption>
 <span style="color:black; ">Figure 10: Mean values of Snow cover Melting Date</span>
 </figcaption>
@@ -363,7 +402,7 @@ For each indicator we plot several maps. See `/images/raster_maps/`
     ##                 2
 
 <figure>
-<a name="scmc_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-18-1.png">
+<a name="scmc_cv"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-19-1.png">
 <figcaption>
 <span style="color:black; ">Figure 11: Coefficient of Variation of values of Snow cover Melting cycles</span>
 </figcaption>
@@ -489,29 +528,27 @@ lon 1.109721 1 1.053433 aspect50mean\_deg\_group 1.091876 7 1.006298 slope50mean
 </table>
 
 <figure>
-<a name="ggpair_scod"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-21-1.png">
+<a name="ggpair_scod"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-22-1.png">
 <figcaption>
 <span style="color:black; ">Figure 12: Explore relationships of covariates (Snow cover onset dates</span>
 </figcaption>
 </figure>
 <figure>
-<a name="scod_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-22-1.png">
+<a name="scod_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-23-1.png">
 <figcaption>
 <span style="color:black; ">Figure 13: Snow cover onset dates by aspect</span>
 </figcaption>
 </figure>
     ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
 
-    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
-
 <figure>
-<a name="scod_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-23-1.png">
+<a name="scod_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-24-1.png">
 <figcaption>
 <span style="color:black; ">Figure 14: Snow cover onset dates by aspect (effect sizes</span>
 </figcaption>
 </figure>
 <figure>
-<a name="scod_lon_slope"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-24-1.png">
+<a name="scod_lon_slope"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-25-1.png">
 <figcaption>
 <span style="color:black; ">Figure 15: Snow cover onset dates by Longitude and Slope</span>
 </figcaption>
@@ -645,25 +682,27 @@ dem50mean 1.104429 1 1.050918 lon 1.217001 1 1.103178 aspect50mean\_deg\_group 1
 </table>
 
 <figure>
-<a name="ggpair_scmd"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-27-1.png">
+<a name="ggpair_scmd"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-28-1.png">
 <figcaption>
 <span style="color:black; ">Figure 16: Explore relationships of covariates (Snow cover melting dates</span>
 </figcaption>
 </figure>
 <figure>
-<a name="scmd_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-28-1.png">
+<a name="scmd_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-29-1.png">
 <figcaption>
 <span style="color:black; ">Figure 17: Snow cover melting dates by aspect</span>
 </figcaption>
 </figure>
+    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
+
 <figure>
-<a name="scmd_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-29-1.png">
+<a name="scmd_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-30-1.png">
 <figcaption>
 <span style="color:black; ">Figure 18: Snow cover melting dates by aspect (effect sizes</span>
 </figcaption>
 </figure>
 <figure>
-<a name="scmd_lon_slope_elev"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-30-1.png">
+<a name="scmd_lon_slope_elev"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-31-1.png">
 <figcaption>
 <span style="color:black; ">Figure 19: Snow cover melting dates by Longitude, Slope and Elevation</span>
 </figcaption>
@@ -797,25 +836,25 @@ dem50mean 1.104429 1 1.050918 lon 1.217001 1 1.103178 aspect50mean\_deg\_group 1
 </table>
 
 <figure>
-<a name="ggpair_scmc"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-33-1.png">
+<a name="ggpair_scmc"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-34-1.png">
 <figcaption>
 <span style="color:black; ">Figure 20: Explore relationships of covariates (Snow cover melting dates</span>
 </figcaption>
 </figure>
 <figure>
-<a name="scmc_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-34-1.png">
+<a name="scmc_tukey_aspect"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-35-1.png">
 <figcaption>
 <span style="color:black; ">Figure 21: Snow cover melting dates by aspect</span>
 </figcaption>
 </figure>
 <figure>
-<a name="scmc_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-35-1.png">
+<a name="scmc_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-36-1.png">
 <figcaption>
 <span style="color:black; ">Figure 22: Snow cover melting dates by aspect (effect sizes</span>
 </figcaption>
 </figure>
 <figure>
-<a name="scmc_lon_slope_elev"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-36-1.png">
+<a name="scmc_lon_slope_elev"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-37-1.png">
 <figcaption>
 <span style="color:black; ">Figure 23: Snow cover melting dates by Longitude, Slope and Elevation</span>
 </figcaption>
@@ -854,12 +893,12 @@ summary(clu_full)
     ## 1331  809 1665 2448 1741
 
 <figure>
-<a name="full_model_cluster"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-40-1.png">
+<a name="full_model_cluster"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-41-1.png">
 <figcaption>
 </figcaption>
 </figure>
 <figure>
-<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-40-2.png">
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-41-2.png">
 <figcaption>
 <span style="color:black; ">Figure 24: Cluster Full Model</span>
 </figcaption>
@@ -881,12 +920,12 @@ summary(clu_full)
     ##  506  601  440  946  720  756 1340  281  800
 
 <figure>
-<a name="1250_model_cluster"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-41-1.png">
+<a name="1250_model_cluster"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-42-1.png">
 <figcaption>
 </figcaption>
 </figure>
 <figure>
-<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-41-2.png">
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-42-2.png">
 <figcaption>
 <span style="color:black; ">Figure 25: Cluster 1250 Model</span>
 </figcaption>
@@ -920,7 +959,7 @@ writeRaster(clu1250_raster, file=paste(di, "/data/derived/r_cluster_1250.asc", s
 ```
 
 <figure>
-<a name="raster_cluster_full"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-43-1.png">
+<a name="raster_cluster_full"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-44-1.png">
 <figcaption>
 <span style="color:black; ">Figure 26: Map of cluster (full)</span>
 </figcaption>
@@ -929,7 +968,7 @@ writeRaster(clu1250_raster, file=paste(di, "/data/derived/r_cluster_1250.asc", s
     ##                 2
 
 <figure>
-<a name="raster_cluster_1250"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-44-1.png">
+<a name="raster_cluster_1250"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-45-1.png">
 <figcaption>
 <span style="color:black; ">Figure 27: Map of cluster (1250)</span>
 </figcaption>
