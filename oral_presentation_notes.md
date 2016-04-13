@@ -40,10 +40,32 @@ In this work we aim
 * Location of Sierra Nevada 
 
 # Slide 3
-* MODIS and WiMMed methods
+> MODIS 
+
+* We used 8-days MODIS snow cover product (MOD10A2) as the basis of this study. 
+ * Spatial resolution 500 m 
+ * Each MOD10A2 pixel is labelled as snow if it has had snow on one of the previous 8 days
+ 
+* We have calculated several indicators from MOD10A2 images (Wang and Xie, 2009)
+ * **Snow-cover duration (SCD)** is defined as the number of days covered by snow per hydrological year
+ * **Snow-cover onset dates (SCOD)** is defined as the first date in the hydrological year that the pixel has snow. This indicator is useful to identify shifts in the starting of snow season.
+ * **Snow-cover melting dates (SCMD)** is the last date in the hydrological year that the pixel has snow. This indicator provides useful information about the melting process.
+
+:red_circle: `Hablamos de esto?`
+> Snow-cover melting cycles (SCMC) is the number of melting cycles in each pixel per hydrological year.
+
+
+
+
 
 # Slide 4 
-* Mann-Kendall test and Theil-Sen slope estimation 
+> Mann-Kendall test and Theil-Sen slope estimation 
+
+* Time span: 
+ * Temporal trends of the indicators in a temporal range of 14 hydrological years.
+ * hydrological year: 1 September of a calendar year to 31 August of the next calendar year 
+
+
 
 # Slide 5: Results (I): General pattern of trend for Snow-cover related indicators
 > General trend results for snow-cover indicators (scd, scod, scmd) 
