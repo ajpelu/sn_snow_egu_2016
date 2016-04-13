@@ -33,6 +33,8 @@ library("dplyr")
 library("ggplot2")
 library("reshape2")
 library("pander")
+source(paste0(di,"/R/exportpdf.R")) # function to export raster levelplots maps as pdf
+library("rasterVis")
 ```
 
 ```{r data}
@@ -201,8 +203,6 @@ aux <- round(((df %>% filter(tau_scod > 0) %>% filter(tau_scmd < 0) %>% count())
 
 A total of `r aux` % of pixels (of all above 1250) showed a positive trend in snow cover onset date (late onset) and a negative trend in snow cover melting date (earlier melting date). It means that of `r aux` % of the pixels above 1250 m, have suffered a trend to rectraction of the snow cover period in the last years (Figure 3). 
 
-:red_circle: `TODO$:` Hacer mapa de esto 
-
 We also can explore this relationship by elevation (Figure 4), and we obtanied that the *retraction pattern* is more evident at low elevations 
 
 ```{r, fig.height=10, fig.width=8, echo=FALSE}
@@ -249,6 +249,98 @@ aux2 <- df %>% group_by(dem50mean_group) %>%
 pander(aux2, caption = '% pixels scod tau_scod > 0.25 & tau_scmd < -0.25')
 ```
 
+
+```{r}
+# Map of pixels with negative trend tau in scod and scmd 
+dfauxmap <- dfaux %>%
+  dplyr::select(nie_malla_modi_id)
+
+
+dfauxmap <- df %>% 
+  dplyr::select(nie_malla_modi_id, tau_scod, tau_scmd) %>%
+  mutate(retraction = ifelse(tau_scod > 0 & tau_scmd < 0, 1, 0))   
+
+table(dfauxmap$retraction) 
+
+
+centroides <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
+                             layer = "centroides_selected", verbose = FALSE)
+# Select only attributes of interest and rename them
+centroides <- centroides[c("id")]
+names(centroides) <-"nie_malla_modi_id"
+# Reproject to utm and m
+centroides <- spTransform(centroides, CRS("+init=epsg:23030"))
+
+# Get projection 
+projection(centroides) 
+
+# Which pixels are in the dfauxmap objet
+pix_comunes <- match(dfauxmap$nie_malla_modi_id, centroides$nie_malla_modi_id)
+
+# Create spatial objetc with centroid of Sierra Nevada
+centroides_sn <- centroides[pix_comunes,] 
+
+
+# merge dfauxmap and spatial pixel 
+aux_spatial <- sp::merge(x=centroides_sn, y=dfauxmap, by="nie_malla_modi_id")
+
+# raster auxiliar 
+aux_rast <- raster(aux_spatial, resolution=500)
+
+  # Rasterize 
+raster_retraction <- rasterize(aux_spatial, aux_rast, 'retraction')
+
+# convert to polygon
+pol <- rasterToPolygons(raster_retraction, fun=function(x){x==1})
+
+
+# Read stack of trends
+myfilename <- paste0(di, "/data/derived/r_tau_stack_1250.grd")
+
+r_stack_tau_1250 <- stack(myfilename)
+# system.file("/data/derived/r_tau_stack_1250.grd", package="raster"))
+
+# Auxiliar layer for Reproject the maps 
+aux_project <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
+                             layer = "centroides_selected", verbose = FALSE)
+
+crs_aux_project <- projection(aux_project)
+
+## Boundaries SN 
+enp <- rgdal::readOGR(dsn=paste("/Users/", machine, "/Dropbox/carto_public/EENNPP/InfGeografica/InfVectorial/Shapes/ED50_30", sep=""),
+                      layer = "EENNPP", verbose = FALSE)
+# Subset limits of SN                      
+sn <- subset(enp, NOMBRE == 'SIERRA NEVADA' & FIGURA == 'Espacio Natural')
+
+# Reproject limits
+sn_re <- spTransform(sn, CRS(crs_aux_project))
+
+
+
+# Reproject Raster stack
+r_stack_tau_1250_re <- projectRaster(r_stack_tau_1250, crs=crs(aux_project))
+
+
+# Reproject pol 
+pol_re <- spTransform(pol, CRS(crs_aux_project))
+
+
+lp <- levelplot(r_stack_tau_1250_re, 
+          layer=c("scod","scmd"), 
+          par.settings=RdBuTheme,
+          pretty=TRUE,
+          #contour=TRUE,  
+          #at=seq(-1,1, by=.1),
+          main= 'Taus of Snow-cover indicators', 
+          layout=c(1,2)) + 
+  latticeExtra::layer(sp.polygons(pol_re, col='black', lwd=0.5)) +
+  latticeExtra::layer(sp.polygons(sn_re))
+
+
+print(lp)
+
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_retraction.pdf'), lp) 
+```
 
 
 # Table of relationships 
@@ -701,13 +793,15 @@ gs <- ggplot(df, aes_string(x=xvar, y=yvar)) +
   theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
   theme(strip.background = element_rect(fill = "white")) + 
   geom_smooth(method='lm') + 
-  annotate('text', label='early',  x=-.9, y=-.9) + 
+  annotate('text', label='early',  x=-.9, y=-.9) 
 gs
 
 ## by elevation
 gs + facet_wrap(~dem50mean_group)
 
+```
 
+```{r, eval=FALSE, echo=FALSE}
 ### It's work
 source("https://gist.githubusercontent.com/kdauria/524eade46135f6348140/raw/b4103972a4ba3ddb3141830f57c3e6ac98fa273c/ggplot_smooth_func.R")
 # http://stackoverflow.com/questions/7549694/ggplot2-adding-regression-line-equation-and-r2-on-graph
@@ -779,7 +873,7 @@ gs + geom_text(x = 2, y = 10, label = lm_eqn, parse = TRUE)
 
 
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 
 First we explore the relationship between topographic variables and snow-cover related variables. 
 

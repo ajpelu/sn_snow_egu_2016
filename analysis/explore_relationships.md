@@ -139,8 +139,6 @@ aux <- round(((df %>% filter(tau_scod > 0) %>% filter(tau_scmd < 0) %>% count())
 
 A total of 63.55 % of pixels (of all above 1250) showed a positive trend in snow cover onset date (late onset) and a negative trend in snow cover melting date (earlier melting date). It means that of 63.55 % of the pixels above 1250 m, have suffered a trend to rectraction of the snow cover period in the last years (Figure 3).
 
-:red\_circle: `TODO$:` Hacer mapa de esto
-
 We also can explore this relationship by elevation (Figure 4), and we obtanied that the *retraction pattern* is more evident at low elevations
 
 ![](explore_relationships_files/figure-markdown_github/unnamed-chunk-5-1.png)
@@ -305,6 +303,114 @@ pander(aux2, caption = '% pixels scod tau_scod > 0.25 & tau_scmd < -0.25')
 </tbody>
 </table>
 
+``` r
+# Map of pixels with negative trend tau in scod and scmd 
+dfauxmap <- dfaux %>%
+  dplyr::select(nie_malla_modi_id)
+
+
+dfauxmap <- df %>% 
+  dplyr::select(nie_malla_modi_id, tau_scod, tau_scmd) %>%
+  mutate(retraction = ifelse(tau_scod > 0 & tau_scmd < 0, 1, 0))   
+
+table(dfauxmap$retraction) 
+```
+
+    ## 
+    ##    0    1 
+    ## 2329 4061
+
+``` r
+centroides <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
+                             layer = "centroides_selected", verbose = FALSE)
+# Select only attributes of interest and rename them
+centroides <- centroides[c("id")]
+names(centroides) <-"nie_malla_modi_id"
+# Reproject to utm and m
+centroides <- spTransform(centroides, CRS("+init=epsg:23030"))
+
+# Get projection 
+projection(centroides) 
+```
+
+    ## [1] "+init=epsg:23030 +proj=utm +zone=30 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs"
+
+``` r
+# Which pixels are in the dfauxmap objet
+pix_comunes <- match(dfauxmap$nie_malla_modi_id, centroides$nie_malla_modi_id)
+
+# Create spatial objetc with centroid of Sierra Nevada
+centroides_sn <- centroides[pix_comunes,] 
+
+
+# merge dfauxmap and spatial pixel 
+aux_spatial <- sp::merge(x=centroides_sn, y=dfauxmap, by="nie_malla_modi_id")
+
+# raster auxiliar 
+aux_rast <- raster(aux_spatial, resolution=500)
+
+  # Rasterize 
+raster_retraction <- rasterize(aux_spatial, aux_rast, 'retraction')
+
+# convert to polygon
+pol <- rasterToPolygons(raster_retraction, fun=function(x){x==1})
+
+
+# Read stack of trends
+myfilename <- paste0(di, "/data/derived/r_tau_stack_1250.grd")
+
+r_stack_tau_1250 <- stack(myfilename)
+# system.file("/data/derived/r_tau_stack_1250.grd", package="raster"))
+
+# Auxiliar layer for Reproject the maps 
+aux_project <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
+                             layer = "centroides_selected", verbose = FALSE)
+
+crs_aux_project <- projection(aux_project)
+
+## Boundaries SN 
+enp <- rgdal::readOGR(dsn=paste("/Users/", machine, "/Dropbox/carto_public/EENNPP/InfGeografica/InfVectorial/Shapes/ED50_30", sep=""),
+                      layer = "EENNPP", verbose = FALSE)
+# Subset limits of SN                      
+sn <- subset(enp, NOMBRE == 'SIERRA NEVADA' & FIGURA == 'Espacio Natural')
+
+# Reproject limits
+sn_re <- spTransform(sn, CRS(crs_aux_project))
+
+
+
+# Reproject Raster stack
+r_stack_tau_1250_re <- projectRaster(r_stack_tau_1250, crs=crs(aux_project))
+
+
+# Reproject pol 
+pol_re <- spTransform(pol, CRS(crs_aux_project))
+
+
+lp <- levelplot(r_stack_tau_1250_re, 
+          layer=c("scod","scmd"), 
+          par.settings=RdBuTheme,
+          pretty=TRUE,
+          #contour=TRUE,  
+          #at=seq(-1,1, by=.1),
+          main= 'Taus of Snow-cover indicators', 
+          layout=c(1,2)) + 
+  latticeExtra::layer(sp.polygons(pol_re, col='black', lwd=0.5)) +
+  latticeExtra::layer(sp.polygons(sn_re))
+
+
+print(lp)
+```
+
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-7-1.png)
+
+``` r
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_retraction.pdf'), lp) 
+```
+
+    ## quartz_off_screen 
+    ##                 2
+
 Table of relationships
 ======================
 
@@ -462,13 +568,13 @@ gt <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gt
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 ``` r
 gt + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-8-2.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-9-2.png)
 
 ``` r
 # Sen 
@@ -490,14 +596,14 @@ gs <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gs
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-8-3.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-9-3.png)
 
 ``` r
 ## by elevation
 gs + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-8-4.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-9-4.png)
 
 SCD and PRE\_SNOW
 -----------------
@@ -521,13 +627,13 @@ gt <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gt
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-9-1.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-10-1.png)
 
 ``` r
 gt + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-9-2.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-10-2.png)
 
 ``` r
 # Sen 
@@ -549,14 +655,14 @@ gs <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gs
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-9-3.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-10-3.png)
 
 ``` r
 ## by elevation
 gs + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-9-4.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-10-4.png)
 
 SCD and PRE\_SNOW\_PER
 ----------------------
@@ -580,13 +686,13 @@ gt <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gt
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-10-1.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
 ``` r
 gt + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-10-2.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-11-2.png)
 
 ``` r
 # Sen 
@@ -608,14 +714,14 @@ gs <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gs
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-10-3.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-11-3.png)
 
 ``` r
 ## by elevation
 gs + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-10-4.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-11-4.png)
 
 SCD and TEMP
 ------------
@@ -639,13 +745,13 @@ gt <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gt
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-11-1.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-12-1.png)
 
 ``` r
 gt + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-11-2.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-12-2.png)
 
 ``` r
 # Sen 
@@ -667,14 +773,14 @@ gs <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gs
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-11-3.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-12-3.png)
 
 ``` r
 ## by elevation
 gs + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-11-4.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-12-4.png)
 
 Snow cover onset dates relationships
 ====================================
@@ -701,13 +807,13 @@ gt <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gt
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-12-1.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
 ``` r
 gt + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-12-2.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-13-2.png)
 
 ``` r
 # Sen 
@@ -729,14 +835,14 @@ gs <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gs
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-12-3.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-13-3.png)
 
 ``` r
 ## by elevation
 gs + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-12-4.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-13-4.png)
 
 SCOD and PRE WINTER
 -------------------
@@ -760,13 +866,13 @@ gt <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gt
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-13-1.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-14-1.png)
 
 ``` r
 gt + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-13-2.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-14-2.png)
 
 ``` r
 # Sen 
@@ -788,14 +894,14 @@ gs <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gs
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-13-3.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-14-3.png)
 
 ``` r
 ## by elevation
 gs + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-13-4.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-14-4.png)
 
 SCOD and PN AUTUMN
 ------------------
@@ -819,13 +925,13 @@ gt <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gt
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-14-1.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-15-1.png)
 
 ``` r
 gt + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-14-2.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-15-2.png)
 
 ``` r
 # Sen 
@@ -847,14 +953,14 @@ gs <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gs
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-14-3.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-15-3.png)
 
 ``` r
 ## by elevation
 gs + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-14-4.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-15-4.png)
 
 SCOD and PN WINTER
 ------------------
@@ -878,13 +984,13 @@ gt <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gt
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-15-1.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-16-1.png)
 
 ``` r
 gt + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-15-2.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-16-2.png)
 
 ``` r
 # Sen 
@@ -906,14 +1012,14 @@ gs <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gs
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-15-3.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-16-3.png)
 
 ``` r
 ## by elevation
 gs + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-15-4.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-16-4.png)
 
 SCOD and TEMP AUTUMN
 --------------------
@@ -937,13 +1043,13 @@ gt <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gt
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-16-1.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-17-1.png)
 
 ``` r
 gt + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-16-2.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-17-2.png)
 
 ``` r
 # Sen 
@@ -965,14 +1071,14 @@ gs <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gs
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-16-3.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-17-3.png)
 
 ``` r
 ## by elevation
 gs + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-16-4.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-17-4.png)
 
 SCOD and TEMP WINTER
 --------------------
@@ -996,13 +1102,13 @@ gt <- ggplot(df, aes_string(x=xvar, y=yvar)) +
 gt
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-17-1.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-18-1.png)
 
 ``` r
 gt + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-17-2.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-18-2.png)
 
 ``` r
 # Sen 
@@ -1020,32 +1126,19 @@ gs <- ggplot(df, aes_string(x=xvar, y=yvar)) +
   geom_hline(yintercept=0) + 
   theme_bw() + ggtitle(mytitle) + xlab(myxlab) + ylab(myylab) +
   theme(strip.background = element_rect(fill = "white")) + 
-  geom_smooth(method='lm')
+  geom_smooth(method='lm') + 
+  annotate('text', label='early',  x=-.9, y=-.9) 
 gs
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-17-3.png)
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-18-3.png)
 
 ``` r
 ## by elevation
 gs + facet_wrap(~dem50mean_group)
 ```
 
-![](explore_relationships_files/figure-markdown_github/unnamed-chunk-17-4.png)
-
-``` r
-First we explore the relationship between topographic variables and snow-cover related variables. 
-
-## Notas
-(see Chen et al. 2015)
-* Dd <- duration of snow cover 
-* Do <- day of onset 
-* De <- day of end 
-
-Analysis of the spatio-temporal pattern of this variables 
-
-### Elevation pattern
-```
+![](explore_relationships_files/figure-markdown_github/unnamed-chunk-18-4.png)
 
 ``` r
 lm_eqn <- function(df){
