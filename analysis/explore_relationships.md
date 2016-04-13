@@ -395,7 +395,7 @@ lp <- levelplot(r_stack_tau_1250_re,
           #at=seq(-1,1, by=.1),
           main= 'Taus of Snow-cover indicators', 
           layout=c(1,2)) + 
-  latticeExtra::layer(sp.polygons(pol_re, col='black', lwd=0.5)) +
+  latticeExtra::layer(sp.polygons(pol_re, col='black', lwd=0.5, alpha=.5)) +
   latticeExtra::layer(sp.polygons(sn_re))
 
 
