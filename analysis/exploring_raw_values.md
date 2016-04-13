@@ -109,151 +109,6 @@ Elevation filter
 See changes of SCD by elevation
 ===============================
 
-    ## 
-    ## Call:
-    ## lm(formula = mean ~ dem50mean, data = scd1000)
-    ## 
-    ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -2.5125 -0.6186 -0.1688  0.4235  6.9085 
-    ## 
-    ## Coefficients:
-    ##               Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept) -2.0307837  0.1491434  -13.62   <2e-16 ***
-    ## dem50mean    0.0053604  0.0001931   27.76   <2e-16 ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 1.07 on 812 degrees of freedom
-    ## Multiple R-squared:  0.487,  Adjusted R-squared:  0.4863 
-    ## F-statistic: 770.8 on 1 and 812 DF,  p-value: < 2.2e-16
-
-    ## dem50mean 
-    ## 0.5360438
-
-    ## 
-    ## Call:
-    ## lm(formula = mean ~ dem50mean, data = scd2000)
-    ## 
-    ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -31.659  -9.825  -1.960   6.571  62.469 
-    ## 
-    ## Coefficients:
-    ##               Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept) -8.233e+01  1.268e+00  -64.95   <2e-16 ***
-    ## dem50mean    7.491e-02  8.104e-04   92.44   <2e-16 ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 14.58 on 4611 degrees of freedom
-    ## Multiple R-squared:  0.6495, Adjusted R-squared:  0.6494 
-    ## F-statistic:  8545 on 1 and 4611 DF,  p-value: < 2.2e-16
-
-    ## dem50mean 
-    ##  7.491194
-
-    ## 
-    ## Call:
-    ## lm(formula = mean ~ dem50mean, data = scd3000)
-    ## 
-    ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -44.901 -10.650  -0.208  10.219  52.714 
-    ## 
-    ## Coefficients:
-    ##               Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept) -1.616e+02  2.660e+00  -60.72   <2e-16 ***
-    ## dem50mean    1.179e-01  1.111e-03  106.16   <2e-16 ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 14.77 on 2463 degrees of freedom
-    ## Multiple R-squared:  0.8207, Adjusted R-squared:  0.8206 
-    ## F-statistic: 1.127e+04 on 1 and 2463 DF,  p-value: < 2.2e-16
-
-    ## dem50mean 
-    ##  11.79453
-
-    ## 
-    ## Call:
-    ## lm(formula = mean ~ dem50mean, data = scd4000)
-    ## 
-    ## Residuals:
-    ##     Min      1Q  Median      3Q     Max 
-    ## -21.843  -8.700   2.660   8.161  16.584 
-    ## 
-    ## Coefficients:
-    ##             Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept) 62.36224   36.12761   1.726 0.087406 .  
-    ## dem50mean    0.04157    0.01165   3.567 0.000557 ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 10.02 on 100 degrees of freedom
-    ## Multiple R-squared:  0.1128, Adjusted R-squared:  0.104 
-    ## F-statistic: 12.72 on 1 and 100 DF,  p-value: 0.0005569
-
-    ## dem50mean 
-    ##  4.156517
-
-    ## 
-    ## Call:
-    ## lm(formula = mean ~ dem50mean, data = scdxx)
-    ## 
-    ## Residuals:
-    ##    Min     1Q Median     3Q    Max 
-    ## -44.24 -11.85  -0.21  11.13  58.48 
-    ## 
-    ## Coefficients:
-    ##               Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept) -1.183e+02  7.168e-01  -165.0   <2e-16 ***
-    ## dem50mean    9.895e-02  3.738e-04   264.7   <2e-16 ***
-    ## ---
-    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-    ## 
-    ## Residual standard error: 15.82 on 7178 degrees of freedom
-    ## Multiple R-squared:  0.9071, Adjusted R-squared:  0.9071 
-    ## F-statistic: 7.006e+04 on 1 and 7178 DF,  p-value: < 2.2e-16
-
-    ## dem50mean 
-    ##  9.894916
-
-<table style="width:33%;">
-<colgroup>
-<col width="16%" />
-<col width="16%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th align="center">elev</th>
-<th align="center">scd_change</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">&lt;1000</td>
-<td align="center">0.536</td>
-</tr>
-<tr class="even">
-<td align="center">1000 - 2000</td>
-<td align="center">7.491</td>
-</tr>
-<tr class="odd">
-<td align="center">2000-3000</td>
-<td align="center">11.79</td>
-</tr>
-<tr class="even">
-<td align="center">&gt;3000</td>
-<td align="center">4.157</td>
-</tr>
-<tr class="odd">
-<td align="center">&gt;1000</td>
-<td align="center">9.895</td>
-</tr>
-</tbody>
-</table>
-
 ``` r
 ggplot(scd, aes(x=dem50mean, y=mean)) + 
   geom_point() +  
@@ -408,6 +263,14 @@ For each indicator we plot several maps. See `/images/raster_maps/`
 
 <figure>
 <a name="scd_mean"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-11-1.png">
+<figcaption>
+</figcaption>
+</figure>
+    ## quartz_off_screen 
+    ##                 2
+
+<figure>
+<img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-11-2.png">
 <figcaption>
 <span style="color:black; ">Figure 4: Mean values of Snow cover duration</span>
 </figcaption>
@@ -793,8 +656,6 @@ dem50mean 1.104429 1 1.050918 lon 1.217001 1 1.103178 aspect50mean\_deg\_group 1
 <span style="color:black; ">Figure 17: Snow cover melting dates by aspect</span>
 </figcaption>
 </figure>
-    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
-
 <figure>
 <a name="scmd_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-29-1.png">
 <figcaption>
@@ -947,8 +808,6 @@ dem50mean 1.104429 1 1.050918 lon 1.217001 1 1.103178 aspect50mean\_deg\_group 1
 <span style="color:black; ">Figure 21: Snow cover melting dates by aspect</span>
 </figcaption>
 </figure>
-    ## Warning in RET$pfunction("adjusted", ...): Completion with error > abseps
-
 <figure>
 <a name="scmc_tukey_aspect_effects"></a><img src="exploring_raw_values_files/figure-markdown_github/unnamed-chunk-35-1.png">
 <figcaption>

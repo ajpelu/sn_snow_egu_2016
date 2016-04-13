@@ -156,7 +156,7 @@ ggplot(scd, aes(x=dem50mean, y=mean)) +
 ```
 
 # See changes of SCD by elevation
-```{r, echo=FALSE}
+```{r, echo=FALSE, results='hide'}
 scd1000 <- scd %>% 
   dplyr::filter(dem50mean < 1000)
 
@@ -401,7 +401,43 @@ lp <- levelplot(r_mean_scd_1250,
 print(lp)
 
 exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scd_', el, '.pdf'), lp) 
-          
+
+
+## Lat long 
+
+# Auxiliar layer for Reproject the maps 
+aux_project <- rgdal::readOGR(dsn=paste(di, "/data/geoinfo", sep=""),
+                             layer = "centroides_selected", verbose = FALSE)
+
+crs_aux_project <- projection(aux_project)
+
+## Boundaries SN 
+enp <- rgdal::readOGR(dsn=paste("/Users/", machine, "/Dropbox/carto_public/EENNPP/InfGeografica/InfVectorial/Shapes/ED50_30", sep=""),
+                      layer = "EENNPP", verbose = FALSE)
+# Subset limits of SN                      
+sn <- subset(enp, NOMBRE == 'SIERRA NEVADA' & FIGURA == 'Espacio Natural')
+
+# Reproject limits
+sn_re <- spTransform(sn, CRS(crs_aux_project))
+
+
+r_mean_scd_1250_repro <- projectRaster(r_mean_scd_1250, crs=crs(aux_project))
+
+
+
+lp <-levelplot(r_mean_scd_1250_repro, 
+          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE,
+          # Contour options
+          contour=TRUE, labels=TRUE, pretty=TRUE, 
+          # Breaks
+          at=c(-1,seq(0,225,by=25)),
+          main="Snow Cover Duration (mean values, days)") 
+# + latticeExtra::layer(sp.polygons(sn_re))
+
+print(lp)
+
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scd_1250_lat_long.pdf'), lp) 
+
 ```
 
 
