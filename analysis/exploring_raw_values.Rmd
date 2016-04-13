@@ -155,6 +155,79 @@ ggplot(scd, aes(x=dem50mean, y=mean)) +
 # dev.off()
 ```
 
+# See changes of SCD by elevation
+```{r, echo=FALSE}
+scd1000 <- scd %>% 
+  dplyr::filter(dem50mean < 1000)
+
+lm1000 <- lm(mean~dem50mean, data=scd1000)
+summary(lm1000)
+
+# Increment of scd by 100 
+coef(lm1000)[2] * 100 
+
+
+
+scd2000 <- scd %>% 
+  dplyr::filter(dem50mean >= 1000) %>% 
+  dplyr::filter(dem50mean < 2000)
+
+lm2000 <- lm(mean~dem50mean, data=scd2000)
+summary(lm2000)
+
+
+# Increment of scd by 100 
+coef(lm2000)[2] * 100 
+
+
+scd3000 <- scd %>% 
+  dplyr::filter(dem50mean >= 2000) %>% 
+  dplyr::filter(dem50mean < 3000)
+
+lm3000 <- lm(mean~dem50mean, data=scd3000)
+summary(lm3000)
+
+# Increment of scd by 100 
+coef(lm3000)[2] * 100 
+
+scd4000 <- scd %>% 
+  dplyr::filter(dem50mean > 3000) 
+
+lm4000 <- lm(mean~dem50mean, data=scd4000)
+summary(lm4000)
+
+# Increment of scd by 100 
+coef(lm4000)[2] * 100 
+
+
+# Above 1000 
+scdxx <- scd %>% 
+  dplyr::filter(dem50mean > 1000) 
+
+lmxx <- lm(mean~dem50mean, data=scdxx)
+summary(lmxx)
+
+# Increment of scd by 100 
+coef(lmxx)[2] * 100 
+
+rate <- data.frame(
+  elev = c('<1000', '1000 - 2000', '2000-3000', '>3000', '>1000'),
+  scd_change = c(coef(lm1000)[2] * 100, 
+                 coef(lm2000)[2] * 100,
+                 coef(lm3000)[2] * 100,
+                 coef(lm4000)[2] * 100,
+                 coef(lmxx)[2] * 100))  
+pander(rate)
+```
+
+```{r}
+ggplot(scd, aes(x=dem50mean, y=mean)) + 
+  geom_point() +  
+  mythemeggplot + 
+  xlab('Elevation (m)') + ylab('SCD (days)') + 
+  ylim(0,225) + xlim(0,4000)
+```
+
 
 
 * Select the pixels above 14 days (scd) 
