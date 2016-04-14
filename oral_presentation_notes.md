@@ -19,7 +19,23 @@
 > Temporal trend of the snow-related variables in Sierra Nevada in the last years: An analysis combining Earth Observation and hydrological modelling 
 
 ## slide 1. 
+
+* Snow cover constitutes a vitally important variable for the planet’s climate, hydrology and environment. A lot of processes are affected by its dynamics. 
+
+* It also was identified as an essential climate variable within the GCOS (Global Climate Observing System) (WMO and GCOS 2011) 
+
+* Special signifcance in mountain regions where snow store enormous quantities of water, altering the ecological and economic balance of regions far down-stream by delaying the realease of water months after precipitation events.  
+
+
+**Climate / Global Change impacts** 
+* Impacts 
+
+
 Climate change impacts on snow cover specially in Mediterranean mountain 
+
+
+Climate variability is influencing the duration and distribution of snow cover
+
 
 ## slide 2. 
 In this work we aim
@@ -81,5 +97,42 @@ In this work we aim
 # Slide 7: Elevation pattern of the scd 
 
 
+
+
+
+# Notes 
+
+## Dietz et al. 2012 (SCD Europe) [Remote Sens. 2012, 4, 2432-2454](https::/dx.doi.org/10.3390/rs4082432) 
+Snow cover is an important variable for water availability .
+
+Climate change affects parameters such snow cover duration (SCD), generally leading to its decrease, a delayed snow cover onset and earlier melt 
+
+1970 - 2014 SCD decreased for most of the Northern and Eastern Europe
+
+Lower elevations are more vulnerable to a reduced SCD than mountainous terrain 
+
+
+Spain is characterized by warm climate and dry summers 
+
+Mountainous regions like the Alps, the Carpathian Mountains in Romania, the Pyrenees at the border of France and Spain, and the Scandinavian Mountains stand out due to long SCD, early SCS, and late SCM. Valleys within these mountains are often characterized by much lower SCD than the surrounding ranges. Rain shadow affects these areas, preventing regular precipitation.
+
+SCD ~ elevation 
+* Central Europe 
+ * mean SCD increases by 4 days per 100 m between 400 - 1000 m elevation
+ * mean SCD increases by 10 days per 100 m between 1000 - 3000 m elevation
+ 
+
+## Brown & Mote 
+
+* Importance of snowpack in mounatin regions where snow stores enormous quantities of water, altering the ecological and economic balance of regions far dowstream by delaying the release of water months after precipitation events. 
+
+* Snow cover is anticipated to decrease in response to global warming, as snow cover formation and melt are closely related to a temperature threshold of 08C. However, as first noted by Groisman et al. (1993) and more recently by Raisanen (2007), the snow cover response to global warming is complicated by projected increases in precipitation, particularly over high latitudes. The snow cover response to warming could therefore vary with latitude and elevation, with potential for increased accumulation in high latitudes and high elevations where increases in precipitation are sufficient to offset reductions in the length of the accumulation season. 
+
+* Snow cover trends in the mountain regions of Europe are characterized by large regional and altitudinal variations (e.g., Vojtek et al. 2003; Scherrer et al. 2004; Brown and Petkova 2007) 
+
+* SCD less sensitive to change in snowfall amoount than SWE, or Snow Depth. 
+* SCD is closely controlled by air temperatures at the start and end of the snow cover season. SCA and SCD are also more closely linked to albedo feedbacks, which are stronger during the spring period (Groisman et al. 1993; De ́ry and Brown 2007) and over mountain regions
+
+* The response of snow to climate change in mountain regions is further complicated by vertical gradients in temperature and precipitation. Typically, the largest relative changes are observed at lower elevations (e.g., Laternser and Schneebeli 2003; Scherrer et al. 2004; Mote et al. 2005; Mote 2006). However, there is evidence at some higher elevation sites of increased peak snow accumulation (e.g., Vojtek et al. 2003; Mote et al. 2005; Regonda et al. 2005) in response to increasing precipi- tation (Zhang et al. 2007)
 
 
