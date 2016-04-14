@@ -117,6 +117,347 @@ fulldf1250 <- fulldf %>%
   filter(dem50mean > 1250)  
 ```
 
+Explore general pattern of trends
+=================================
+
+``` r
+exp_pre <- exploreMKTS(pre, alpha=0.05)
+exp_pre_snow <- exploreMKTS(pre_snow, alpha=0.05)
+exp_pre_snow_per <- exploreMKTS(pre_snow_per, alpha=0.05)
+exp_temp <- exploreMKTS(temp, alpha=0.05)
+
+
+# Create table with all resuls 
+# tau_pos
+tau_pos <- rbind(
+  cbind(exp_pre$summary[1,c(2,3)],variable='pre'),
+  cbind(exp_pre_snow$summary[1,c(2,3)],variable='pre_snow'),
+  cbind(exp_pre_snow_per$summary[1,c(2,3)],variable='pre_snow_per'),
+  cbind(exp_temp$summary[1,c(2,3)],variable='temp'))
+  names(tau_pos) <- c('tau_pos_n','tau_pos_%','variable')
+
+# tau_pos_sig
+tau_pos_sig <- rbind(
+  cbind(exp_pre$summary[2,c(2,3)],variable='pre'),
+  cbind(exp_pre_snow$summary[2,c(2,3)],variable='pre_snow'),
+  cbind(exp_pre_snow_per$summary[2,c(2,3)],variable='pre_snow_per'),
+  cbind(exp_temp$summary[2,c(2,3)],variable='temp'))
+names(tau_pos_sig) <- c('tau_pos_sig_n','tau_pos_sig_%','variable')
+
+
+# tau_neg
+tau_neg <- rbind(
+  cbind(exp_pre$summary[3,c(2,3)],variable='pre'),
+  cbind(exp_pre_snow$summary[3,c(2,3)],variable='pre_snow'),
+  cbind(exp_pre_snow_per$summary[3,c(2,3)],variable='pre_snow_per'),
+  cbind(exp_temp$summary[3,c(2,3)],variable='temp'))
+names(tau_neg) <- c('tau_neg_n','tau_neg_%','variable')
+
+# tau_neg_sig
+tau_neg_sig <- rbind(
+  cbind(exp_pre$summary[4,c(2,3)],variable='pre'),
+  cbind(exp_pre_snow$summary[4,c(2,3)],variable='pre_snow'),
+  cbind(exp_pre_snow_per$summary[4,c(2,3)],variable='pre_snow_per'),
+  cbind(exp_temp$summary[4,c(2,3)],variable='temp'))
+names(tau_neg_sig) <- c('tau_neg_sig_n','tau_neg_sig_%','variable')
+
+# Table with all the results 
+summ_explore <- join(join(tau_pos, tau_pos_sig, by='variable'),
+     join(tau_neg, tau_neg_sig, by='variable'), by='variable')
+# Reorder variables
+summ_explore <- summ_explore[,c(3,1:2,4:9)]
+summ_explore
+```
+
+    ##       variable tau_pos_n tau_pos_% tau_pos_sig_n tau_pos_sig_% tau_neg_n
+    ## 1          pre      4040     50.54             0             0      3953
+    ## 2     pre_snow      6147      76.9            89          1.45      1747
+    ## 3 pre_snow_per      6685     83.63            26          0.39      1186
+    ## 4         temp      6621     82.82           477           7.2      1312
+    ##   tau_neg_% tau_neg_sig_n tau_neg_sig_%
+    ## 1     49.45             0             0
+    ## 2     21.85             0             0
+    ## 3     14.84             1          0.08
+    ## 4     16.41             0             0
+
+``` r
+pander(summ_explore, caption= 'Summary trends all Sierra Nevada')
+```
+
+<table>
+<caption>Summary trends all Sierra Nevada (continued below)</caption>
+<colgroup>
+<col width="16%" />
+<col width="15%" />
+<col width="15%" />
+<col width="20%" />
+<col width="20%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">variable</th>
+<th align="center">tau_pos_n</th>
+<th align="center">tau_pos_%</th>
+<th align="center">tau_pos_sig_n</th>
+<th align="center">tau_pos_sig_%</th>
+<th align="center">tau_neg_n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">pre</td>
+<td align="center">4040</td>
+<td align="center">50.54</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">3953</td>
+</tr>
+<tr class="even">
+<td align="center">pre_snow</td>
+<td align="center">6147</td>
+<td align="center">76.9</td>
+<td align="center">89</td>
+<td align="center">1.45</td>
+<td align="center">1747</td>
+</tr>
+<tr class="odd">
+<td align="center">pre_snow_per</td>
+<td align="center">6685</td>
+<td align="center">83.63</td>
+<td align="center">26</td>
+<td align="center">0.39</td>
+<td align="center">1186</td>
+</tr>
+<tr class="even">
+<td align="center">temp</td>
+<td align="center">6621</td>
+<td align="center">82.82</td>
+<td align="center">477</td>
+<td align="center">7.2</td>
+<td align="center">1312</td>
+</tr>
+</tbody>
+</table>
+
+<table style="width:61%;">
+<colgroup>
+<col width="16%" />
+<col width="22%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">tau_neg_%</th>
+<th align="center">tau_neg_sig_n</th>
+<th align="center">tau_neg_sig_%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">49.45</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center">21.85</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center">14.84</td>
+<td align="center">1</td>
+<td align="center">0.08</td>
+</tr>
+<tr class="even">
+<td align="center">16.41</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+</tbody>
+</table>
+
+Explore trends (&gt;1250)
+=========================
+
+``` r
+# Get nie_malla_modi_id + elev
+topo_elev <- topo %>% 
+  select(nie_malla_modi_id, dem50mean)
+
+pre1250 <- pre %>% 
+  inner_join(topo_elev, by = 'nie_malla_modi_id') %>% 
+  filter(dem50mean > 1250)
+
+pre_snow1250 <- pre_snow %>% 
+  inner_join(topo_elev, by = 'nie_malla_modi_id') %>% 
+  filter(dem50mean > 1250)
+
+pre_snow_per1250 <- pre_snow_per %>% 
+  inner_join(topo_elev, by = 'nie_malla_modi_id') %>% 
+  filter(dem50mean > 1250)
+
+temp1250 <- temp %>% 
+  inner_join(topo_elev, by = 'nie_malla_modi_id') %>% 
+  filter(dem50mean > 1250)
+
+
+exp_pre1250 <- exploreMKTS(pre1250, alpha=0.05)
+exp_pre_snow1250 <- exploreMKTS(pre_snow1250, alpha=0.05)
+exp_pre_snow_per1250 <- exploreMKTS(pre_snow_per1250, alpha=0.05)
+exp_temp1250 <- exploreMKTS(temp1250, alpha=0.05)
+
+
+# Create table with all resuls 
+# tau_pos
+tau_pos <- rbind(
+  cbind(exp_pre1250$summary[1,c(2,3)],variable='pre'),
+  cbind(exp_pre_snow1250$summary[1,c(2,3)],variable='pre_snow'),
+  cbind(exp_pre_snow_per1250$summary[1,c(2,3)],variable='pre_snow_per'),
+  cbind(exp_temp1250$summary[1,c(2,3)],variable='temp'))
+names(tau_pos) <- c('tau_pos_n','tau_pos_%','variable')
+
+# tau_pos_sig
+tau_pos_sig <- rbind(
+  cbind(exp_pre1250$summary[2,c(2,3)],variable='pre'),
+  cbind(exp_pre_snow1250$summary[2,c(2,3)],variable='pre_snow'),
+  cbind(exp_pre_snow_per1250$summary[2,c(2,3)],variable='pre_snow_per'),
+  cbind(exp_temp1250$summary[2,c(2,3)],variable='temp'))
+names(tau_pos_sig) <- c('tau_pos_sig_n','tau_pos_sig_%','variable')
+
+
+# tau_neg
+tau_neg <- rbind(
+  cbind(exp_pre1250$summary[3,c(2,3)],variable='pre'),
+  cbind(exp_pre_snow1250$summary[3,c(2,3)],variable='pre_snow'),
+  cbind(exp_pre_snow_per1250$summary[3,c(2,3)],variable='pre_snow_per'),
+  cbind(exp_temp1250$summary[3,c(2,3)],variable='temp'))
+names(tau_neg) <- c('tau_neg_n','tau_neg_%','variable')
+
+# tau_neg_sig
+tau_neg_sig <- rbind(
+  cbind(exp_pre1250$summary[4,c(2,3)],variable='pre'),
+  cbind(exp_pre_snow1250$summary[4,c(2,3)],variable='pre_snow'),
+  cbind(exp_pre_snow_per1250$summary[4,c(2,3)],variable='pre_snow_per'),
+  cbind(exp_temp1250$summary[4,c(2,3)],variable='temp'))
+names(tau_neg_sig) <- c('tau_neg_sig_n','tau_neg_sig_%','variable')
+
+# Table with all the results 
+summ_explore <- join(join(tau_pos, tau_pos_sig, by='variable'),
+                     join(tau_neg, tau_neg_sig, by='variable'), by='variable')
+# Reorder variables
+summ_explore <- summ_explore[,c(3,1:2,4:9)]
+summ_explore
+```
+
+    ##       variable tau_pos_n tau_pos_% tau_pos_sig_n tau_pos_sig_% tau_neg_n
+    ## 1          pre      3472     54.33             0             0      2917
+    ## 2     pre_snow      5198     81.35            88          1.69      1192
+    ## 3 pre_snow_per      5808     90.89            22          0.38       580
+    ## 4         temp      5081     79.51           314          6.18      1251
+    ##   tau_neg_% tau_neg_sig_n tau_neg_sig_%
+    ## 1     45.65             0             0
+    ## 2     18.65             0             0
+    ## 3      9.08             0             0
+    ## 4     19.58             0             0
+
+``` r
+pander(summ_explore, caption= 'Summary trends Sierra Nevada (>1250)')
+```
+
+<table>
+<caption>Summary trends Sierra Nevada (&gt;1250) (continued below)</caption>
+<colgroup>
+<col width="16%" />
+<col width="15%" />
+<col width="15%" />
+<col width="20%" />
+<col width="20%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">variable</th>
+<th align="center">tau_pos_n</th>
+<th align="center">tau_pos_%</th>
+<th align="center">tau_pos_sig_n</th>
+<th align="center">tau_pos_sig_%</th>
+<th align="center">tau_neg_n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">pre</td>
+<td align="center">3472</td>
+<td align="center">54.33</td>
+<td align="center">0</td>
+<td align="center">0</td>
+<td align="center">2917</td>
+</tr>
+<tr class="even">
+<td align="center">pre_snow</td>
+<td align="center">5198</td>
+<td align="center">81.35</td>
+<td align="center">88</td>
+<td align="center">1.69</td>
+<td align="center">1192</td>
+</tr>
+<tr class="odd">
+<td align="center">pre_snow_per</td>
+<td align="center">5808</td>
+<td align="center">90.89</td>
+<td align="center">22</td>
+<td align="center">0.38</td>
+<td align="center">580</td>
+</tr>
+<tr class="even">
+<td align="center">temp</td>
+<td align="center">5081</td>
+<td align="center">79.51</td>
+<td align="center">314</td>
+<td align="center">6.18</td>
+<td align="center">1251</td>
+</tr>
+</tbody>
+</table>
+
+<table style="width:61%;">
+<colgroup>
+<col width="16%" />
+<col width="22%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">tau_neg_%</th>
+<th align="center">tau_neg_sig_n</th>
+<th align="center">tau_neg_sig_%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">45.65</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center">18.65</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center">9.08</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center">19.58</td>
+<td align="center">0</td>
+<td align="center">0</td>
+</tr>
+</tbody>
+</table>
+
 Explore trends of annual variables by basin
 ===========================================
 
@@ -230,7 +571,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-4-1.png)
+![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
 ``` r
 # Sen Pre
@@ -303,7 +644,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-5-1.png)
+![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 Pre Snow
 ========
@@ -379,7 +720,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
 ``` r
 # Sen Pre Snow 
@@ -452,7 +793,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-7-1.png)
+![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 Pre Snow per
 ============
@@ -528,7 +869,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-10-1.png)
 
 ``` r
 # Sen Pre snow per 
@@ -601,7 +942,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-9-1.png)
+![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
 Temp
 ====
@@ -677,7 +1018,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-10-1.png)
+![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-12-1.png)
 
 ``` r
 # Sen temp 
@@ -750,7 +1091,7 @@ ggplot(df, aes_string(x='basin_name', y=variable)) +
   ylab(my_ylab) + xlab('')
 ```
 
-![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-11-1.png)
+![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
 ``` r
 # Create a df with letter and variables
@@ -773,7 +1114,7 @@ ggplot(df_basin_tau, aes(x=basin_name, y=mean)) +
   xlab('') + ylab('Taus')
 ```
 
-![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-12-1.png)
+![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-14-1.png)
 
 ``` r
 # Create a df with letter and variables
@@ -793,7 +1134,7 @@ ggplot(df_basin_sen, aes(x=basin_name, y=mean)) +
   xlab('') + ylab('Sen Slopes')
 ```
 
-![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-13-1.png)
+![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-15-1.png)
 
 #### Tau Pre
 
@@ -1612,7 +1953,7 @@ d <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey'
 grid.arrange(a, d, b, c, nrow=2)
 ```
 
-![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-22-1.png)
+![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-24-1.png)
 
 Sen
 ---
@@ -1854,4 +2195,4 @@ d <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey'
 grid.arrange(a, d, b, c, nrow=2)
 ```
 
-![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-23-1.png)
+![](explore_wimmed_trends_annual_files/figure-markdown_github/unnamed-chunk-25-1.png)
