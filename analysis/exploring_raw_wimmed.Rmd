@@ -142,28 +142,45 @@ mythemeggplot <- theme_bw() + theme(panel.grid.major=element_blank(),
 
 ```{r, echo=FALSE, fig.cap=fig$cap("elev_filter", "Profile of elevation"), fig.height=8 , fig.width=8}
 # Pre 
-ggplot(pre, aes(x=dem50mean, y=mean)) +
+plot_pre <- ggplot(pre, aes(x=dem50mean, y=mean)) +
     geom_point() +  
   mythemeggplot + 
   xlab('Elevation') + ylab('Rainfall (mm)') 
 
+pdf(file=paste0(di, "/images/plot_elevation_pre.pdf"), height = 10, width = 10)
+plot_pre
+dev.off()
+
 # Pre Snow 
-ggplot(pre_snow, aes(x=dem50mean, y=mean)) +
-    geom_point() +  
-  mythemeggplot + 
-  xlab('Elevation') + ylab('Snow Rainfall (mm)') 
+plot_pre_snow <- ggplot(pre_snow, aes(x=dem50mean, y=mean)) +
+    geom_point() +  mythemeggplot + 
+  xlab('Elevation') + ylab('Snow Rainfall (mm)')
+
+pdf(file=paste0(di, "/images/plot_elevation_pre_snow.pdf"), height = 10, width = 10)
+plot_pre_snow
+dev.off()
 
 # Pre Snow PEr
-ggplot(pre_snow_per, aes(x=dem50mean, y=mean)) +
+plot_pre_snow_per <- ggplot(pre_snow_per, aes(x=dem50mean, y=mean)) +
     geom_point() +  
   mythemeggplot + 
   xlab('Elevation') + ylab('Snow Rainfall (%)') 
 
+pdf(file=paste0(di, "/images/plot_elevation_pre_snow_per.pdf"), height = 10, width = 10)
+plot_pre_snow_per
+dev.off()
+
+
 # Temp
-ggplot(temp, aes(x=dem50mean, y=mean)) +
+plot_temp <- ggplot(temp, aes(x=dem50mean, y=mean)) +
     geom_point() +  
   mythemeggplot + 
   xlab('Elevation') + ylab('Mean Temperature') 
+
+pdf(file=paste0(di, "/images/plot_elevation_temp.pdf"), height = 10, width = 10)
+plot_temp
+dev.off()
+
 
 ```
 
@@ -228,25 +245,21 @@ for (i in indicadores) {
 }
 ```
 
-## Visualization of the Snow Cover indicators 
+## Visualization 
 
 For each indicator we plot several maps. See `/images/raster_maps/`
 
-### Snow Cover Duration
+### Pre
 
-```{r, echo=FALSE, fig.cap=fig$cap("scd_mean", "Mean values of Snow cover duration"), fig.height=8 , fig.width=11}
+```{r, echo=FALSE, fig.cap=fig$cap("pre_mean", "Mean values of Rainfall"), fig.height=8 , fig.width=11}
 
 # Select a palette
 # http://colorbrewer2.org/
-# mypal <- brewer.pal(9, "Blues")
-# Add a colour for 0 value
-# mypal <- c("#D2D2D2", mypal)
-
-mypal <- c("#D2D2D2", "#C6DBEF", "#9ECAE1", "#6BAED6", "#4292C6", "#2171B5", "#08519C", "#08306B")
+mypal <- brewer.pal(9, "Blues")
 
 # Specify the color palette
 myTheme=rasterTheme(region=mypal)
-# myTheme$panel.background$col <- 'gray'
+
 
 # Mean plot
 lp <- levelplot(r_mean_pre, 
@@ -255,10 +268,9 @@ lp <- levelplot(r_mean_pre,
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
           # at=c(-1,seq(0,225,by=25)),
-          main="Rainfall")
+          main="Rainfall (mm)")
 print(lp)
-
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scd_', el, '.pdf'), lp) 
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_pre.pdf'), lp) 
 
 
 ## Lat long 
@@ -279,212 +291,137 @@ sn <- subset(enp, NOMBRE == 'SIERRA NEVADA' & FIGURA == 'Espacio Natural')
 sn_re <- spTransform(sn, CRS(crs_aux_project))
 
 
-r_mean_scd_1250_repro <- projectRaster(r_mean_scd_1250, crs=crs(aux_project))
+r_mean_pre_re <- projectRaster(r_mean_pre, crs=crs(aux_project))
 
 
 
-lp <-levelplot(r_mean_scd_1250_repro, 
+lp <-levelplot(r_mean_pre_re, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE,
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
-          at=c(-1,seq(0,225,by=25)),
-          main="Snow Cover Duration (mean values, days)") 
-# + latticeExtra::layer(sp.polygons(sn_re))
+          # at=c(-1,seq(0,225,by=25)),
+          main="Rainfall (mm)") # + latticeExtra::layer(sp.polygons(sn_re))
 
 print(lp)
 
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scd_1250_lat_long.pdf'), lp) 
-
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_pre_lat_long.pdf'), lp) 
 ```
 
 
+### Pre Snow 
 
-```{r, echo=FALSE, fig.cap=fig$cap("scd_cv", "Coefficient of Variation of values of Snow cover duration"), fig.height=8 , fig.width=11}
-# CV plot
-mypal_cv <- brewer.pal(9, "Oranges")
-mypal_cv <- c("#D2D2D2", mypal_cv)
-
-myTheme_cv=rasterTheme(region=mypal_cv)
-
-lp <- levelplot(r_cv_scd_1250, 
-          par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
-          contour=TRUE, labels=TRUE, pretty=TRUE, 
-          # Breaks
-          at=c(-1, seq(0,maxValue(r_cv_scd_1250),by=20)),
-          main="Snow Cover Duration (CV)")
-print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scd_', el, '.pdf'), lp) 
-  
-
-```
-
-
-
-### Snow Cover Onset Date
-
-```{r, echo=FALSE, fig.cap=fig$cap("scod_mean", "Mean values of Snow cover Onset Date"), fig.height=8 , fig.width=11}
+```{r, echo=FALSE, fig.cap=fig$cap("pre_snow_mean", "Mean values of Snowfall"), fig.height=8 , fig.width=11}
 
 # Select a palette
 # http://colorbrewer2.org/
-mypal <- brewer.pal(9, "YlOrRd")
-# Add a colour for 0 value
-mypal <- c("#D2D2D2", mypal)
+mypal <- brewer.pal(9, "Blues")
+
 # Specify the color palette
 myTheme=rasterTheme(region=mypal)
 
 
-lp <- levelplot(r_mean_scod_1250, 
-          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
+# Mean plot
+lp <- levelplot(r_mean_pre_snow, 
+          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE,
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
-          #cut=20,
-          at=c(-1,seq(15,maxValue(r_mean_scd_1250),by=20)),
-          main="Snow Cover Onset Date (mean values, hydrological day)") 
+          # at=c(-1,seq(0,225,by=25)),
+          main="Snowfall (mm)")
 print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scod_1900.pdf'), lp) 
-  
-
-lp <- levelplot(r_mean_scod_1250, 
-          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
-          main="Snow Cover Onset Date (mean values, hydrological day)") 
-
-print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scod_', el, '_non_isolines.pdf'), lp) 
-
-```
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_pre_snow.pdf'), lp) 
 
 
+## Lat long 
+r_mean_pre_snow_re <- projectRaster(r_mean_pre_snow, crs=crs(aux_project))
 
-```{r, echo=FALSE, fig.cap=fig$cap("scod_cv", "Coefficient of Variation of values of Snow cover Onset date"), fig.height=8 , fig.width=11}
-# CV plot
-mypal_cv <- brewer.pal(9, "Oranges")
-mypal_cv <- c("#D2D2D2", mypal_cv)
-
-myTheme_cv=rasterTheme(region=mypal_cv)
-
-lp <- levelplot(r_cv_scod_1250, 
-          par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
+lp <-levelplot(r_mean_pre_snow_re, 
+          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE,
+          # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
-          at=c(-1, seq(0,maxValue(r_cv_scod_1250),by=20)),
-          main="Snow Cover Onset Date (CV)")
+          # at=c(-1,seq(0,225,by=25)),
+          main="Snowfall (mm)") # + latticeExtra::layer(sp.polygons(sn_re))
 
 print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scod_', el, '.pdf'), lp) 
- 
+
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_pre_snow_lat_long.pdf'), lp) 
 ```
 
 
-### Snow Cover Melting Date
 
-```{r, echo=FALSE, fig.cap=fig$cap("scmd_mean", "Mean values of Snow cover Melting Date"), fig.height=8 , fig.width=11}
+### Pre Snow Per
+
+```{r, echo=FALSE, fig.cap=fig$cap("pre_snow_per_mean", "Mean values of Snowfall (%)"), fig.height=8 , fig.width=11}
 
 # Select a palette
 # http://colorbrewer2.org/
-mypal <- rev(brewer.pal(9, "Greens"))
-# Add a colour for 0 value
-mypal <- c("#D2D2D2", mypal)
+mypal <- brewer.pal(9, "Blues")
+
 # Specify the color palette
 myTheme=rasterTheme(region=mypal)
 
 
-lp <- levelplot(r_mean_scmd_1250, 
-          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
+# Mean plot
+lp <- levelplot(r_mean_pre_snow_per, 
+          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE,
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
-          #cut=20,
-          at=c(-1, 0,seq(100,280,by=20)),
-          main="Snow Cover Melting Date (mean values, hydrological day)") 
-
+          # at=c(seq(0,100,by=10)),
+          main="Snowfall (mm)")
 print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmd_', el, '.pdf'), lp) 
- 
-
-lp <- levelplot(r_mean_scmd_1250, 
-          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
-          main="Snow Cover Melting Date (mean values, hydrological day)", 
-          at=c(-1,seq(0,280,by=10)))
-
-print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmd_', el, '_non_isolines.pdf'), lp) 
-```
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_pre_snow_per.pdf'), lp) 
 
 
+## Lat long 
+r_mean_pre_snow_per_re <- projectRaster(r_mean_pre_snow_per, crs=crs(aux_project))
 
-```{r, echo=FALSE, fig.cap=fig$cap("scmd_cv", "Coefficient of Variation of values of Snow cover Melting date"), fig.height=8 , fig.width=11}
-# CV plot
-mypal_cv <- brewer.pal(9, "Oranges")
-mypal_cv <- c("#D2D2D2", mypal_cv)
-
-myTheme_cv=rasterTheme(region=mypal_cv)
-
-lp <- levelplot(r_cv_scmd_1250, 
-          par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
-          #contour=TRUE, labels=TRUE, pretty=TRUE, 
-          # Breaks
-          #at=seq(0,50,by=7.5),
-          main="Snow Cover Melting Date (CV)")
-print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scmd_', el, '.pdf'), lp) 
- 
-```
-
-
-### Snow Cover Melting Cycles
-
-```{r, echo=FALSE, fig.cap=fig$cap("scmc_mean", "Mean values of Snow cover Melting Date"), fig.height=8 , fig.width=11}
-
-# Select a palette
-# http://colorbrewer2.org/
-mypal <- brewer.pal(5, "Purples")
-# Add a colour for 0 value
-mypal <- c("#D2D2D2", mypal)
-# Specify the color palette
-myTheme=rasterTheme(region=mypal)
-
-
-lp <- levelplot(r_mean_scmc_1250, 
-          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
+lp <-levelplot(r_mean_pre_snow_per_re, 
+          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE,
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
-          at=seq(0,5,by=1),
-          main="Snow Cover Melting cycles (mean values, number)") 
-print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmc_', el, '.pdf'), lp) 
-
-lp <- levelplot(r_mean_scmc_1250, 
-          par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE, 
-          main="Snow Cover Melting cycles (mean values, number)")
+          # at=c(-1,seq(0,225,by=25)),
+          main="Snowfall (mm)") # + latticeExtra::layer(sp.polygons(sn_re))
 
 print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scmc_', el, '_non_isolines.pdf'), lp) 
 
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_pre_snow_per_lat_long.pdf'), lp) 
 ```
 
 
+### Temp 
 
-```{r, echo=FALSE, fig.cap=fig$cap("scmc_cv", "Coefficient of Variation of values of Snow cover Melting cycles"), fig.height=8 , fig.width=11}
-# CV plot
-mypal_cv <- brewer.pal(9, "Oranges")
-mypal_cv <- c("#D2D2D2", mypal_cv)
+```{r, echo=FALSE, fig.cap=fig$cap("temp", "Mean values of Temp (ºC)"), fig.height=8 , fig.width=11}
 
-myTheme_cv=rasterTheme(region=mypal_cv)
 
-lp <- levelplot(r_cv_scmc_1250, 
-          par.settings=myTheme_cv, margin=list(axis=TRUE), colorkey=TRUE, 
+# Mean plot
+lp <- levelplot(r_mean_temp, 
+          par.settings=BuRdTheme, margin=list(axis=TRUE), colorkey=TRUE,
+          # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
-          at=seq(0,maxValue(r_cv_scmc_1250),by=20),
-          main="Snow Cover Melting Date (CV)")
+          # at=c(seq(0,100,by=10)),
+          main="Mean Temperature (ºC)")
+print(lp)
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_temp.pdf'), lp) 
+
+
+## Lat long 
+r_mean_temp_re <- projectRaster(r_mean_temp, crs=crs(aux_project))
+
+lp <-levelplot(r_mean_temp_re, 
+          par.settings=BuRdTheme, margin=list(axis=TRUE), colorkey=TRUE,
+          # Contour options
+          contour=TRUE, labels=TRUE, pretty=TRUE, 
+          # Breaks
+          # at=c(-1,seq(0,225,by=25)),
+          main="Mean Temperature (ºC)") # + latticeExtra::layer(sp.polygons(sn_re))
 
 print(lp)
-exportpdf(mypdf=paste0(di, '/images/raster_maps/r_cv_scmc_', el, '.pdf'), lp) 
 
-
+exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_temp_lat_long.pdf'), lp) 
 ```
-
 
