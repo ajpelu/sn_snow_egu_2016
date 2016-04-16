@@ -135,30 +135,34 @@ for (i in indicadores) {
 # Set theme ggplot options
 mythemeggplot <- theme_bw() + theme(panel.grid.major=element_blank(),
                        panel.grid.minor=element_blank(),
-                       strip.background=element_rect(fill='white'))
+                       strip.background=element_rect(fill='white'),
+                       axis.text = element_text(size = rel(1.7)),
+                       axis.title = element_text(size = rel(1.7)))
 ```
 
 ## Explore variables with elevation 
 
 ```{r, echo=FALSE, fig.cap=fig$cap("elev_filter", "Profile of elevation"), fig.height=8 , fig.width=8}
-# Pre 
+# Pre
+
 plot_pre <- ggplot(pre, aes(x=dem50mean, y=mean)) +
     geom_point() +  
   mythemeggplot + 
-  xlab('Elevation') + ylab('Rainfall (mm)') 
+  xlab('Elevation (m. a.s.l.)') + ylab('Rainfall (mm)') 
 
-pdf(file=paste0(di, "/images/plot_elevation_pre.pdf"), height = 10, width = 10)
+
+# pdf(file=paste0(di, "/images/plot_elevation_pre.pdf"), height = 8, width = 8)
 plot_pre
-dev.off()
+# dev.off()
 
 # Pre Snow 
 plot_pre_snow <- ggplot(pre_snow, aes(x=dem50mean, y=mean)) +
     geom_point() +  mythemeggplot + 
   xlab('Elevation') + ylab('Snow Rainfall (mm)')
 
-pdf(file=paste0(di, "/images/plot_elevation_pre_snow.pdf"), height = 10, width = 10)
+# pdf(file=paste0(di, "/images/plot_elevation_pre_snow.pdf"), height = 8, width = 8)
 plot_pre_snow
-dev.off()
+# dev.off()
 
 # Pre Snow PEr
 plot_pre_snow_per <- ggplot(pre_snow_per, aes(x=dem50mean, y=mean)) +
@@ -166,20 +170,20 @@ plot_pre_snow_per <- ggplot(pre_snow_per, aes(x=dem50mean, y=mean)) +
   mythemeggplot + 
   xlab('Elevation') + ylab('Snow Rainfall (%)') 
 
-pdf(file=paste0(di, "/images/plot_elevation_pre_snow_per.pdf"), height = 10, width = 10)
+# pdf(file=paste0(di, "/images/plot_elevation_pre_snow_per.pdf"), height = 8, width = 8)
 plot_pre_snow_per
-dev.off()
+# dev.off()
 
 
 # Temp
 plot_temp <- ggplot(temp, aes(x=dem50mean, y=mean)) +
     geom_point() +  
   mythemeggplot + 
-  xlab('Elevation') + ylab('Mean Temperature') 
+  xlab('Elevation') + ylab('Mean Temperature (ºC)') 
 
-pdf(file=paste0(di, "/images/plot_elevation_temp.pdf"), height = 10, width = 10)
+# pdf(file=paste0(di, "/images/plot_elevation_temp.pdf"), height = 8, width = 8)
 plot_temp
-dev.off()
+# dev.off()
 
 
 ```
@@ -273,6 +277,12 @@ print(lp)
 exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_pre.pdf'), lp) 
 
 
+tiff(filename=paste0(di, '/images/raster_maps/r_mean_pre.tiff'), 
+     height = 1600, width = 2500, res=200, pointsize = 20, bg='transparent')
+print(lp)
+dev.off() 
+
+
 ## Lat long 
 
 # Auxiliar layer for Reproject the maps 
@@ -297,6 +307,7 @@ r_mean_pre_re <- projectRaster(r_mean_pre, crs=crs(aux_project))
 
 lp <-levelplot(r_mean_pre_re, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE,
+          xlab=NULL, ylab=NULL,
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
@@ -306,6 +317,12 @@ lp <-levelplot(r_mean_pre_re,
 print(lp)
 
 exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_pre_lat_long.pdf'), lp) 
+
+
+tiff(filename=paste0(di, '/images/raster_maps/r_mean_pre_lat_long.tiff'), 
+     height = 1600, width = 2500, res=200, pointsize = 20, bg='transparent')
+print(lp)
+dev.off() 
 ```
 
 
@@ -338,6 +355,7 @@ r_mean_pre_snow_re <- projectRaster(r_mean_pre_snow, crs=crs(aux_project))
 
 lp <-levelplot(r_mean_pre_snow_re, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE,
+          xlab=NULL, ylab=NULL,
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
@@ -347,6 +365,13 @@ lp <-levelplot(r_mean_pre_snow_re,
 print(lp)
 
 exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_pre_snow_lat_long.pdf'), lp) 
+
+tiff(filename=paste0(di, '/images/raster_maps/r_mean_pre_snow_lat_long.tiff'), 
+     height = 1600, width = 2500, res=200, pointsize = 20, bg='transparent')
+print(lp)
+dev.off() 
+
+
 ```
 
 
@@ -381,7 +406,7 @@ r_mean_pre_snow_per_re <- projectRaster(r_mean_pre_snow_per, crs=crs(aux_project
 lp <-levelplot(r_mean_pre_snow_per_re, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE,
           # Contour options
-          contour=TRUE, labels=TRUE, pretty=TRUE, 
+          contour=TRUE, labels=TRUE, pretty=TRUE, xlab=NULL, ylab=NULL,
           # Breaks
           # at=c(-1,seq(0,225,by=25)),
           main="Snowfall (mm)") # + latticeExtra::layer(sp.polygons(sn_re))
@@ -389,6 +414,12 @@ lp <-levelplot(r_mean_pre_snow_per_re,
 print(lp)
 
 exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_pre_snow_per_lat_long.pdf'), lp) 
+
+tiff(filename=paste0(di, '/images/raster_maps/r_mean_pre_snow_per_lat_long.tiff'), 
+     height = 1600, width = 2500, res=200, pointsize = 20, bg='transparent')
+print(lp)
+dev.off() 
+
 ```
 
 
@@ -415,7 +446,7 @@ r_mean_temp_re <- projectRaster(r_mean_temp, crs=crs(aux_project))
 lp <-levelplot(r_mean_temp_re, 
           par.settings=BuRdTheme, margin=list(axis=TRUE), colorkey=TRUE,
           # Contour options
-          contour=TRUE, labels=TRUE, pretty=TRUE, 
+          contour=TRUE, labels=TRUE, pretty=TRUE, xlab=NULL, ylab=NULL, 
           # Breaks
           # at=c(-1,seq(0,225,by=25)),
           main="Mean Temperature (ºC)") # + latticeExtra::layer(sp.polygons(sn_re))
@@ -423,5 +454,11 @@ lp <-levelplot(r_mean_temp_re,
 print(lp)
 
 exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_temp_lat_long.pdf'), lp) 
+
+tiff(filename=paste0(di, '/images/raster_maps/r_mean_temp_lat_long.tiff'), 
+     height = 1600, width = 2500, res=200, pointsize = 20, bg='transparent')
+print(lp)
+dev.off() 
+
 ```
 

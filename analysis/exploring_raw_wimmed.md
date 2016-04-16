@@ -112,18 +112,28 @@ for (i in indicadores) {
 Explore variables with elevation
 --------------------------------
 
-    ## quartz_off_screen 
-    ##                 2
-
-    ## quartz_off_screen 
-    ##                 2
-
-    ## quartz_off_screen 
-    ##                 2
-
-    ## quartz_off_screen 
-    ##                 2
-
+<figure>
+<a name="elev_filter"></a><img src="exploring_raw_wimmed_files/figure-markdown_github/unnamed-chunk-4-1.png">
+<figcaption>
+</figcaption>
+</figure>
+<figure>
+<img src="exploring_raw_wimmed_files/figure-markdown_github/unnamed-chunk-4-2.png">
+<figcaption>
+<span style="color:black; ">Figure 1: Profile of elevation</span>
+</figcaption>
+</figure>
+<figure>
+<a name="elev_filter"></a><img src="exploring_raw_wimmed_files/figure-markdown_github/unnamed-chunk-4-3.png">
+<figcaption>
+</figcaption>
+</figure>
+<figure>
+<img src="exploring_raw_wimmed_files/figure-markdown_github/unnamed-chunk-4-4.png">
+<figcaption>
+<span style="color:black; ">Figure 1: Profile of elevation</span>
+</figcaption>
+</figure>
 ### Spatial pattern of the wimmed indicators
 
 -   All these rasters are stored at `./data/derived/`
@@ -202,12 +212,18 @@ For each indicator we plot several maps. See `/images/raster_maps/`
     ## quartz_off_screen 
     ##                 2
 
+    ## quartz_off_screen 
+    ##                 2
+
 <figure>
 <img src="exploring_raw_wimmed_files/figure-markdown_github/unnamed-chunk-6-2.png">
 <figcaption>
 <span style="color:black; ">Figure 2: Mean values of Rainfall</span>
 </figcaption>
 </figure>
+    ## quartz_off_screen 
+    ##                 2
+
     ## quartz_off_screen 
     ##                 2
 
@@ -230,6 +246,9 @@ For each indicator we plot several maps. See `/images/raster_maps/`
     ## quartz_off_screen 
     ##                 2
 
+    ## quartz_off_screen 
+    ##                 2
+
 ### Pre Snow Per
 
 <figure>
@@ -249,6 +268,9 @@ For each indicator we plot several maps. See `/images/raster_maps/`
     ## quartz_off_screen 
     ##                 2
 
+    ## quartz_off_screen 
+    ##                 2
+
 ### Temp
 
 <figure>
@@ -265,5 +287,8 @@ For each indicator we plot several maps. See `/images/raster_maps/`
 <span style="color:black; ">Figure 5: Mean values of Temp (ºC)</span>
 </figcaption>
 </figure>
+    ## quartz_off_screen 
+    ##                 2
+
     ## quartz_off_screen 
     ##                 2
