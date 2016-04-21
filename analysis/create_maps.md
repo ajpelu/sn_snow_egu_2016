@@ -262,7 +262,7 @@ lp <- levelplot(stack_sen_1250_re,
           margin=FALSE,
           contour=TRUE, at=seq(-6,3, by=1),
           main='Sen Slope of the trend for Snow cover duration',
-          pretty=TRUE) + layer(sp.polygons(sn_re))
+          pretty=TRUE) + latticeExtra::layer(sp.polygons(sn_re))
 
 
 print(lp)
@@ -279,12 +279,11 @@ exportpdf(mypdf=paste0(di, '/images/raster_maps/r_sen_scd_latlong_contour.pdf'),
 
 ``` r
 lp <- levelplot(stack_sen_1250_re, 
-          layer="scd", 
+          layer="scd", xlab=NULL, ylab=NULL,
           par.settings=RdBuTheme, 
           margin=FALSE,
-          main='Sen Slope of the trend for Snow cover duration',
-          pretty=TRUE) + layer(sp.polygons(sn_re))
-
+          main='Sen Slope of SCD',
+          pretty=TRUE) + latticeExtra::layer(sp.polygons(sn_re))
 
 print(lp)
 ```
@@ -298,17 +297,28 @@ exportpdf(mypdf=paste0(di, '/images/raster_maps/r_sen_scd_latlong.pdf'), lp)
     ## quartz_off_screen 
     ##                 2
 
+``` r
+tiff(filename=paste0(di, '/images/raster_maps/r_sen_scd_latlong.tiff'), 
+     height = 1600, width = 2500, res=200, pointsize = 20, bg='transparent')
+print(lp)
+dev.off()
+```
+
+    ## quartz_off_screen 
+    ##                 2
+
 Annual precipitation and snow precipitation
 -------------------------------------------
 
 ``` r
 lp <- levelplot(stack_tau_1250_re, 
-          layer=c("pre","pre_snow", "pre_snow_per"), 
-          par.settings=RdBuTheme, 
+          layer=c("pre","pre_snow", "temp"), 
+          par.settings=RdBuTheme,
+        xlab=NULL, ylab=NULL, 
+          names.attr=c("Precipitation", "Snowfall", "Temperature"),
           margin=FALSE,
           pretty=TRUE,
-          main='Tau for precipitation and snow precipitation',
-          layout=c(1,3)) + layer(sp.polygons(sn_re))
+          layout=c(1,3)) + latticeExtra::layer(sp.polygons(sn_re))
 
 
 print(lp)
@@ -318,6 +328,16 @@ print(lp)
 
 ``` r
 exportpdf(mypdf=paste0(di, '/images/raster_maps/r_tau_precipitations_latlong.pdf'), lp) 
+```
+
+    ## quartz_off_screen 
+    ##                 2
+
+``` r
+tiff(filename=paste0(di, '/images/raster_maps/r_tau_pre_snow_temp_latlong.tiff'), 
+     height = 1600, width = 2500, res=200, pointsize = 20, bg='transparent')
+print(lp)
+dev.off()
 ```
 
     ## quartz_off_screen 
