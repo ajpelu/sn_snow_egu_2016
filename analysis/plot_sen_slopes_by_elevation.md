@@ -153,19 +153,22 @@ dfaux <- df %>% select(dem50mean, sen_slope_scd, sen_slope_pre, sen_slope_pre_sn
 dfplot <- melt(dfaux, id='dem50mean')
 
 label_variables <- c('sen_slope_scd' = 'Snow Cover Duration (days)', 
-                     'sen_slope_pre' = 'Rainfall (mm)',
-                     'sen_slope_pre_snow' = 'Snow Rainfall (mm)')
+                     'sen_slope_pre' = 'Precipitation (mm)',
+                     'sen_slope_pre_snow' = 'Snowfall (mm)')
 
 
 a <- ggplot(dfplot, aes(x=dem50mean, y=value)) + 
   geom_point(col='grey') + 
   geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
   facet_wrap(~variable, labeller = as_labeller(label_variables)) +
-  xlab('Elevation (m. a.s.l.)') + ylab('Sen slope of the trend') +
+  xlab('Elevation (m)') + ylab('Sen slope (magnitude) of the trend') +
   theme_bw() + theme(panel.grid.major=element_blank(),
-                       # panel.grid.minor=element_blank(),
-                       strip.background=element_rect(fill='white')) +
+                       strip.background=element_rect(fill='white'),
+                     axis.text = element_text(size = rel(1.2)),
+                     axis.title = element_text(size = rel(1.2)),
+                     strip.text = element_text(size = 14)) +
   scale_y_continuous(breaks = seq(-10,20, by=2.5))
+
 
 a 
 ```
@@ -173,10 +176,13 @@ a
 ![](plot_sen_slopes_by_elevation_files/figure-markdown_github/unnamed-chunk-2-1.png)
 
 ``` r
-# pdf(file=paste0(di, "/images/plot_sen_slopes_by_elevation.pdf"), height = 10, width = 14)
-# a 
-# dev.off()
+pdf(file=paste0(di, "/images/plot_sen_slopes_by_elevation.pdf"), height = 4, width = 10)
+a 
+dev.off()
 ```
+
+    ## quartz_off_screen 
+    ##                 2
 
 Sen slope percentages
 =====================
@@ -204,3 +210,76 @@ ggplot(dfplot, aes(x=dem50mean, y=value)) +
 ```
 
 ![](plot_sen_slopes_by_elevation_files/figure-markdown_github/unnamed-chunk-3-1.png)
+
+Sen of pre, pre\_snow, temp
+===========================
+
+``` r
+# Remove pre_snow_per
+dfaux <- df %>% select(dem50mean, sen_slope_pre, sen_slope_pre_snow, sen_slope_temp)
+
+dfplot <- melt(dfaux, id='dem50mean')
+
+label_variables <- c('sen_slope_pre' = 'Precipitation (mm)',
+                     'sen_slope_pre_snow' = 'Snowfall (mm)',
+                     'sen_slope_temp' = 'Temperature (ºC)')
+
+
+a <- ggplot(dfplot, aes(x=dem50mean, y=value)) + 
+  geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  facet_wrap(~variable, labeller = as_labeller(label_variables), scales= "free_y") +
+  xlab('Elevation (m)') + ylab('Sen slope (magnitude) of the trends') +
+  theme_bw() + theme(panel.grid.major=element_blank(),
+                     strip.background=element_rect(fill='white'),
+                     axis.text = element_text(size = rel(1.2)),
+                     axis.title = element_text(size = rel(1.2)),
+                     strip.text = element_text(size = 14))
+a 
+```
+
+![](plot_sen_slopes_by_elevation_files/figure-markdown_github/unnamed-chunk-4-1.png)
+
+``` r
+#pdf(file=paste0(di, "/images/plot_sen_elevation_pre_snow_temp.pdf"), height = 4, width = 10)
+#a 
+#dev.off()
+```
+
+Tau of pre, pre\_snow, temp
+===========================
+
+``` r
+# Remove pre_snow_per
+dfaux <- df %>% select(dem50mean, tau_pre, tau_pre_snow, tau_temp)
+
+dfplot <- melt(dfaux, id='dem50mean')
+
+label_variables <- c('tau_pre' = 'Precipitation',
+                     'tau_pre_snow' = 'Snowfall',
+                     'tau_temp' = 'Temperature')
+
+
+a <- ggplot(dfplot, aes(x=dem50mean, y=value)) + 
+  geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  facet_wrap(~variable, labeller = as_labeller(label_variables)) +
+  xlab('Elevation (m)') + ylab('Sen slope (magnitude) of the trends') +
+  theme_bw() + theme(panel.grid.major=element_blank(),
+                     strip.background=element_rect(fill='white'),
+                     axis.text = element_text(size = rel(1.2)),
+                     axis.title = element_text(size = rel(1.2)),
+                     strip.text = element_text(size = 14))
+a 
+```
+
+![](plot_sen_slopes_by_elevation_files/figure-markdown_github/unnamed-chunk-5-1.png)
+
+``` r
+pdf(file=paste0(di, "/images/plot_tau_elevation_pre_snow_temp.pdf"), height = 4, width = 10)
+a 
+dev.off()
+```
+
+    ## quartz_off_screen 
+    ##                 2
