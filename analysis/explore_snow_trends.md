@@ -100,8 +100,8 @@ fulldf1250 <- fulldf %>%
   filter(dem50mean > 1250)  
 ```
 
-Explor general pattern of snow-cover
-====================================
+Explore general pattern of snow-cover
+=====================================
 
 ``` r
 exp_scd <- exploreMKTS(scd, alpha=0.05)
@@ -450,6 +450,9 @@ for (i in misvariables){
   # assign(paste0(prefijo,i), aux)
    
 }
+
+# Export stats_basin dataframe 
+write.csv(stats_basin, file=paste(di, '/data/stats_basin.csv', sep=''), row.names = FALSE)
 ```
 
 ### Snow cover duration
@@ -1937,7 +1940,8 @@ mygam_summ
 a <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
   geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
   annotate("text", x = 3000, y=2, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %"),
+           size=5) + 
   mythemeggplot + 
   xlab('Elevation') + ylab(myylab)
   
@@ -2121,3 +2125,184 @@ grid.arrange(a, d, b, c, nrow=2)
 ```
 
 ![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-26-1.png)
+
+``` r
+# SCD sen 
+pdf(file=paste0(di, "/images/plot_sen_scd_elevation.pdf"), height = 8, width = 8)
+a + theme(axis.text = element_text(size = rel(1.7)),
+                       axis.title = element_text(size = rel(1.7)))
+dev.off() 
+```
+
+    ## quartz_off_screen 
+    ##                 2
+
+``` r
+scd_plot <- fulldf1250 %>% 
+  group_by(dem50mean_group) %>% 
+  summarise(mean=mean(sen_slope_scd),
+              sd = sd(sen_slope_scd),
+              se = sd / sqrt (length(sen_slope_scd)))
+  
+
+ss <- ggplot(scd_plot, aes(x=dem50mean_group, y=mean, group=1)) + 
+  geom_line()+ 
+  geom_errorbar(aes(ymax = mean + 3.5*se, ymin= mean - 3.5*se), width=.15) +
+  geom_point(size=3, shape=21, fill="white") + 
+  xlab('Elevation') + ylab('Sen Slope SCD') +
+  mythemeggplot + 
+  theme(axis.text.x=element_text(angle = -90, hjust = 0),
+        axis.text = element_text(size = rel(1.7)),
+                       axis.title = element_text(size = rel(1.7)))
+
+
+#pdf(file=paste0(di, "/images/plot_sen_scd_elevation_interval.pdf"), height = 8, width = 8)
+ss 
+```
+
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-27-1.png)
+
+``` r
+# dev.off() 
+```
+
+``` r
+myvariable <- 'tau_scd'
+myylab <- 'Tau SCD'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## tau_scd ~ s(dem50mean)
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value
+    ## s(dem50mean) 8.263  8.854 410.4  <2e-16
+
+``` r
+mygam_summ <- summary(modgam)
+mygam_summ
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## tau_scd ~ s(dem50mean)
+    ## 
+    ## Parametric coefficients:
+    ##              Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -0.153844   0.001532  -100.4   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df     F p-value    
+    ## s(dem50mean) 8.263  8.854 410.4  <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## R-sq.(adj) =  0.363   Deviance explained = 36.3%
+    ## GCV = 0.015024  Scale est. = 0.015002  n = 6390
+
+``` r
+# Plot GAM
+a <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 2500, y=0.3, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %"),
+           size=6) + 
+  mythemeggplot + 
+  xlab('Elevation (m)') + ylab(myylab) +
+  theme(axis.text = element_text(size = rel(1.2)),
+                     axis.title = element_text(size = rel(1.2)))
+
+
+a
+```
+
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-28-1.png)
+
+``` r
+myvariable <- 'sen_slope_scd'
+myylab <- 'Sen Slope SCD'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## sen_slope_scd ~ s(dem50mean)
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df    F p-value
+    ## s(dem50mean) 8.592  8.953 1115  <2e-16
+
+``` r
+mygam_summ <- summary(modgam)
+mygam_summ
+```
+
+    ## 
+    ## Family: gaussian 
+    ## Link function: identity 
+    ## 
+    ## Formula:
+    ## sen_slope_scd ~ s(dem50mean)
+    ## 
+    ## Parametric coefficients:
+    ##             Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept) -1.37941    0.01193  -115.7   <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Approximate significance of smooth terms:
+    ##                edf Ref.df    F p-value    
+    ## s(dem50mean) 8.592  8.953 1115  <2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## R-sq.(adj) =   0.61   Deviance explained =   61%
+    ## GCV = 0.91018  Scale est. = 0.90881   n = 6390
+
+``` r
+# Plot GAM
+b <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 2500, y=2, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %"),
+           size=6) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab) +
+  theme(axis.text = element_text(size = rel(1.2)),
+                     axis.title = element_text(size = rel(1.2)))
+b
+```
+
+![](explore_snow_trends_files/figure-markdown_github/unnamed-chunk-28-2.png)
+
+``` r
+pdf(file=paste0(di, "/images/plot_scd_elev.pdf"), height = 8, width = 5)
+grid.arrange(a, b,nrow=2)
+dev.off()
+```
+
+    ## quartz_off_screen 
+    ##                 2
