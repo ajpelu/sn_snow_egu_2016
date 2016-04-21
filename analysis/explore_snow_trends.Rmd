@@ -742,7 +742,8 @@ mygam_summ
 a <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
   geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
   annotate("text", x = 3000, y=2, 
-           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %")) + 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %"),
+           size=5) + 
   mythemeggplot + 
   xlab('Elevation') + ylab(myylab)
   
@@ -809,14 +810,97 @@ d <- ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey'
 
 
 grid.arrange(a, d, b, c, nrow=2)
+
+
+
+
+# SCD sen 
+pdf(file=paste0(di, "/images/plot_sen_scd_elevation.pdf"), height = 8, width = 8)
+a + theme(axis.text = element_text(size = rel(1.7)),
+                       axis.title = element_text(size = rel(1.7)))
+dev.off() 
+
 ```
 
 
+```{r}
+
+scd_plot <- fulldf1250 %>% 
+  group_by(dem50mean_group) %>% 
+  summarise(mean=mean(sen_slope_scd),
+              sd = sd(sen_slope_scd),
+              se = sd / sqrt (length(sen_slope_scd)))
+  
+
+ss <- ggplot(scd_plot, aes(x=dem50mean_group, y=mean, group=1)) + 
+  geom_line()+ 
+  geom_errorbar(aes(ymax = mean + 3.5*se, ymin= mean - 3.5*se), width=.15) +
+  geom_point(size=3, shape=21, fill="white") + 
+  xlab('Elevation') + ylab('Sen Slope SCD') +
+  mythemeggplot + 
+  theme(axis.text.x=element_text(angle = -90, hjust = 0),
+        axis.text = element_text(size = rel(1.7)),
+                       axis.title = element_text(size = rel(1.7)))
 
 
+#pdf(file=paste0(di, "/images/plot_sen_scd_elevation_interval.pdf"), height = 8, width = 8)
+ss 
+# dev.off() 
+```
 
 
+```{r}
+myvariable <- 'tau_scd'
+myylab <- 'Tau SCD'
 
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+mygam_summ <- summary(modgam)
+mygam_summ
+
+# Plot GAM
+a <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 2500, y=0.3, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %"),
+           size=6) + 
+  mythemeggplot + 
+  xlab('Elevation (m)') + ylab(myylab) +
+  theme(axis.text = element_text(size = rel(1.2)),
+                     axis.title = element_text(size = rel(1.2)))
+
+
+a
+
+myvariable <- 'sen_slope_scd'
+myylab <- 'Sen Slope SCD'
+
+# GAM 
+myformula <- formula(paste(myvariable, '~ s(dem50mean)', sep=''))
+modgam <- mgcv::gam(formula = myformula, 
+                    data= df)
+anova(modgam)
+mygam_summ <- summary(modgam)
+mygam_summ
+
+# Plot GAM
+b <-ggplot(df, aes_string(x='dem50mean', y=myvariable)) + geom_point(col='grey') + 
+  geom_smooth(method="gam", formula = y ~ s(x), fill='red', col='red') + 
+  annotate("text", x = 2500, y=2, 
+           label= paste0("Dev. exp. = ", round((mygam_summ$dev.expl)*100, 2), " %"),
+           size=6) + 
+  mythemeggplot + 
+  xlab('Elevation') + ylab(myylab) +
+  theme(axis.text = element_text(size = rel(1.2)),
+                     axis.title = element_text(size = rel(1.2)))
+b
+
+pdf(file=paste0(di, "/images/plot_scd_elev.pdf"), height = 8, width = 5)
+grid.arrange(a, b,nrow=2)
+dev.off()
 
 
 

@@ -83,6 +83,27 @@ topo <- rawtopo %>%
                 slope50median_deg, aspect50mean_deg, aspect50median_deg) 
 # -- 
 
+topo <- topo %>% 
+  mutate(dem50mean_group = cut(dem50mean, 
+                         breaks = seq(from=0, to=3500, by=250),
+                         labels = c("0-250", "251-500","501-750","751-1000",
+                                    "1001-1250","1251-1500","1501-1750","1751-2000",
+                                    "2001-2250","2251-2500","2501-2750", "2751-3000",
+                                    "3001-3250", "3251-3500")),
+         dem50mean_group100 = cut(dem50mean, 
+                         breaks = seq(from=0, to=3500, by=100),
+                         labels = c("0-100", '100-200','200-300','300-400','400-500',
+                                    "500-600", '600-700','700-800','800-900','900-1000',
+                                    "1000-1100", '1100-1200','1200-1300','1300-1400','1400-1500',
+                                    '1500-1600', '1600-1700','1700-1800','1800-1900','1900-2000',
+                                    '2000-2100', '2100-2200','2200-2300','2300-2400','2400-2500',
+                                    '2500-2600', '2600-2700','2700-2800','2800-2900','2900-3000',
+                                    '3000-3100', '3100-3200','3200-3300','3300-3400','3400-3500')),
+         dem50mean_g100 = cut(dem50mean, 
+                         breaks = seq(from=0, to=3500, by=100),
+                         labels = seq(from=100, to=3500, by=100)))
+
+
 ## Hydrological basin 
 basin <- read.csv(file=paste(di, "/data/derived/pixel_region.csv", sep=""),
                     header=TRUE,
@@ -232,6 +253,122 @@ ggplot(scd, aes(x=dem50mean, y=mean)) +
 ```
 
 
+* Read data from Dietz et al. (2012)
+```{r}
+dietz <- read.table(file=paste0(di, '/data/scd_elev_dietz.csv'), header = TRUE, 
+                    sep=";")
+
+f <- scd %>% filter(mean > 100)  
+min(f$dem50mean)
+f1 <- scd %>% filter(mean > 150)  
+min(f1$dem50mean)
+f2 <- scd %>% filter(mean > 200)  
+min(f2$dem50mean)
+
+mis_f <- c(min(f$dem50mean), min(f1$dem50mean), min(f2$dem50mean))
+
+gd <- ggplot(scd, aes(x=dem50mean, y=mean)) + 
+  geom_point(col='gray') +  
+  geom_line(data=dietz, aes(x=elev, y=scd), col='blue') + 
+  geom_point(data=dietz, aes(x=elev, y=scd), shape=21, fill='white', col='blue') + 
+  xlab('Elevation (m)') + ylab('SCD (days)') + 
+  ylim(0,400) + xlim(0,4000) + 
+  theme_bw() + theme(panel.grid.major=element_blank(),
+                       panel.grid.minor=element_blank(),
+                       strip.background=element_rect(fill='white'),
+                       axis.text = element_text(size = rel(1.7)),
+                       axis.title = element_text(size = rel(1.7))) 
+
+
+gd 
+
+pdf(file=paste0(di, "/images/plot_elevation_scd_dietz.pdf"), height = 7, width = 11)
+gd
+dev.off() 
+
+gd1 <- gd + geom_segment(aes(x=1250, xend= 1250, y=100, yend=0), col='blue') +
+  geom_segment(aes(x=mis_f[1], xend=mis_f[1], y=100, yend=0), col='black') +
+  geom_segment(aes(x=1250, xend=mis_f[1], y=50, yend=50), col='blue', 
+               arrow= arrow(length = unit(0.4, "cm"), type="closed")) +
+  annotate("text", label=paste0('+',round((mis_f[1] - 1250), 0)), y=30, x=1500) +
+  # 200 
+  geom_segment(aes(x=2350, xend=2350, y=200, yend=0), col='blue') +
+  geom_segment(aes(x=mis_f[3], xend=mis_f[3], y=200, yend=0), col='black') +
+  geom_segment(aes(x=2350, xend=mis_f[3], y=175, yend=175), col='blue', 
+               arrow= arrow(length = unit(0.4, "cm"), type="closed")) +
+  annotate("text", label=paste0('+',round((mis_f[3] - 2350), 0)), y=150, x=2600)
+
+
+gd1
+
+#pdf(file=paste0(di, "/images/plot_elevation_scd_dietz_scdlines.pdf"), height = 7, width = 11)
+#gd1
+#dev.off() 
+
+mytable <- as.data.frame(cbind(
+  scd = c(100, 150, 200),
+  elev_sn = mis_f,
+  dif_elev = c(mis_f[1] - 1250, mis_f[2] - 1750, mis_f[3] - 2350)))
+
+pander(mytable)
+
+
+# 2nd option 
+
+scd_grouped <- scd %>% mutate(scd_medio=mean) %>%
+  group_by(dem50mean_g100) %>% 
+  summarise(media = mean(scd_medio))
+scd_grouped$dem50mean_g100 <- as.numeric(as.character(scd_grouped$dem50mean_g100))
+
+
+gg <- ggplot(data=dietz, aes(x=elev, y=scd)) +
+  geom_line(col='blue', lwd=1.2) +
+  geom_point(data=dietz, aes(x=elev, y=scd), shape=21, fill='white', col='blue', size=3.5) + 
+  geom_point(data=scd, aes(x=dem50mean, y=mean), col='gray') + 
+  geom_line(data=scd_grouped, aes(x=dem50mean_g100, y=media), col='red', lwd=1.2) + 
+  geom_point(data=scd_grouped, aes(x=dem50mean_g100, y=media), shape=21, fill='white', col='red', size=3.5) +
+  xlab('Elevation (m)') + ylab('mean SCD (days)') + 
+  ylim(0,400) + xlim(0,4000) + 
+  theme_bw() + theme(panel.grid.major=element_blank(),
+                       panel.grid.minor=element_blank(),
+                       strip.background=element_rect(fill='white'),
+                       axis.text = element_text(size = rel(1.7)),
+                       axis.title = element_text(size = rel(1.7))) 
+
+#pdf(file=paste0(di, "/images/plot_elevation_scd_dietz_scdlines_mean.pdf"), height = 7, width = 11)
+gg
+#dev.off() 
+
+
+# Values for 100 scd (SN)  
+sn100 <- ((100 - 91.38)/(103.35 - 91.38)*100) + 2200
+# Value for 100 scd (Central Europe)
+d100 <- ((100 - 94)/(106 - 94)*100) + 1200
+
+# Value for 150 scd 
+sn150<- ((150 - 140.50)/(152.24 - 140.50)*100) + 2600 
+# Value for 150 scd (Central Europe)
+d150 <- ((150 - 145)/(154 - 145)*100) + 1700
+
+gg1 <- gg + 
+  geom_segment(aes(x=d100, xend=d100, y=100, yend=0), col='blue') +
+  geom_segment(aes(x=sn100, xend=sn100, y=100, yend=0), col='red') + 
+  geom_segment(aes(x=d100, xend=sn100, y=50, yend=50), col='blue', 
+               arrow= arrow(length = unit(0.4, "cm"), type="closed")) +
+  geom_segment(aes(x=d150, xend=d150, y=150, yend=0), col='blue') +
+  geom_segment(aes(x=sn150, xend=sn150, y=150, yend=0), col='red') + 
+  geom_segment(aes(x=d150, xend=sn150, y=120, yend=120), col='blue', 
+               arrow= arrow(length = unit(0.4, "cm"), type="closed")) +
+  annotate("text", label=paste0('+',round((sn100-d100), 0)), y=60, x=1500, 
+           fontface="bold", size=8) +
+  annotate("text", label=paste0('+',round((sn150-d150), 0)), y=130, x=2000, 
+           fontface="bold", size=8)
+
+#pdf(file=paste0(di, "/images/plot_elevation_scd_dietz_scdlines_mean_increment.pdf"), height = 7, width = 11)
+gg1
+#dev.off() 
+
+```
 
 * Select the pixels above 14 days (scd) 
 
@@ -430,6 +567,7 @@ r_mean_scd_1250_repro <- projectRaster(r_mean_scd_1250, crs=crs(aux_project))
 
 lp <-levelplot(r_mean_scd_1250_repro, 
           par.settings=myTheme, margin=list(axis=TRUE), colorkey=TRUE,
+           xlab=NULL, ylab=NULL,
           # Contour options
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
@@ -440,6 +578,11 @@ lp <-levelplot(r_mean_scd_1250_repro,
 print(lp)
 
 exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_scd_1250_lat_long.pdf'), lp) 
+
+tiff(filename=paste0(di, '/images/raster_maps/r_mean_scd_1250_lat_long.tiff'), 
+     height = 1600, width = 2500, res=200, pointsize = 20, bg='transparent')
+print(lp)
+dev.off() 
 
 ```
 

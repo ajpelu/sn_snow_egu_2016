@@ -98,6 +98,26 @@ topo <- rawtopo %>%
                 slope50median_deg, aspect50mean_deg, aspect50median_deg) 
 # -- 
 
+
+topo <- topo %>% 
+  mutate(dem50mean_group = cut(dem50mean, 
+                         breaks = seq(from=0, to=3500, by=250),
+                         labels = c("0-250", "251-500","501-750","751-1000",
+                                    "1001-1250","1251-1500","1501-1750","1751-2000",
+                                    "2001-2250","2251-2500","2501-2750", "2751-3000",
+                                    "3001-3250", "3251-3500")),
+         dem50mean_group100 = cut(dem50mean, 
+                         breaks = seq(from=0, to=3500, by=100),
+                         labels = c("0-100", '100-200','200-300','300-400','400-500',
+                                    "500-600", '600-700','700-800','800-900','900-1000',
+                                    "1000-1100", '1100-1200','1200-1300','1300-1400','1400-1500',
+                                    '1500-1600', '1600-1700','1700-1800','1800-1900','1900-2000',
+                                    '2000-2100', '2100-2200','2200-2300','2300-2400','2400-2500',
+                                    '2500-2600', '2600-2700','2700-2800','2800-2900','2900-3000',
+                                    '3000-3100', '3100-3200','3200-3300','3300-3400','3400-3500')))
+
+
+
 ## Hydrological basin 
 basin <- read.csv(file=paste(di, "/data/derived/pixel_region.csv", sep=""),
                     header=TRUE,
@@ -148,42 +168,42 @@ mythemeggplot <- theme_bw() + theme(panel.grid.major=element_blank(),
 plot_pre <- ggplot(pre, aes(x=dem50mean, y=mean)) +
     geom_point() +  
   mythemeggplot + 
-  xlab('Elevation (m. a.s.l.)') + ylab('Rainfall (mm)') 
+  xlab('Elevation (m)') + ylab('Precipitation (mm)') 
 
 
-# pdf(file=paste0(di, "/images/plot_elevation_pre.pdf"), height = 8, width = 8)
+#pdf(file=paste0(di, "/images/plot_elevation_pre.pdf"), height = 8, width = 8)
 plot_pre
-# dev.off()
+#dev.off()
 
 # Pre Snow 
 plot_pre_snow <- ggplot(pre_snow, aes(x=dem50mean, y=mean)) +
     geom_point() +  mythemeggplot + 
-  xlab('Elevation') + ylab('Snow Rainfall (mm)')
+  xlab('Elevation (m)') + ylab('Snowfall (mm)')
 
-# pdf(file=paste0(di, "/images/plot_elevation_pre_snow.pdf"), height = 8, width = 8)
+#pdf(file=paste0(di, "/images/plot_elevation_pre_snow.pdf"), height = 8, width = 8)
 plot_pre_snow
-# dev.off()
+#dev.off()
 
 # Pre Snow PEr
 plot_pre_snow_per <- ggplot(pre_snow_per, aes(x=dem50mean, y=mean)) +
     geom_point() +  
   mythemeggplot + 
-  xlab('Elevation') + ylab('Snow Rainfall (%)') 
+  xlab('Elevation (m)') + ylab('Snowfall (%)') 
 
-# pdf(file=paste0(di, "/images/plot_elevation_pre_snow_per.pdf"), height = 8, width = 8)
+#pdf(file=paste0(di, "/images/plot_elevation_pre_snow_per.pdf"), height = 8, width = 8)
 plot_pre_snow_per
-# dev.off()
+#dev.off()
 
 
 # Temp
 plot_temp <- ggplot(temp, aes(x=dem50mean, y=mean)) +
     geom_point() +  
   mythemeggplot + 
-  xlab('Elevation') + ylab('Mean Temperature (ºC)') 
+  xlab('Elevation (m)') + ylab('Mean Temperature (ºC)') 
 
-# pdf(file=paste0(di, "/images/plot_elevation_temp.pdf"), height = 8, width = 8)
+#pdf(file=paste0(di, "/images/plot_elevation_temp.pdf"), height = 8, width = 8)
 plot_temp
-# dev.off()
+#dev.off()
 
 
 ```
@@ -272,7 +292,7 @@ lp <- levelplot(r_mean_pre,
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
           # at=c(-1,seq(0,225,by=25)),
-          main="Rainfall (mm)")
+          main="Precipitation (mm)")
 print(lp)
 exportpdf(mypdf=paste0(di, '/images/raster_maps/r_mean_pre.pdf'), lp) 
 
@@ -312,7 +332,7 @@ lp <-levelplot(r_mean_pre_re,
           contour=TRUE, labels=TRUE, pretty=TRUE, 
           # Breaks
           # at=c(-1,seq(0,225,by=25)),
-          main="Rainfall (mm)") # + latticeExtra::layer(sp.polygons(sn_re))
+          main="Precipitation (mm)") # + latticeExtra::layer(sp.polygons(sn_re))
 
 print(lp)
 
